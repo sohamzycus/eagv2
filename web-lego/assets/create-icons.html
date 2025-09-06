@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Lego Icon Generator</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 20px;
+            background: #f8fafc;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+        .icon-preview {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .icon-size {
+            text-align: center;
+            padding: 15px;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+        .icon-size h3 {
+            margin: 10px 0 5px;
+            color: #4a5568;
+        }
+        canvas {
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+        }
+        .download-btn {
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .download-btn:hover {
+            opacity: 0.9;
+        }
+        .instructions {
+            background: #e6fffa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border-left: 4px solid #38b2ac;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧱 Web Lego Icon Generator</h1>
+        <p>This page generates the required PNG icons for the Web Lego Chrome extension.</p>
+        
+        <div class="icon-preview">
+            <div class="icon-size">
+                <canvas id="icon16" width="16" height="16"></canvas>
+                <h3>16x16</h3>
+                <button class="download-btn" onclick="downloadIcon('icon16', 'icon-16.png')">Download</button>
+            </div>
+            <div class="icon-size">
+                <canvas id="icon32" width="32" height="32"></canvas>
+                <h3>32x32</h3>
+                <button class="download-btn" onclick="downloadIcon('icon32', 'icon-32.png')">Download</button>
+            </div>
+            <div class="icon-size">
+                <canvas id="icon48" width="48" height="48"></canvas>
+                <h3>48x48</h3>
+                <button class="download-btn" onclick="downloadIcon('icon48', 'icon-48.png')">Download</button>
+            </div>
+            <div class="icon-size">
+                <canvas id="icon128" width="128" height="128"></canvas>
+                <h3>128x128</h3>
+                <button class="download-btn" onclick="downloadIcon('icon128', 'icon-128.png')">Download</button>
+            </div>
+        </div>
+        
+        <div class="instructions">
+            <h3>📋 Instructions:</h3>
+            <ol>
+                <li>Open this HTML file in a web browser</li>
+                <li>Click each "Download" button to save the PNG icons</li>
+                <li>Save all icons in the <code>assets/</code> folder of your extension</li>
+                <li>The extension will automatically use these icons</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        // Generate Lego-style icons programmatically
+        function drawLegoIcon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            const scale = size / 128; // Base size is 128px
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Create gradients
+            const bgGradient = ctx.createLinearGradient(0, 0, size, size);
+            bgGradient.addColorStop(0, '#667eea');
+            bgGradient.addColorStop(1, '#764ba2');
+            
+            // Background circle (subtle)
+            ctx.globalAlpha = 0.1;
+            ctx.fillStyle = bgGradient;
+            ctx.beginPath();
+            ctx.arc(size/2, size/2, size * 0.47, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.globalAlpha = 1;
+            
+            // Draw main blocks
+            drawBlock(ctx, 20*scale, 35*scale, 45*scale, 30*scale, '#ff6b6b', 3, 2, scale);
+            drawBlock(ctx, 70*scale, 25*scale, 35*scale, 25*scale, '#4ecdc4', 3, 2, scale);
+            drawBlock(ctx, 35*scale, 70*scale, 25*scale, 20*scale, '#45b7d1', 2, 2, scale);
+            drawBlock(ctx, 75*scale, 75*scale, 20*scale, 15*scale, '#96ceb4', 2, 2, scale);
+        }
+        
+        function drawBlock(ctx, x, y, width, height, color, studsX, studsY, scale) {
+            // Block body
+            const gradient = ctx.createLinearGradient(x, y, x + width, y + height);
+            gradient.addColorStop(0, color);
+            gradient.addColorStop(1, adjustBrightness(color, -20));
+            
+            ctx.fillStyle = gradient;
+            ctx.fillRect(x, y, width, height);
+            
+            // Round corners effect (simplified)
+            ctx.fillStyle = gradient;
+            ctx.fillRect(x, y, width, height);
+            
+            // Draw studs
+            const studSize = Math.max(2, 4 * scale);
+            const studSpacingX = width / studsX;
+            const studSpacingY = height / studsY;
+            
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            for (let i = 0; i < studsX; i++) {
+                for (let j = 0; j < studsY; j++) {
+                    const studX = x + studSpacingX * (i + 0.5);
+                    const studY = y + studSpacingY * (j + 0.5);
+                    
+                    ctx.beginPath();
+                    ctx.arc(studX, studY, studSize, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+            }
+            
+            // Add subtle shadow
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+            ctx.fillRect(x + 2*scale, y + height, width, 2*scale);
+        }
+        
+        function adjustBrightness(hex, percent) {
+            const num = parseInt(hex.replace("#", ""), 16);
+            const amt = Math.round(2.55 * percent);
+            const R = (num >> 16) + amt;
+            const G = (num >> 8 & 0x00FF) + amt;
+            const B = (num & 0x0000FF) + amt;
+            return "#" + (0x1000000 + (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
+                (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
+                (B < 255 ? B < 1 ? 0 : B : 255)).toString(16).slice(1);
+        }
+        
+        function downloadIcon(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        // Generate all icons when page loads
+        window.onload = function() {
+            drawLegoIcon(document.getElementById('icon16'), 16);
+            drawLegoIcon(document.getElementById('icon32'), 32);
+            drawLegoIcon(document.getElementById('icon48'), 48);
+            drawLegoIcon(document.getElementById('icon128'), 128);
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PNG Icon Creator for Web Lego</title>
+</head>
+<body>
+    <h1>Creating PNG Icons...</h1>
+    <p>This will automatically download the required PNG icons for the Web Lego extension.</p>
+    
+    <canvas id="canvas" style="display: none;"></canvas>
+    
+    <div id="status"></div>
+    
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const status = document.getElementById('status');
+        
+        function drawLegoIcon(size) {
+            canvas.width = size;
+            canvas.height = size;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, size, size);
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#667eea');
+            gradient.addColorStop(1, '#764ba2');
+            
+            // Background
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Lego blocks
+            const scale = size / 128;
+            
+            // Block 1 (red)
+            ctx.fillStyle = '#ff6b6b';
+            ctx.fillRect(20*scale, 35*scale, 45*scale, 30*scale);
+            
+            // Block 2 (teal)
+            ctx.fillStyle = '#4ecdc4';
+            ctx.fillRect(70*scale, 25*scale, 35*scale, 25*scale);
+            
+            // Block 3 (blue)
+            ctx.fillStyle = '#45b7d1';
+            ctx.fillRect(35*scale, 70*scale, 25*scale, 20*scale);
+            
+            // Block 4 (green)
+            ctx.fillStyle = '#96ceb4';
+            ctx.fillRect(75*scale, 75*scale, 20*scale, 15*scale);
+            
+            // Add studs (white circles)
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            const studSize = Math.max(1, 3 * scale);
+            
+            // Studs for block 1
+            for(let i = 0; i < 3; i++) {
+                for(let j = 0; j < 2; j++) {
+                    ctx.beginPath();
+                    ctx.arc((30 + i*12)*scale, (45 + j*10)*scale, studSize, 0, 2*Math.PI);
+                    ctx.fill();
+                }
+            }
+            
+            // Studs for other blocks (simplified)
+            if(size >= 32) {
+                ctx.beginPath();
+                ctx.arc(78*scale, 33*scale, studSize*0.8, 0, 2*Math.PI);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(88*scale, 42*scale, studSize*0.8, 0, 2*Math.PI);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(47*scale, 80*scale, studSize*0.6, 0, 2*Math.PI);
+                ctx.fill();
+                
+                ctx.beginPath();
+                ctx.arc(85*scale, 82*scale, studSize*0.5, 0, 2*Math.PI);
+                ctx.fill();
+            }
+        }
+        
+        function downloadPNG(size, filename) {
+            drawLegoIcon(size);
+            
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                status.innerHTML += `<p>✅ Downloaded ${filename}</p>`;
+            }, 'image/png');
+        }
+        
+        // Auto-download all required icons
+        setTimeout(() => {
+            status.innerHTML = '<h2>Generating icons...</h2>';
+            
+            downloadPNG(16, 'icon-16.png');
+            setTimeout(() => downloadPNG(32, 'icon-32.png'), 100);
+            setTimeout(() => downloadPNG(48, 'icon-48.png'), 200);
+            setTimeout(() => downloadPNG(128, 'icon-128.png'), 300);
+            
+            setTimeout(() => {
+                status.innerHTML += '<h2>🎉 All icons generated!</h2><p>Save all downloaded PNG files to the assets/ folder.</p>';
+            }, 500);
+        }, 1000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="block1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ff6b6b;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ee5a52;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="block2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4ecdc4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#44a08d;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="block3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#45b7d1;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3498db;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="block4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#96ceb4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#85c1a3;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Background circle -->
+  <circle cx="64" cy="64" r="60" fill="url(#bgGradient)" opacity="0.1"/>
+  
+  <!-- Main Lego block (large) -->
+  <rect x="20" y="35" width="45" height="30" rx="4" fill="url(#block1)" />
+  <!-- Studs on main block -->
+  <circle cx="30" cy="45" r="4" fill="#ffffff" opacity="0.8"/>
+  <circle cx="42" cy="45" r="4" fill="#ffffff" opacity="0.8"/>
+  <circle cx="54" cy="45" r="4" fill="#ffffff" opacity="0.8"/>
+  <circle cx="30" cy="55" r="4" fill="#ffffff" opacity="0.8"/>
+  <circle cx="42" cy="55" r="4" fill="#ffffff" opacity="0.8"/>
+  <circle cx="54" cy="55" r="4" fill="#ffffff" opacity="0.8"/>
+  
+  <!-- Second block (medium) -->
+  <rect x="70" y="25" width="35" height="25" rx="3" fill="url(#block2)" />
+  <!-- Studs on second block -->
+  <circle cx="78" cy="33" r="3" fill="#ffffff" opacity="0.8"/>
+  <circle cx="88" cy="33" r="3" fill="#ffffff" opacity="0.8"/>
+  <circle cx="97" cy="33" r="3" fill="#ffffff" opacity="0.8"/>
+  <circle cx="78" cy="42" r="3" fill="#ffffff" opacity="0.8"/>
+  <circle cx="88" cy="42" r="3" fill="#ffffff" opacity="0.8"/>
+  <circle cx="97" cy="42" r="3" fill="#ffffff" opacity="0.8"/>
+  
+  <!-- Third block (small) -->
+  <rect x="35" y="70" width="25" height="20" rx="3" fill="url(#block3)" />
+  <!-- Studs on third block -->
+  <circle cx="42" cy="77" r="2.5" fill="#ffffff" opacity="0.8"/>
+  <circle cx="52" cy="77" r="2.5" fill="#ffffff" opacity="0.8"/>
+  <circle cx="42" cy="83" r="2.5" fill="#ffffff" opacity="0.8"/>
+  <circle cx="52" cy="83" r="2.5" fill="#ffffff" opacity="0.8"/>
+  
+  <!-- Fourth block (tiny) -->
+  <rect x="75" y="75" width="20" height="15" rx="2" fill="url(#block4)" />
+  <!-- Studs on fourth block -->
+  <circle cx="80" cy="80" r="2" fill="#ffffff" opacity="0.8"/>
+  <circle cx="90" cy="80" r="2" fill="#ffffff" opacity="0.8"/>
+  <circle cx="80" cy="85" r="2" fill="#ffffff" opacity="0.8"/>
+  <circle cx="90" cy="85" r="2" fill="#ffffff" opacity="0.8"/>
+  
+  <!-- Subtle shadow effects -->
+  <rect x="22" y="67" width="45" height="3" rx="2" fill="#000000" opacity="0.1"/>
+  <rect x="72" y="52" width="35" height="2" rx="1" fill="#000000" opacity="0.1"/>
+  <rect x="37" y="92" width="25" height="2" rx="1" fill="#000000" opacity="0.1"/>
+  <rect x="77" y="92" width="20" height="1" rx="1" fill="#000000" opacity="0.1"/>
+</svg>
