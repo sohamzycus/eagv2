@@ -52,9 +52,13 @@
                     <span class="btn-icon">🎯</span>
                     <span class="btn-text">Select</span>
                 </button>
-                <button id="addToCanvasBtn" class="toolbar-btn" title="Add to Canvas" disabled>
+                <button id="addToCanvasBtn" class="toolbar-btn" title="Add Selected to Canvas" disabled>
                     <span class="btn-icon">➕</span>
-                    <span class="btn-text">Add</span>
+                    <span class="btn-text">Add Selected</span>
+                </button>
+                <button id="addAllBtn" class="toolbar-btn" title="Add All Elements from Page">
+                    <span class="btn-icon">📦</span>
+                    <span class="btn-text">Add All</span>
                 </button>
                 <button id="openCanvasBtn" class="toolbar-btn" title="Open Canvas in New Tab">
                     <span class="btn-icon">🎨</span>
@@ -76,11 +80,13 @@
     function setupToolbarEvents() {
         const selectBtn = document.getElementById('selectBlocksBtn');
         const addBtn = document.getElementById('addToCanvasBtn');
+        const addAllBtn = document.getElementById('addAllBtn');
         const canvasBtn = document.getElementById('openCanvasBtn');
         const closeBtn = document.getElementById('closeWebLegoBtn');
         
         selectBtn.addEventListener('click', toggleSelectionMode);
         addBtn.addEventListener('click', addSelectedToCanvas);
+        addAllBtn.addEventListener('click', addAllElementsToCanvas);
         canvasBtn.addEventListener('click', openCanvas);
         closeBtn.addEventListener('click', deactivateWebLego);
     }
@@ -231,6 +237,74 @@
         }
     }
     
+    // Add all suitable elements from page to canvas
+    async function addAllElementsToCanvas() {
+        // Find all suitable elements (divs, sections, articles, headers, etc.)
+        const allElements = document.querySelectorAll(
+            'div, section, article, header, main, aside, footer, p, h1, h2, h3, h4, h5, h6, blockquote, img, video, figure, nav'
+        );
+        
+        const suitableElements = [];
+        
+        allElements.forEach(element => {
+            // Skip toolbar, canvas, and other extension elements
+            if (element.closest('#webLegoToolbar') || 
+                element.closest('#webLegoCanvas') || 
+                element.closest('#webLegoOnboarding')) {
+                return;
+            }
+            
+            // Skip elements that are too small or hidden
+            const rect = element.getBoundingClientRect();
+            if (rect.width < 50 || rect.height < 20 || rect.width === 0 || rect.height === 0) {
+                return;
+            }
+            
+            // Skip elements that are mostly empty
+            const text = element.textContent.trim();
+            const hasContent = text.length > 5 || 
+                              element.querySelector('img, video, canvas, svg') ||
+                              element.style.backgroundImage;
+            
+            if (hasContent) {
+                suitableElements.push(element);
+            }
+        });
+        
+        // Limit to prevent overwhelming the canvas
+        const elementsToAdd = suitableElements.slice(0, 20);
+        
+        if (elementsToAdd.length === 0) {
+            showNotification('No suitable elements found on this page');
+            return;
+        }
+        
+        const blocks = [];
+        
+        // Extract content from all suitable elements
+        elementsToAdd.forEach((element, index) => {
+            const block = extractElementContent(element, index);
+            if (block) {
+                // Spread them out more for "Add All"
+                block.x = 50 + (index % 4) * 250;
+                block.y = 50 + Math.floor(index / 4) * 200;
+                blocks.push(block);
+            }
+        });
+        
+        // Store blocks in chrome storage
+        const existingBlocks = await getStoredBlocks();
+        const allBlocks = [...existingBlocks, ...blocks];
+        
+        await chrome.storage.local.set({ webLegoBlocks: allBlocks });
+        
+        // Show success feedback
+        showNotification(`Added ${blocks.length} elements from this page!`);
+        
+        // Open canvas
+        openCanvas();
+    }
+    
     // Extract content from DOM element
     function extractElementContent(element, index) {
         const rect = element.getBoundingClientRect();
@@ -252,7 +326,9 @@
             height: Math.max(100, Math.min(300, rect.height)),
             x: 50 + (index * 20),
             y: 50 + (index * 20),
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            editable: true,  // Make all webpage blocks editable
+            source: 'webpage'  // Track source for better handling
         };
     }
     

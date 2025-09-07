@@ -46,6 +46,7 @@
         loadBlocks();
         setupEventListeners();
         setupStorageListener();
+        setupModalEvents();
         
         // Periodic refresh to sync with content script
         setInterval(loadBlocks, 3000);
@@ -642,7 +643,21 @@
     
     function closeExportModal() {
         const modal = document.getElementById('exportModal');
-        modal.classList.remove('active');
+        if (modal) {
+            modal.classList.remove('active');
+        }
+    }
+    
+    // Add event listener for modal backdrop click
+    function setupModalEvents() {
+        const modal = document.getElementById('exportModal');
+        if (modal) {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeExportModal();
+                }
+            });
+        }
     }
     
     // Make closeExportModal globally available
@@ -666,35 +681,122 @@
         
         // Create a modal to show the code
         const codeModal = document.createElement('div');
-        codeModal.innerHTML = `
-            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 3000;">
-                <div style="background: white; border-radius: 12px; padding: 30px; max-width: 80%; max-height: 80%; overflow-y: auto;">
-                    <h3>Your HTML Code</h3>
-                    <textarea style="width: 100%; height: 400px; font-family: monospace; font-size: 12px; margin: 15px 0;" readonly>${html}</textarea>
-                    <div style="display: flex; gap: 10px;">
-                        <button onclick="navigator.clipboard.writeText(this.parentElement.previousElementSibling.value); this.textContent='Copied!'" style="padding: 8px 16px; background: #667eea; color: white; border: none; border-radius: 6px;">Copy Code</button>
-                        <button onclick="this.closest('div').remove()" style="padding: 8px 16px; background: #e2e8f0; color: #4a5568; border: none; border-radius: 6px;">Close</button>
-                    </div>
-                </div>
+        codeModal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 3000;';
+        
+        const modalContent = document.createElement('div');
+        modalContent.style.cssText = 'background: white; border-radius: 12px; padding: 30px; max-width: 80%; max-height: 80%; overflow-y: auto; width: 600px;';
+        
+        modalContent.innerHTML = `
+            <h3 style="margin: 0 0 15px; color: #2d3748;">Your HTML Code</h3>
+            <textarea id="codeTextarea" style="width: 100%; height: 400px; font-family: monospace; font-size: 12px; margin: 15px 0; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px;" readonly>${html.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</textarea>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button id="copyCodeBtn" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">Copy Code</button>
+                <button id="closeCodeModal" style="padding: 10px 20px; background: #e2e8f0; color: #4a5568; border: none; border-radius: 6px; cursor: pointer;">Close</button>
             </div>
         `;
         
+        codeModal.appendChild(modalContent);
         document.body.appendChild(codeModal);
+        
+        // Add event listeners
+        document.getElementById('copyCodeBtn').addEventListener('click', function() {
+            const textarea = document.getElementById('codeTextarea');
+            textarea.select();
+            document.execCommand('copy');
+            this.textContent = 'Copied!';
+            setTimeout(() => { this.textContent = 'Copy Code'; }, 2000);
+        });
+        
+        document.getElementById('closeCodeModal').addEventListener('click', function() {
+            codeModal.remove();
+        });
+        
+        // Close on backdrop click
+        codeModal.addEventListener('click', function(e) {
+            if (e.target === codeModal) {
+                codeModal.remove();
+            }
+        });
+        
         closeExportModal();
     }
     
     function shareLayout() {
-        // Generate a shareable link (this would typically involve a backend service)
-        const layoutData = btoa(JSON.stringify(blocks));
-        const shareUrl = `${window.location.origin}${window.location.pathname}?layout=${layoutData}`;
-        
-        navigator.clipboard.writeText(shareUrl).then(() => {
-            showNotification('Share link copied to clipboard!');
-        }).catch(() => {
-            showNotification('Could not copy share link');
-        });
+        try {
+            // Generate a shareable link with layout data
+            const layoutData = btoa(JSON.stringify(blocks));
+            const shareUrl = `${window.location.origin}${window.location.pathname}?layout=${layoutData}`;
+            
+            // Try to copy to clipboard
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(shareUrl).then(() => {
+                    showNotification('Share link copied to clipboard!');
+                }).catch(() => {
+                    fallbackCopyToClipboard(shareUrl);
+                });
+            } else {
+                fallbackCopyToClipboard(shareUrl);
+            }
+        } catch (error) {
+            console.error('Share failed:', error);
+            showNotification('Could not create share link');
+        }
         
         closeExportModal();
+    }
+    
+    // Fallback clipboard copy method
+    function fallbackCopyToClipboard(text) {
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        textArea.style.position = 'fixed';
+        textArea.style.left = '-999999px';
+        textArea.style.top = '-999999px';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        
+        try {
+            const successful = document.execCommand('copy');
+            if (successful) {
+                showNotification('Share link copied to clipboard!');
+            } else {
+                showShareLinkModal(text);
+            }
+        } catch (err) {
+            showShareLinkModal(text);
+        }
+        
+        document.body.removeChild(textArea);
+    }
+    
+    // Show share link in a modal if copying fails
+    function showShareLinkModal(shareUrl) {
+        const modal = document.createElement('div');
+        modal.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: flex; align-items: center; justify-content: center; z-index: 3000;';
+        
+        const content = document.createElement('div');
+        content.style.cssText = 'background: white; border-radius: 12px; padding: 30px; max-width: 600px; width: 90%;';
+        
+        content.innerHTML = `
+            <h3 style="margin: 0 0 15px; color: #2d3748;">Share Your Layout</h3>
+            <p style="margin: 0 0 15px; color: #4a5568;">Copy this link to share your layout:</p>
+            <input type="text" value="${shareUrl}" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px; margin-bottom: 15px;" readonly>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button onclick="this.closest('div').querySelector('input').select(); document.execCommand('copy'); this.textContent='Copied!'" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 6px; cursor: pointer;">Copy Link</button>
+                <button onclick="this.closest('div').parentElement.remove()" style="padding: 10px 20px; background: #e2e8f0; color: #4a5568; border: none; border-radius: 6px; cursor: pointer;">Close</button>
+            </div>
+        `;
+        
+        modal.appendChild(content);
+        document.body.appendChild(modal);
+        
+        // Close on backdrop click
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
     }
     
     // Make export functions globally available
@@ -735,13 +837,23 @@
     }
     
     function downloadFile(filename, content, contentType) {
-        const blob = new Blob([content], { type: contentType });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        a.click();
-        URL.revokeObjectURL(url);
+        try {
+            const blob = new Blob([content], { type: contentType });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.style.display = 'none';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            return true;
+        } catch (error) {
+            console.error('Download failed:', error);
+            showNotification('Download failed. Please try again.');
+            return false;
+        }
     }
     
     // Other utility functions

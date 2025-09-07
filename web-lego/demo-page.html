@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🧱 Web Lego Demo - Perfect for Screen Recording</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .demo-header {
+            text-align: center;
+            color: white;
+            margin-bottom: 50px;
+            animation: fadeInUp 0.8s ease-out;
+        }
+        
+        .demo-header h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .demo-header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .demo-steps {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.8s ease-out 0.2s both;
+        }
+        
+        .demo-steps h2 {
+            color: #2d3748;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            text-align: center;
+        }
+        
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .step-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 16px;
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .step-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        
+        .step-card h3 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+        
+        .step-card p {
+            color: #4a5568;
+            font-size: 0.95em;
+        }
+        
+        .content-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .content-section {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.8s ease-out 0.4s both;
+            transition: transform 0.3s ease;
+        }
+        
+        .content-section:hover {
+            transform: translateY(-3px);
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .content-section h3 {
+            color: #2d3748;
+            font-size: 1.4em;
+        }
+        
+        .content-section p {
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            color: #4a5568;
+            position: relative;
+            padding-left: 25px;
+        }
+        
+        .feature-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #48bb78;
+            font-weight: bold;
+        }
+        
+        .demo-gallery {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            animation: fadeInUp 0.8s ease-out 0.6s both;
+        }
+        
+        .demo-gallery h2 {
+            color: #2d3748;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2em;
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+        }
+        
+        .gallery-item {
+            background: linear-gradient(45deg, #667eea, #764ba2, #ff6b6b, #4ecdc4);
+            border-radius: 12px;
+            padding: 25px;
+            color: white;
+            text-align: center;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-item:hover {
+            transform: scale(1.05) rotate(1deg);
+        }
+        
+        .gallery-item h4 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+        
+        .gallery-item p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .demo-quote {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 40px;
+            border-left: 5px solid #4ecdc4;
+            animation: fadeInUp 0.8s ease-out 0.8s both;
+        }
+        
+        .demo-quote blockquote {
+            font-size: 1.5em;
+            font-style: italic;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+        
+        .demo-quote cite {
+            color: #4a5568;
+            font-size: 1.1em;
+        }
+        
+        .demo-footer {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+            animation: fadeInUp 0.8s ease-out 1s both;
+        }
+        
+        .demo-footer h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        .demo-footer p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+        
+        .demo-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .demo-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #ffeaa7, #fab1a0);
+            color: #2d3748;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: 600;
+            border: 3px dashed #e17055;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .demo-header h1 {
+                font-size: 2.5em;
+            }
+            
+            .demo-steps {
+                padding: 25px;
+            }
+            
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .content-sections {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>🧱 Web Lego Demo</h1>
+            <p>Perfect page for demonstrating the Web Lego Chrome Extension. All elements are designed to be easily selectable and rearrangeable!</p>
+        </div>
+        
+        <div class="highlight-box">
+            🎬 <strong>Perfect for Screen Recording!</strong> This page contains diverse, colorful elements that showcase all Web Lego features beautifully.
+        </div>
+        
+        <div class="demo-steps">
+            <h2>📋 How to Demo Web Lego</h2>
+            <div class="steps-grid">
+                <div class="step-card">
+                    <div class="step-number">1</div>
+                    <h3>Activate Extension</h3>
+                    <p>Click the Web Lego icon in your browser toolbar and press "Activate Web Lego"</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">2</div>
+                    <h3>Select Elements</h3>
+                    <p>Click "Select" in the floating toolbar, then hover and click on elements below</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">3</div>
+                    <h3>Add to Canvas</h3>
+                    <p>Click "Add Selected" to move elements to your canvas, or use "Add All" for everything</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-number">4</div>
+                    <h3>Create & Export</h3>
+                    <p>Open canvas, arrange blocks, edit content, and export as HTML or share links</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content-sections">
+            <div class="content-section">
+                <div class="section-header">
+                    <div class="section-icon">🎯</div>
+                    <h3>Easy Selection</h3>
+                </div>
+                <p>This card demonstrates perfect element selection. The colorful header, text content, and overall styling make it ideal for showcasing the selection feature.</p>
+                <ul class="feature-list">
+                    <li>Hover highlights in blue</li>
+                    <li>Click to select (turns green)</li>
+                    <li>Visual feedback with checkmarks</li>
+                    <li>Multiple selections supported</li>
+                </ul>
+            </div>
+            
+            <div class="content-section">
+                <div class="section-header">
+                    <div class="section-icon">✏️</div>
+                    <h3>Editable Content</h3>
+                </div>
+                <p>Once in the canvas, all content becomes editable! Double-click any text to modify it, creating entirely new layouts from existing content.</p>
+                <ul class="feature-list">
+                    <li>Double-click to edit text</li>
+                    <li>Maintain original styling</li>
+                    <li>Mix webpage + custom content</li>
+                    <li>Real-time editing</li>
+                </ul>
+            </div>
+            
+            <div class="content-section">
+                <div class="section-header">
+                    <div class="section-icon">🎨</div>
+                    <h3>Creative Layouts</h3>
+                </div>
+                <p>Drag, resize, and arrange elements freely. Create overlapping compositions, adjust sizes, and build professional layouts that look amazing.</p>
+                <ul class="feature-list">
+                    <li>Free-form positioning</li>
+                    <li>Resize with corner handles</li>
+                    <li>Overlap for complex designs</li>
+                    <li>Professional canvas tools</li>
+                </ul>
+            </div>
+            
+            <div class="content-section">
+                <div class="section-header">
+                    <div class="section-icon">📤</div>
+                    <h3>Export & Share</h3>
+                </div>
+                <p>Export your creations as complete HTML files, copy the code, or generate shareable links. Your layouts become real, usable web content!</p>
+                <ul class="feature-list">
+                    <li>Download HTML files</li>
+                    <li>Copy HTML/CSS code</li>
+                    <li>Share via links</li>
+                    <li>Save as templates</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="demo-gallery">
+            <h2>🎨 Sample Elements for Selection</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <h4>🌟 Hero Section</h4>
+                    <p>Perfect for headers and main content areas</p>
+                </div>
+                <div class="gallery-item">
+                    <h4>📊 Data Card</h4>
+                    <p>Great for statistics and information display</p>
+                </div>
+                <div class="gallery-item">
+                    <h4>🖼️ Media Block</h4>
+                    <p>Ideal for images and multimedia content</p>
+                </div>
+                <div class="gallery-item">
+                    <h4>📝 Text Content</h4>
+                    <p>Perfect for articles and descriptions</p>
+                </div>
+                <div class="gallery-item">
+                    <h4>🎯 Call to Action</h4>
+                    <p>Great for buttons and interactive elements</p>
+                </div>
+                <div class="gallery-item">
+                    <h4>📋 Feature List</h4>
+                    <p>Excellent for showcasing capabilities</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="demo-quote">
+            <blockquote>"Web Lego transforms any webpage into building blocks for creativity. It's like having superpowers for web design!"</blockquote>
+            <cite>— Happy Web Lego User</cite>
+        </div>
+        
+        <div class="demo-footer">
+            <h2>🚀 Ready to Build?</h2>
+            <p>This demo page contains everything you need to showcase Web Lego's amazing features in a screen recording.</p>
+            <a href="#" class="demo-button">Start Creating with Web Lego!</a>
+        </div>
+    </div>
+    
+    <script>
+        // Add some interactive elements for better demo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click animations to cards
+            const cards = document.querySelectorAll('.content-section, .gallery-item, .step-card');
+            cards.forEach(card => {
+                card.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+            
+            // Add some dynamic content
+            const dynamicContent = document.createElement('div');
+            dynamicContent.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                background: rgba(255,255,255,0.9);
+                padding: 15px 20px;
+                border-radius: 10px;
+                font-size: 14px;
+                color: #333;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                backdrop-filter: blur(10px);
+                z-index: 1000;
+            `;
+            dynamicContent.innerHTML = '🎬 Perfect for screen recording!';
+            document.body.appendChild(dynamicContent);
+            
+            // Animate the dynamic content
+            setTimeout(() => {
+                dynamicContent.style.animation = 'fadeInUp 0.5s ease-out';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
