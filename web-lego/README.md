@@ -71,7 +71,7 @@ magick icon.svg -resize 128x128 icon-128.png
    - Hover over webpage elements to highlight them
    - Click elements to select them (they turn green with a checkmark)
 3. **Add to Canvas**: Click "Add" to move selected elements to your canvas
-4. **Arrange**: Click "Canvas" to open the workspace where you can:
+4. **Arrange**: Click "Open Canvas" to launch the full-screen workspace where you can:
    - Drag blocks around
    - Resize blocks by dragging the corner
    - Delete blocks with the × button

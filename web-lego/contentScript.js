@@ -56,9 +56,9 @@
                     <span class="btn-icon">➕</span>
                     <span class="btn-text">Add</span>
                 </button>
-                <button id="openCanvasBtn" class="toolbar-btn" title="Open Canvas">
+                <button id="openCanvasBtn" class="toolbar-btn" title="Open Canvas in New Tab">
                     <span class="btn-icon">🎨</span>
-                    <span class="btn-text">Canvas</span>
+                    <span class="btn-text">Open Canvas</span>
                 </button>
                 <button id="closeWebLegoBtn" class="toolbar-btn close-btn" title="Close Web Lego">
                     <span class="btn-icon">✕</span>
@@ -276,21 +276,44 @@
         updateAddButtonState();
     }
     
-    // Open canvas in side panel
+    // Open canvas in new tab
     function openCanvas() {
+        try {
+            // Open canvas in a new tab for better user experience
+            const canvasUrl = chrome.runtime.getURL('canvas.html');
+            window.open(canvasUrl, '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+            
+            // Show success notification
+            showNotification('Canvas opened in new tab!');
+            
+        } catch (error) {
+            console.error('Error opening canvas:', error);
+            // Fallback to modal overlay if new tab fails
+            openCanvasModal();
+        }
+    }
+    
+    // Fallback: Open canvas as full-screen modal overlay
+    function openCanvasModal() {
         if (canvas) {
             canvas.style.display = 'block';
             return;
         }
         
-        // Create canvas iframe
+        // Create full-screen modal canvas
         canvas = document.createElement('div');
         canvas.id = 'webLegoCanvas';
         canvas.innerHTML = `
-            <iframe src="${chrome.runtime.getURL('canvas.html')}" 
-                    frameborder="0" 
-                    style="width: 100%; height: 100%; border: none;">
-            </iframe>
+            <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 999999; display: flex; flex-direction: column;">
+                <div style="height: 50px; background: #667eea; color: white; display: flex; align-items: center; justify-content: space-between; padding: 0 20px;">
+                    <div style="font-weight: 600;">🧱 Web Lego Canvas</div>
+                    <button onclick="this.closest('#webLegoCanvas').remove()" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 6px; cursor: pointer;">✕ Close</button>
+                </div>
+                <iframe src="${chrome.runtime.getURL('canvas.html')}" 
+                        frameborder="0" 
+                        style="flex: 1; width: 100%; border: none;">
+                </iframe>
+            </div>
         `;
         
         document.body.appendChild(canvas);
