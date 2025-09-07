@@ -4,12 +4,37 @@
 
 ## ✨ Features
 
-- **🎯 Element Selection**: Hover and click to select any webpage element
-- **🎨 Drag & Drop Canvas**: Rearrange selected elements in a beautiful interface
-- **📱 Responsive Design**: Works on desktop and mobile
-- **💾 Auto-Save**: Your creations are automatically saved locally
-- **🚀 Modern UI**: Clean, animated interface with smooth transitions
-- **🎪 Onboarding**: First-time user tutorial with demo blocks
+### 🎯 Element Selection & Creation
+- **Webpage Selection**: Hover and click to select any webpage element
+- **Built-in Tools**: Add text blocks, images, and shapes directly
+- **Smart Selection**: Intelligent element detection and extraction
+
+### 🎨 Advanced Canvas Studio
+- **Professional Layout**: Wide canvas with sidebar tools and instructions
+- **Live Editing**: Double-click any block to edit text content
+- **Complex Layouts**: Overlap blocks, create layered compositions
+- **Drag & Drop**: Smooth dragging with visual feedback
+- **Precise Resizing**: Drag corner handles to resize blocks
+
+### 💡 User-Friendly Design
+- **Guided Interface**: Step-by-step instructions in sidebar
+- **Visual Stats**: See block count and layout complexity
+- **Selection Tools**: Click blocks to select, use keyboard shortcuts
+- **Undo/Redo**: Full history management with keyboard shortcuts
+
+### 📤 Export & Sharing
+- **HTML Export**: Download complete HTML files
+- **Share Links**: Create shareable URLs of your layouts
+- **Code Export**: Copy HTML/CSS code for your layouts
+- **Templates**: Save layouts as reusable templates
+- **Image Export**: Export as PNG/JPEG (coming soon)
+
+### 🚀 Pro Features
+- **Zoom Controls**: Zoom in/out and fit to screen
+- **Keyboard Shortcuts**: Ctrl+Z/Y for undo/redo, Delete to remove blocks
+- **Auto-Save**: Your work is automatically saved
+- **Offline Mode**: Works even when extension context is invalidated
+- **Block Duplication**: Easily duplicate blocks with one click
 
 ## 🚀 Installation
 

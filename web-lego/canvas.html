@@ -19,37 +19,160 @@
         }
         
         .canvas-container {
-            position: relative;
+            display: flex;
             width: 100%;
             height: 100vh;
-            background: 
-                radial-gradient(circle at 20px 20px, #e2e8f0 2px, transparent 2px),
-                radial-gradient(circle at 20px 20px, #e2e8f0 2px, transparent 2px);
-            background-size: 40px 40px;
-            background-position: 0 0, 20px 20px;
         }
         
-        .canvas-header {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
+        /* Left Sidebar - Tools and Instructions */
+        .sidebar {
+            width: 300px;
             background: white;
-            border-bottom: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 20px;
-            z-index: 1000;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            flex-direction: column;
+            box-shadow: 2px 0 8px rgba(0,0,0,0.05);
         }
         
-        .canvas-title {
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .sidebar-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .instruction-card {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 3px solid #4299e1;
+        }
+        
+        .instruction-card h4 {
+            font-size: 14px;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+        
+        .instruction-card p {
+            font-size: 12px;
+            color: #4a5568;
+            line-height: 1.4;
+        }
+        
+        .tool-button {
+            width: 100%;
+            padding: 12px 16px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4a5568;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 18px;
+        }
+        
+        .tool-button:hover {
+            border-color: #667eea;
+            color: #667eea;
+            background: #f7fafc;
+        }
+        
+        .tool-button.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .stat-item {
+            flex: 1;
+            background: #edf2f7;
+            padding: 12px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: #4a5568;
+            margin-top: 2px;
+        }
+        
+        /* Main Canvas Area */
+        .canvas-workspace {
+            flex: 1;
+            position: relative;
+            background: 
+                radial-gradient(circle at 20px 20px, #e2e8f0 1.5px, transparent 1.5px),
+                radial-gradient(circle at 20px 20px, #e2e8f0 1.5px, transparent 1.5px);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            overflow: auto;
+        }
+        
+        .canvas-header {
+            position: sticky;
+            top: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #e2e8f0;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+        }
+        
+        .canvas-title {
+            font-size: 16px;
             font-weight: 600;
             color: #2d3748;
         }
@@ -62,8 +185,8 @@
         .canvas-btn {
             padding: 8px 16px;
             border: none;
-            border-radius: 8px;
-            font-size: 14px;
+            border-radius: 6px;
+            font-size: 13px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -85,72 +208,86 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         
-        .canvas-workspace {
-            position: absolute;
-            top: 60px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            overflow: auto;
-            padding: 20px;
+        .workspace-area {
+            min-height: calc(100vh - 70px);
+            padding: 25px;
+            position: relative;
         }
         
+        /* Blocks */
         .block {
             position: absolute;
             background: white;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             cursor: move;
-            transition: box-shadow 0.2s ease;
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
             min-width: 100px;
             min-height: 50px;
-            overflow: hidden;
+            overflow: visible;
+            border: 2px solid transparent;
         }
         
         .block:hover {
             box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        
+        .block.selected {
+            border-color: #4299e1;
+            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.1);
         }
         
         .block.dragging {
             z-index: 1000;
-            transform: rotate(2deg);
+            transform: rotate(1deg) scale(1.02);
             box-shadow: 0 12px 32px rgba(0,0,0,0.2);
         }
         
-        .block-header {
+        .block-toolbar {
             position: absolute;
-            top: 0;
+            top: -35px;
             left: 0;
             right: 0;
             height: 30px;
-            background: rgba(0,0,0,0.05);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 0 10px;
             opacity: 0;
-            transition: opacity 0.2s ease;
-            cursor: move;
+            transform: translateY(10px);
+            transition: all 0.2s ease;
+            border: 1px solid #e2e8f0;
         }
         
-        .block:hover .block-header {
+        .block:hover .block-toolbar {
             opacity: 1;
+            transform: translateY(0);
         }
         
         .block-drag-handle {
             font-size: 12px;
             color: #718096;
             cursor: move;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
         
-        .block-delete {
+        .block-actions {
+            display: flex;
+            gap: 5px;
+        }
+        
+        .block-action {
             width: 20px;
             height: 20px;
             border: none;
-            background: #fed7d7;
-            color: #e53e3e;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 11px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -158,33 +295,65 @@
             transition: all 0.2s ease;
         }
         
-        .block-delete:hover {
+        .block-action.edit {
+            background: #e6fffa;
+            color: #2c7a7b;
+        }
+        
+        .block-action.edit:hover {
+            background: #b2f5ea;
+        }
+        
+        .block-action.duplicate {
+            background: #e6f3ff;
+            color: #2b6cb0;
+        }
+        
+        .block-action.duplicate:hover {
+            background: #bee3f8;
+        }
+        
+        .block-action.delete {
+            background: #fed7d7;
+            color: #e53e3e;
+        }
+        
+        .block-action.delete:hover {
             background: #feb2b2;
         }
         
         .block-content {
-            padding: 10px;
-            margin-top: 30px;
-            height: calc(100% - 30px);
+            padding: 15px;
+            height: 100%;
             overflow: hidden;
+            position: relative;
+        }
+        
+        .block-content[contenteditable="true"] {
+            outline: 2px dashed #4299e1;
+            outline-offset: 2px;
         }
         
         .block-resize {
             position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 20px;
-            height: 20px;
-            background: linear-gradient(135deg, transparent 0%, transparent 30%, #cbd5e0 30%, #cbd5e0 70%, transparent 70%);
+            bottom: -5px;
+            right: -5px;
+            width: 15px;
+            height: 15px;
+            background: #4299e1;
+            border-radius: 50%;
             cursor: nw-resize;
             opacity: 0;
             transition: opacity 0.2s ease;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
         
         .block:hover .block-resize {
             opacity: 1;
         }
         
+        /* Empty State */
         .empty-state {
             position: absolute;
             top: 50%;
@@ -192,42 +361,52 @@
             transform: translate(-50%, -50%);
             text-align: center;
             color: #718096;
+            max-width: 500px;
         }
         
         .empty-state h3 {
             font-size: 24px;
             margin-bottom: 10px;
+            color: #2d3748;
         }
         
         .empty-state p {
             font-size: 16px;
             margin-bottom: 20px;
+            line-height: 1.5;
+        }
+        
+        .empty-state-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
         }
         
         .empty-state-btn {
             padding: 12px 24px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
             border: none;
             border-radius: 8px;
-            font-size: 16px;
+            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
         }
         
-        .empty-state-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        .empty-state-btn.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
         }
         
-        .block-count {
-            background: #e2e8f0;
+        .empty-state-btn.secondary {
+            background: white;
             color: #4a5568;
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 500;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .empty-state-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
         }
         
         /* Animations */
@@ -243,7 +422,7 @@
         }
         
         .block-appear {
-            animation: blockAppear 0.3s ease-out;
+            animation: blockAppear 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         
         @keyframes blockRemove {
@@ -253,34 +432,227 @@
             }
             to {
                 opacity: 0;
-                transform: scale(0.8);
+                transform: scale(0.8) rotate(-5deg);
             }
         }
         
         .block-remove {
-            animation: blockRemove 0.2s ease-in forwards;
+            animation: blockRemove 0.3s ease-in forwards;
+        }
+        
+        /* Export Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2d3748;
+        }
+        
+        .modal-close {
+            width: 30px;
+            height: 30px;
+            border: none;
+            background: #f7fafc;
+            border-radius: 50%;
+            cursor: pointer;
+            color: #4a5568;
+            font-size: 16px;
+        }
+        
+        .export-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .export-option {
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+        
+        .export-option:hover {
+            border-color: #667eea;
+            background: #f7fafc;
+        }
+        
+        .export-option h4 {
+            font-size: 16px;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+        
+        .export-option p {
+            font-size: 13px;
+            color: #4a5568;
         }
     </style>
 </head>
 <body>
     <div class="canvas-container">
-        <div class="canvas-header">
-            <div class="canvas-title">
-                <span>🧱</span>
-                <span>Web Lego Canvas</span>
-                <span id="blockCount" class="block-count">0 blocks</span>
+        <!-- Left Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">🧱 Web Lego Studio</div>
+                <div class="sidebar-subtitle">Build amazing layouts</div>
             </div>
-            <div class="canvas-controls">
-                <button id="resetBtn" class="canvas-btn secondary">Reset All</button>
-                <button id="saveBtn" class="canvas-btn primary">Save Layout</button>
+            
+            <div class="sidebar-content">
+                <div class="section">
+                    <div class="section-title">📊 Your Project</div>
+                    <div class="stats">
+                        <div class="stat-item">
+                            <div id="blockCount" class="stat-number">0</div>
+                            <div class="stat-label">Blocks</div>
+                        </div>
+                        <div class="stat-item">
+                            <div id="layerCount" class="stat-number">1</div>
+                            <div class="stat-label">Layers</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">🎨 Tools</div>
+                    <button id="addTextBtn" class="tool-button">
+                        <span>📝</span> Add Text Block
+                    </button>
+                    <button id="addImageBtn" class="tool-button">
+                        <span>🖼️</span> Add Image Placeholder
+                    </button>
+                    <button id="addShapeBtn" class="tool-button">
+                        <span>⬜</span> Add Shape
+                    </button>
+                    <button id="selectModeBtn" class="tool-button">
+                        <span>🎯</span> Selection Mode
+                    </button>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">💡 How to Use</div>
+                    <div class="instruction-card">
+                        <h4>1. Add Content</h4>
+                        <p>Use tools above or select elements from any webpage</p>
+                    </div>
+                    <div class="instruction-card">
+                        <h4>2. Edit & Arrange</h4>
+                        <p>Double-click blocks to edit text, drag to rearrange</p>
+                    </div>
+                    <div class="instruction-card">
+                        <h4>3. Create Layouts</h4>
+                        <p>Overlap blocks, resize them, build complex designs</p>
+                    </div>
+                    <div class="instruction-card">
+                        <h4>4. Export & Share</h4>
+                        <p>Save as HTML, share links, or create templates</p>
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">⚙️ Actions</div>
+                    <button id="exportBtn" class="tool-button">
+                        <span>📤</span> Export Layout
+                    </button>
+                    <button id="saveTemplateBtn" class="tool-button">
+                        <span>💾</span> Save Template
+                    </button>
+                    <button id="resetBtn" class="tool-button">
+                        <span>🗑️</span> Clear Canvas
+                    </button>
+                </div>
             </div>
         </div>
         
-        <div id="workspace" class="canvas-workspace">
-            <div id="emptyState" class="empty-state">
-                <h3>🎨 Your Canvas Awaits</h3>
-                <p>Start selecting elements from any webpage to build something amazing!</p>
-                <button id="getDemoBlocks" class="empty-state-btn">Add Demo Blocks</button>
+        <!-- Main Canvas -->
+        <div class="canvas-workspace">
+            <div class="canvas-header">
+                <div class="canvas-title">Canvas</div>
+                <div class="canvas-controls">
+                    <button id="undoBtn" class="canvas-btn secondary" disabled>↶ Undo</button>
+                    <button id="redoBtn" class="canvas-btn secondary" disabled>↷ Redo</button>
+                    <button id="zoomOutBtn" class="canvas-btn secondary">🔍-</button>
+                    <button id="zoomInBtn" class="canvas-btn secondary">🔍+</button>
+                    <button id="fitToScreenBtn" class="canvas-btn primary">Fit Screen</button>
+                </div>
+            </div>
+            
+            <div id="workspace" class="workspace-area">
+                <div id="emptyState" class="empty-state">
+                    <h3>🎨 Start Creating!</h3>
+                    <p>Your canvas is ready. Add blocks from the sidebar or select elements from any webpage to begin building your layout.</p>
+                    <div class="empty-state-actions">
+                        <button id="getDemoBlocks" class="empty-state-btn primary">Add Demo Blocks</button>
+                        <button id="openTutorial" class="empty-state-btn secondary">Watch Tutorial</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Export Modal -->
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Export Your Layout</div>
+                <button class="modal-close" onclick="closeExportModal()">×</button>
+            </div>
+            
+            <div class="export-options">
+                <div class="export-option" onclick="exportAsHTML()">
+                    <h4>📄 HTML File</h4>
+                    <p>Download as a complete HTML page</p>
+                </div>
+                <div class="export-option" onclick="exportAsImage()">
+                    <h4>🖼️ Image</h4>
+                    <p>Save as PNG or JPEG image</p>
+                </div>
+                <div class="export-option" onclick="exportAsCode()">
+                    <h4>💻 Code</h4>
+                    <p>Get HTML/CSS code to copy</p>
+                </div>
+                <div class="export-option" onclick="shareLayout()">
+                    <h4>🔗 Share Link</h4>
+                    <p>Create a shareable link</p>
+                </div>
             </div>
         </div>
     </div>

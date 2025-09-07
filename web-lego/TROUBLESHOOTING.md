@@ -8,6 +8,9 @@
 ### Error: "Cannot read properties of undefined (reading 'onClicked')"
 **Solution**: This has been fixed! Removed problematic context menu and action listeners.
 
+### Error: "Extension context invalidated" in canvas.js
+**Solution**: This has been fixed! Added fallback storage and graceful error handling for when the extension context becomes invalid (usually after reloading the extension).
+
 ## 🚀 Steps to Fix Installation Issues
 
 ### Step 1: Clear Previous Installation
@@ -54,6 +57,15 @@
 - Check browser console for errors
 - Verify canvas.html and canvas.js are present
 - Try disabling popup blockers
+
+### Issue: "Extension context invalidated" errors
+**Symptoms**: Canvas shows errors, blocks don't save/load
+**Solutions**:
+- This happens when you reload the extension while the canvas is open
+- Close the canvas tab and reopen it
+- The canvas now uses fallback storage (localStorage) automatically
+- You'll see "(offline mode)" indicator when this happens
+- Your blocks are still saved and will sync when extension context is restored
 
 ## 📋 File Checklist
 
