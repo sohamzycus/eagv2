@@ -55,15 +55,8 @@ async function handleExtensionUpdate(previousVersion) {
 
 // Show welcome notification on first install
 function showWelcomeNotification() {
-    // Only show if notifications are supported
-    if (chrome.notifications) {
-        chrome.notifications.create('welcome', {
-            type: 'basic',
-            iconUrl: 'assets/icon-48.png',
-            title: '🧱 Welcome to Web Lego!',
-            message: 'Click the extension icon to start building with webpage elements!'
-        });
-    }
+    // Skip notifications for now to avoid permission issues
+    console.log('🧱 Welcome to Web Lego! Extension initialized successfully.');
 }
 
 // Handle messages from content scripts and popup
@@ -213,44 +206,11 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     }
 });
 
-// Handle extension icon click (action)
-chrome.action.onClicked.addListener(async (tab) => {
-    // This won't be called if popup.html is set, but keeping for fallback
-    try {
-        await chrome.scripting.executeScript({
-            target: { tabId: tab.id },
-            func: () => {
-                // Activate Web Lego if popup isn't working
-                document.dispatchEvent(new CustomEvent('webLegoActivate'));
-            }
-        });
-    } catch (error) {
-        console.error('Error activating Web Lego via action click:', error);
-    }
-});
+// Extension icon click handler removed since we use popup.html
+// The popup handles all user interactions
 
-// Periodic cleanup of old data
-setInterval(async () => {
-    try {
-        // Clean up old blocks (older than 30 days)
-        const result = await chrome.storage.local.get('webLegoBlocks');
-        const blocks = result.webLegoBlocks || [];
-        
-        const thirtyDaysAgo = Date.now() - (30 * 24 * 60 * 60 * 1000);
-        const recentBlocks = blocks.filter(block => 
-            block.timestamp && block.timestamp > thirtyDaysAgo
-        );
-        
-        // Only update if we removed some blocks
-        if (recentBlocks.length < blocks.length) {
-            await chrome.storage.local.set({ webLegoBlocks: recentBlocks });
-            console.log(`Cleaned up ${blocks.length - recentBlocks.length} old blocks`);
-        }
-        
-    } catch (error) {
-        console.error('Error during periodic cleanup:', error);
-    }
-}, 24 * 60 * 60 * 1000); // Run once per day
+// Periodic cleanup disabled for now to avoid potential issues
+// Can be re-enabled later if needed
 
 // Handle extension suspend/resume
 chrome.runtime.onSuspend.addListener(() => {
@@ -261,31 +221,8 @@ chrome.runtime.onStartup.addListener(() => {
     console.log('Web Lego extension starting up');
 });
 
-// Context menu setup (optional feature)
-chrome.runtime.onInstalled.addListener(() => {
-    // Create context menu for quick activation
-    chrome.contextMenus.create({
-        id: 'activateWebLego',
-        title: '🧱 Activate Web Lego',
-        contexts: ['page']
-    });
-});
-
-// Handle context menu clicks
-chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-    if (info.menuItemId === 'activateWebLego' && tab) {
-        try {
-            await chrome.scripting.executeScript({
-                target: { tabId: tab.id },
-                func: () => {
-                    document.dispatchEvent(new CustomEvent('webLegoActivate'));
-                }
-            });
-        } catch (error) {
-            console.error('Error activating Web Lego via context menu:', error);
-        }
-    }
-});
+// Context menu setup removed to avoid permission issues
+// Can be re-enabled later if needed with contextMenus permission
 
 // Export functions for testing (if needed)
 if (typeof module !== 'undefined' && module.exports) {
