@@ -13,16 +13,31 @@
     let canvas = null;
     let onboardingOverlay = null;
     
-    // Initialize Web Lego
+    // Initialize Web Lego with context validation
     function initWebLego() {
         if (window.webLegoInitialized) return;
         window.webLegoInitialized = true;
+        
+        // Validate extension context
+        if (!isExtensionContextValid()) {
+            console.log('Extension context invalid during initialization');
+            return;
+        }
         
         // Listen for activation event from popup
         document.addEventListener('webLegoActivate', activateWebLego);
         
         // Check if this is first time use
         checkFirstTimeUse();
+    }
+    
+    // Check if extension context is valid
+    function isExtensionContextValid() {
+        try {
+            return !!(chrome && chrome.runtime && chrome.runtime.id && chrome.storage);
+        } catch (error) {
+            return false;
+        }
     }
     
     // Activate Web Lego mode
@@ -464,12 +479,25 @@
     
     // Show onboarding overlay
     function showOnboarding() {
+        if (!isExtensionContextValid()) {
+            console.log('Cannot show onboarding - extension context invalid');
+            return;
+        }
+        
         // Check if user has seen onboarding
-        chrome.storage.local.get('webLegoOnboardingShown').then(result => {
-            if (!result.webLegoOnboardingShown) {
+        try {
+            chrome.storage.local.get('webLegoOnboardingShown').then(result => {
+                if (!result.webLegoOnboardingShown) {
+                    createOnboardingOverlay();
+                }
+            }).catch(error => {
+                console.log('Error checking onboarding status:', error);
+                // Show onboarding anyway if we can't check
                 createOnboardingOverlay();
-            }
-        });
+            });
+        } catch (error) {
+            console.log('Error accessing storage for onboarding check:', error);
+        }
     }
     
     // Create onboarding overlay
@@ -514,7 +542,13 @@
     // Start onboarding process
     function startOnboarding() {
         // Mark onboarding as shown
-        chrome.storage.local.set({ webLegoOnboardingShown: true });
+        if (isExtensionContextValid()) {
+            try {
+                chrome.storage.local.set({ webLegoOnboardingShown: true });
+            } catch (error) {
+                console.log('Could not save onboarding status:', error);
+            }
+        }
         
         // Remove overlay
         if (onboardingOverlay) {
@@ -535,7 +569,13 @@
     
     // Skip onboarding
     function skipOnboarding() {
-        chrome.storage.local.set({ webLegoOnboardingShown: true });
+        if (isExtensionContextValid()) {
+            try {
+                chrome.storage.local.set({ webLegoOnboardingShown: true });
+            } catch (error) {
+                console.log('Could not save onboarding status:', error);
+            }
+        }
         
         if (onboardingOverlay) {
             onboardingOverlay.remove();
@@ -545,6 +585,11 @@
     
     // Create demo blocks for first-time users
     async function createDemoBlocks() {
+        if (!isExtensionContextValid()) {
+            console.log('Cannot create demo blocks - extension context invalid');
+            return;
+        }
+        
         const demoBlocks = [
             {
                 id: 'demo-text-1',
@@ -578,16 +623,31 @@
             }
         ];
         
-        await chrome.storage.local.set({ webLegoBlocks: demoBlocks });
+        try {
+            await chrome.storage.local.set({ webLegoBlocks: demoBlocks });
+        } catch (error) {
+            console.log('Error creating demo blocks:', error);
+        }
     }
     
     // Check if this is first time use
     function checkFirstTimeUse() {
-        chrome.storage.local.get('webLegoOnboardingShown').then(result => {
-            if (!result.webLegoOnboardingShown) {
-                // This is first time use, we'll show onboarding when activated
-            }
-        });
+        if (!isExtensionContextValid()) {
+            console.log('Cannot check first time use - extension context invalid');
+            return;
+        }
+        
+        try {
+            chrome.storage.local.get('webLegoOnboardingShown').then(result => {
+                if (!result.webLegoOnboardingShown) {
+                    // This is first time use, we'll show onboarding when activated
+                }
+            }).catch(error => {
+                console.log('Error checking first time use:', error);
+            });
+        } catch (error) {
+            console.log('Error accessing storage for first time check:', error);
+        }
     }
     
     // Deactivate Web Lego
