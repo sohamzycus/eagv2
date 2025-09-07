@@ -219,21 +219,25 @@
             }
         });
         
-        // Store blocks in chrome storage
-        const existingBlocks = await getStoredBlocks();
-        const allBlocks = [...existingBlocks, ...blocks];
-        
-        await chrome.storage.local.set({ webLegoBlocks: allBlocks });
-        
-        // Clear selections
-        clearSelections();
-        
-        // Show success feedback
-        showNotification(`Added ${blocks.length} block(s) to canvas!`);
-        
-        // Open canvas if not already open
-        if (!canvas) {
+        // Store blocks in chrome storage with error handling
+        try {
+            const existingBlocks = await getStoredBlocks();
+            const allBlocks = [...existingBlocks, ...blocks];
+            
+            await saveBlocksToStorage(allBlocks);
+            
+            // Clear selections
+            clearSelections();
+            
+            // Show success feedback
+            showNotification(`Added ${blocks.length} block(s) to canvas!`);
+            
+            // Open canvas if not already open
             openCanvas();
+            
+        } catch (error) {
+            console.error('Error saving to storage:', error);
+            showNotification('Warning: Could not save blocks. Extension may need reload.');
         }
     }
     
@@ -292,17 +296,23 @@
             }
         });
         
-        // Store blocks in chrome storage
-        const existingBlocks = await getStoredBlocks();
-        const allBlocks = [...existingBlocks, ...blocks];
-        
-        await chrome.storage.local.set({ webLegoBlocks: allBlocks });
-        
-        // Show success feedback
-        showNotification(`Added ${blocks.length} elements from this page!`);
-        
-        // Open canvas
-        openCanvas();
+        // Store blocks in chrome storage with error handling
+        try {
+            const existingBlocks = await getStoredBlocks();
+            const allBlocks = [...existingBlocks, ...blocks];
+            
+            await saveBlocksToStorage(allBlocks);
+            
+            // Show success feedback
+            showNotification(`Added ${blocks.length} elements from this page!`);
+            
+            // Open canvas
+            openCanvas();
+            
+        } catch (error) {
+            console.error('Error saving to storage:', error);
+            showNotification('Warning: Could not save blocks. Extension may need reload.');
+        }
     }
     
     // Extract content from DOM element
@@ -335,11 +345,28 @@
     // Get stored blocks from chrome storage
     async function getStoredBlocks() {
         try {
+            if (!chrome || !chrome.storage || !chrome.runtime || !chrome.runtime.id) {
+                console.log('Extension context invalidated, returning empty blocks');
+                return [];
+            }
             const result = await chrome.storage.local.get('webLegoBlocks');
             return result.webLegoBlocks || [];
         } catch (error) {
             console.error('Error getting stored blocks:', error);
             return [];
+        }
+    }
+    
+    // Save blocks to chrome storage with error handling
+    async function saveBlocksToStorage(blocks) {
+        try {
+            if (!chrome || !chrome.storage || !chrome.runtime || !chrome.runtime.id) {
+                throw new Error('Extension context invalidated');
+            }
+            await chrome.storage.local.set({ webLegoBlocks: blocks });
+        } catch (error) {
+            console.error('Error saving blocks to storage:', error);
+            throw error;
         }
     }
     

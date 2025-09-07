@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Add All Functionality</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-section {
+            background: white;
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .colorful {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 10px 0;
+        }
+        img {
+            width: 200px;
+            height: 100px;
+            background: #ddd;
+            display: block;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Page for "Add All" Feature</h1>
+    
+    <div class="test-section">
+        <h2>Section 1: Header Content</h2>
+        <p>This is a test paragraph that should be captured by the "Add All" feature.</p>
+    </div>
+    
+    <div class="test-section colorful">
+        <h3>Section 2: Colorful Block</h3>
+        <p>This colorful section should definitely be picked up by the Add All functionality.</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>Section 3: Information Box</h2>
+        <div class="info-box">
+            <h4>Important Info</h4>
+            <p>This info box should be selectable as a separate element.</p>
+        </div>
+    </div>
+    
+    <article class="test-section">
+        <h2>Section 4: Article Element</h2>
+        <p>This is an article element that should be captured.</p>
+        <img alt="Test image placeholder">
+    </article>
+    
+    <section class="test-section">
+        <h2>Section 5: Section Element</h2>
+        <p>This section element should also be captured by Add All.</p>
+    </section>
+    
+    <div class="test-section">
+        <h2>Section 6: Multiple Elements</h2>
+        <p>First paragraph in this section.</p>
+        <p>Second paragraph in this section.</p>
+        <blockquote style="background: #f9f9f9; padding: 15px; border-left: 4px solid #ccc; margin: 15px 0;">
+            This is a blockquote that should be captured.
+        </blockquote>
+    </div>
+    
+    <footer class="test-section">
+        <h2>Footer Section</h2>
+        <p>Even footer content should be capturable.</p>
+    </footer>
+    
+    <div style="position: fixed; bottom: 20px; right: 20px; background: #4caf50; color: white; padding: 15px; border-radius: 8px; font-weight: bold;">
+        🎯 Test Instructions:
+        <br>1. Activate Web Lego
+        <br>2. Click "Add All" 
+        <br>3. Should capture ~8-10 elements
+        <br>4. Check canvas for all sections
+    </div>
+    
+    <script>
+        // Add some dynamic content to test
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Test page loaded - ready for Add All testing');
+            
+            // Add a dynamic element
+            const dynamic = document.createElement('div');
+            dynamic.className = 'test-section';
+            dynamic.innerHTML = '<h2>Dynamic Section</h2><p>This was added by JavaScript and should still be capturable.</p>';
+            document.body.insertBefore(dynamic, document.querySelector('footer'));
+        });
+    </script>
+</body>
+</html>
