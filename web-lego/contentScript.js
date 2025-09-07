@@ -13,31 +13,16 @@
     let canvas = null;
     let onboardingOverlay = null;
     
-    // Initialize Web Lego with context validation
+    // Initialize Web Lego
     function initWebLego() {
         if (window.webLegoInitialized) return;
         window.webLegoInitialized = true;
-        
-        // Validate extension context
-        if (!isExtensionContextValid()) {
-            console.log('Extension context invalid during initialization');
-            return;
-        }
         
         // Listen for activation event from popup
         document.addEventListener('webLegoActivate', activateWebLego);
         
         // Check if this is first time use
         checkFirstTimeUse();
-    }
-    
-    // Check if extension context is valid
-    function isExtensionContextValid() {
-        try {
-            return !!(chrome && chrome.runtime && chrome.runtime.id && chrome.storage);
-        } catch (error) {
-            return false;
-        }
     }
     
     // Activate Web Lego mode
@@ -234,12 +219,12 @@
             }
         });
         
-        // Store blocks in chrome storage with error handling
+        // Store blocks in chrome storage
         try {
             const existingBlocks = await getStoredBlocks();
             const allBlocks = [...existingBlocks, ...blocks];
             
-            await saveBlocksToStorage(allBlocks);
+            await chrome.storage.local.set({ webLegoBlocks: allBlocks });
             
             // Clear selections
             clearSelections();
@@ -247,12 +232,12 @@
             // Show success feedback
             showNotification(`Added ${blocks.length} block(s) to canvas!`);
             
-            // Open canvas if not already open
+            // Open canvas
             openCanvas();
             
         } catch (error) {
-            console.error('Error saving to storage:', error);
-            showNotification('Warning: Could not save blocks. Extension may need reload.');
+            console.error('Error saving blocks:', error);
+            showNotification('Could not save blocks. Try reloading the extension.');
         }
     }
     
@@ -311,12 +296,12 @@
             }
         });
         
-        // Store blocks in chrome storage with error handling
+        // Store blocks in chrome storage
         try {
             const existingBlocks = await getStoredBlocks();
             const allBlocks = [...existingBlocks, ...blocks];
             
-            await saveBlocksToStorage(allBlocks);
+            await chrome.storage.local.set({ webLegoBlocks: allBlocks });
             
             // Show success feedback
             showNotification(`Added ${blocks.length} elements from this page!`);
@@ -325,8 +310,8 @@
             openCanvas();
             
         } catch (error) {
-            console.error('Error saving to storage:', error);
-            showNotification('Warning: Could not save blocks. Extension may need reload.');
+            console.error('Error saving blocks:', error);
+            showNotification('Could not save blocks. Try reloading the extension.');
         }
     }
     
@@ -360,28 +345,11 @@
     // Get stored blocks from chrome storage
     async function getStoredBlocks() {
         try {
-            if (!chrome || !chrome.storage || !chrome.runtime || !chrome.runtime.id) {
-                console.log('Extension context invalidated, returning empty blocks');
-                return [];
-            }
             const result = await chrome.storage.local.get('webLegoBlocks');
             return result.webLegoBlocks || [];
         } catch (error) {
             console.error('Error getting stored blocks:', error);
             return [];
-        }
-    }
-    
-    // Save blocks to chrome storage with error handling
-    async function saveBlocksToStorage(blocks) {
-        try {
-            if (!chrome || !chrome.storage || !chrome.runtime || !chrome.runtime.id) {
-                throw new Error('Extension context invalidated');
-            }
-            await chrome.storage.local.set({ webLegoBlocks: blocks });
-        } catch (error) {
-            console.error('Error saving blocks to storage:', error);
-            throw error;
         }
     }
     
@@ -397,23 +365,11 @@
     // Open canvas in new tab
     function openCanvas() {
         try {
-            // Check if extension context is still valid
-            if (!chrome || !chrome.runtime || !chrome.runtime.getURL) {
-                console.log('Extension context invalidated, using modal fallback');
-                openCanvasModal();
-                return;
-            }
-            
-            // Try to get canvas URL
             const canvasUrl = chrome.runtime.getURL('canvas.html');
             window.open(canvasUrl, '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
-            
-            // Show success notification
             showNotification('Canvas opened in new tab!');
-            
         } catch (error) {
             console.error('Error opening canvas:', error);
-            // Fallback to modal overlay if new tab fails
             openCanvasModal();
         }
     }
@@ -425,40 +381,30 @@
             return;
         }
         
-        // Get canvas URL with fallback
-        let canvasUrl;
         try {
-            if (chrome && chrome.runtime && chrome.runtime.getURL) {
-                canvasUrl = chrome.runtime.getURL('canvas.html');
-            } else {
-                // Fallback: try to construct URL manually
-                canvasUrl = 'chrome-extension://' + (chrome?.runtime?.id || 'unknown') + '/canvas.html';
-            }
-        } catch (error) {
-            console.error('Cannot get canvas URL:', error);
-            showNotification('Cannot open canvas - extension context invalidated. Please reload the page and try again.');
-            return;
-        }
-        
-        // Create full-screen modal canvas
-        canvas = document.createElement('div');
-        canvas.id = 'webLegoCanvas';
-        canvas.innerHTML = `
-            <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 999999; display: flex; flex-direction: column;">
-                <div style="height: 50px; background: #667eea; color: white; display: flex; align-items: center; justify-content: space-between; padding: 0 20px;">
-                    <div style="font-weight: 600;">🧱 Web Lego Canvas</div>
-                    <button onclick="this.closest('#webLegoCanvas').remove()" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 6px; cursor: pointer;">✕ Close</button>
+            const canvasUrl = chrome.runtime.getURL('canvas.html');
+            
+            canvas = document.createElement('div');
+            canvas.id = 'webLegoCanvas';
+            canvas.innerHTML = `
+                <div style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 999999; display: flex; flex-direction: column;">
+                    <div style="height: 50px; background: #667eea; color: white; display: flex; align-items: center; justify-content: space-between; padding: 0 20px;">
+                        <div style="font-weight: 600;">🧱 Web Lego Canvas</div>
+                        <button onclick="this.closest('#webLegoCanvas').remove()" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 6px; cursor: pointer;">✕ Close</button>
+                    </div>
+                    <iframe src="${canvasUrl}" 
+                            frameborder="0" 
+                            style="flex: 1; width: 100%; border: none;">
+                    </iframe>
                 </div>
-                <iframe src="${canvasUrl}" 
-                        frameborder="0" 
-                        style="flex: 1; width: 100%; border: none;"
-                        onerror="this.parentElement.innerHTML='<div style=\\'padding: 50px; text-align: center; color: #666;\\'>Canvas could not load. Please reload the page and try again.</div>'">
-                </iframe>
-            </div>
-        `;
-        
-        document.body.appendChild(canvas);
-        showNotification('Canvas opened in modal (extension context issue detected)');
+            `;
+            
+            document.body.appendChild(canvas);
+            showNotification('Canvas opened in modal');
+        } catch (error) {
+            console.error('Cannot open canvas modal:', error);
+            showNotification('Cannot open canvas. Please reload the page and try again.');
+        }
     }
     
     // Show notification
@@ -479,12 +425,6 @@
     
     // Show onboarding overlay
     function showOnboarding() {
-        if (!isExtensionContextValid()) {
-            console.log('Cannot show onboarding - extension context invalid');
-            return;
-        }
-        
-        // Check if user has seen onboarding
         try {
             chrome.storage.local.get('webLegoOnboardingShown').then(result => {
                 if (!result.webLegoOnboardingShown) {
@@ -492,8 +432,6 @@
                 }
             }).catch(error => {
                 console.log('Error checking onboarding status:', error);
-                // Show onboarding anyway if we can't check
-                createOnboardingOverlay();
             });
         } catch (error) {
             console.log('Error accessing storage for onboarding check:', error);
@@ -542,12 +480,10 @@
     // Start onboarding process
     function startOnboarding() {
         // Mark onboarding as shown
-        if (isExtensionContextValid()) {
-            try {
-                chrome.storage.local.set({ webLegoOnboardingShown: true });
-            } catch (error) {
-                console.log('Could not save onboarding status:', error);
-            }
+        try {
+            chrome.storage.local.set({ webLegoOnboardingShown: true });
+        } catch (error) {
+            console.log('Could not save onboarding status:', error);
         }
         
         // Remove overlay
@@ -569,12 +505,10 @@
     
     // Skip onboarding
     function skipOnboarding() {
-        if (isExtensionContextValid()) {
-            try {
-                chrome.storage.local.set({ webLegoOnboardingShown: true });
-            } catch (error) {
-                console.log('Could not save onboarding status:', error);
-            }
+        try {
+            chrome.storage.local.set({ webLegoOnboardingShown: true });
+        } catch (error) {
+            console.log('Could not save onboarding status:', error);
         }
         
         if (onboardingOverlay) {
@@ -585,11 +519,6 @@
     
     // Create demo blocks for first-time users
     async function createDemoBlocks() {
-        if (!isExtensionContextValid()) {
-            console.log('Cannot create demo blocks - extension context invalid');
-            return;
-        }
-        
         const demoBlocks = [
             {
                 id: 'demo-text-1',
@@ -599,7 +528,8 @@
                 height: 120,
                 x: 50,
                 y: 50,
-                timestamp: Date.now()
+                timestamp: Date.now(),
+                editable: true
             },
             {
                 id: 'demo-quote-1',
@@ -609,7 +539,8 @@
                 height: 100,
                 x: 80,
                 y: 200,
-                timestamp: Date.now() + 1
+                timestamp: Date.now() + 1,
+                editable: true
             },
             {
                 id: 'demo-image-1',
@@ -619,7 +550,8 @@
                 height: 180,
                 x: 110,
                 y: 330,
-                timestamp: Date.now() + 2
+                timestamp: Date.now() + 2,
+                editable: true
             }
         ];
         
@@ -632,11 +564,6 @@
     
     // Check if this is first time use
     function checkFirstTimeUse() {
-        if (!isExtensionContextValid()) {
-            console.log('Cannot check first time use - extension context invalid');
-            return;
-        }
-        
         try {
             chrome.storage.local.get('webLegoOnboardingShown').then(result => {
                 if (!result.webLegoOnboardingShown) {
