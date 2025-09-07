@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎬 Web Lego Demo Video - Interactive Showcase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .demo-screen {
+            width: 90%;
+            max-width: 1200px;
+            height: 80%;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            position: relative;
+        }
+        
+        .demo-header {
+            background: #2d3748;
+            color: white;
+            padding: 15px 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .demo-dots {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .demo-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .demo-dot.red { background: #ff5f56; }
+        .demo-dot.yellow { background: #ffbd2e; }
+        .demo-dot.green { background: #27ca3f; }
+        
+        .demo-title {
+            flex: 1;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .demo-content {
+            height: calc(100% - 60px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .demo-scene {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(100px);
+        }
+        
+        .demo-scene.active {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        
+        .scene-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: white;
+        }
+        
+        .scene-1 h1 {
+            font-size: 4em;
+            margin-bottom: 20px;
+            animation: bounceIn 1s ease-out 0.5s both;
+        }
+        
+        .scene-1 p {
+            font-size: 1.5em;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease-out 1s both;
+        }
+        
+        .scene-2 {
+            background: white;
+            color: #333;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .browser-mockup {
+            width: 100%;
+            max-width: 800px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+        
+        .browser-header {
+            background: #e9ecef;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .browser-content {
+            padding: 30px;
+            min-height: 400px;
+            position: relative;
+        }
+        
+        .demo-element {
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 15px 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            animation: elementPulse 2s infinite;
+        }
+        
+        .demo-element:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+        }
+        
+        .floating-toolbar {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 12px 20px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 10px;
+            animation: toolbarSlideDown 0.8s ease-out 2s both;
+        }
+        
+        .toolbar-btn {
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .toolbar-btn:hover {
+            background: #5a67d8;
+            transform: translateY(-2px);
+        }
+        
+        .controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+        }
+        
+        .control-btn {
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .control-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+        
+        .control-btn.active {
+            background: white;
+            color: #667eea;
+        }
+        
+        .scene-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 4px;
+            background: #4ecdc4;
+            transition: width 0.8s ease;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        @keyframes bounceIn {
+            0% { opacity: 0; transform: scale(0.3) translateY(-100px); }
+            50% { opacity: 1; transform: scale(1.05) translateY(0); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes toolbarSlideDown {
+            from { opacity: 0; transform: translateX(-50%) translateY(-30px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        
+        @keyframes elementPulse {
+            0%, 100% { box-shadow: 0 4px 12px rgba(255,107,107,0.3); }
+            50% { box-shadow: 0 8px 24px rgba(76,205,196,0.4); }
+        }
+        
+        .narration-text {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 18px;
+            text-align: center;
+            max-width: 80%;
+            backdrop-filter: blur(10px);
+            animation: fadeInUp 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="video-container">
+        <div class="demo-screen">
+            <div class="demo-header">
+                <div class="demo-dots">
+                    <div class="demo-dot red"></div>
+                    <div class="demo-dot yellow"></div>
+                    <div class="demo-dot green"></div>
+                </div>
+                <div class="demo-title">🧱 Web Lego Demo - Interactive Showcase</div>
+            </div>
+            
+            <div class="demo-content">
+                <!-- Scene 1: Introduction -->
+                <div class="demo-scene scene-1 active" id="scene1">
+                    <h1>🧱 Web Lego</h1>
+                    <p>Turn ANY website into building blocks</p>
+                </div>
+                
+                <!-- Scene 2: Browser Demo -->
+                <div class="demo-scene" id="scene2">
+                    <div class="browser-mockup">
+                        <div class="browser-header">
+                            <div class="demo-dots">
+                                <div class="demo-dot red"></div>
+                                <div class="demo-dot yellow"></div>
+                                <div class="demo-dot green"></div>
+                            </div>
+                            <div style="flex: 1; text-align: center; font-size: 12px;">Demo Website</div>
+                        </div>
+                        <div class="browser-content">
+                            <div class="floating-toolbar">
+                                <button class="toolbar-btn">🎯 Select</button>
+                                <button class="toolbar-btn">➕ Add</button>
+                                <button class="toolbar-btn">📦 Add All</button>
+                                <button class="toolbar-btn">🎨 Canvas</button>
+                            </div>
+                            
+                            <div class="demo-element" onclick="selectElement(this)">
+                                <h3>🌟 Amazing Header</h3>
+                                <p>Click me to select!</p>
+                            </div>
+                            
+                            <div class="demo-element" onclick="selectElement(this)">
+                                <h3>📊 Cool Data Card</h3>
+                                <p>I can be selected too!</p>
+                            </div>
+                            
+                            <div class="demo-element" onclick="selectElement(this)">
+                                <h3>🎨 Beautiful Section</h3>
+                                <p>Select me for your layout!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Scene 3: Canvas Demo -->
+                <div class="demo-scene" id="scene3" style="background: #f8fafc; color: #333;">
+                    <div style="display: flex; height: 100%;">
+                        <div style="width: 250px; background: white; padding: 20px; border-right: 1px solid #e2e8f0;">
+                            <h3>🎨 Web Lego Studio</h3>
+                            <div style="margin: 20px 0;">
+                                <div style="background: #edf2f7; padding: 10px; border-radius: 8px; margin: 10px 0;">
+                                    <strong>3</strong> Blocks
+                                </div>
+                            </div>
+                            <h4 style="margin: 20px 0 10px;">🖌️ Edit Tools</h4>
+                            <input type="color" value="#ff6b6b" style="width: 100%; height: 35px; margin: 5px 0;">
+                            <input type="range" min="12" max="24" value="16" style="width: 100%; margin: 5px 0;">
+                        </div>
+                        <div style="flex: 1; position: relative; background: radial-gradient(circle at 20px 20px, #e2e8f0 1px, transparent 1px); background-size: 40px 40px;">
+                            <div class="demo-block" style="position: absolute; top: 50px; left: 50px; width: 200px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); animation: blockAppear 0.5s ease-out 1s both;">
+                                <h4 style="color: #ff6b6b;">Amazing Header</h4>
+                                <p style="color: #666; font-size: 14px;">Click me to select!</p>
+                            </div>
+                            <div class="demo-block" style="position: absolute; top: 180px; left: 280px; width: 180px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); animation: blockAppear 0.5s ease-out 1.5s both;">
+                                <h4 style="color: #4ecdc4;">Cool Data Card</h4>
+                                <p style="color: #666; font-size: 14px;">I can be selected too!</p>
+                            </div>
+                            <div class="demo-block" style="position: absolute; top: 320px; left: 150px; width: 220px; background: white; padding: 15px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); animation: blockAppear 0.5s ease-out 2s both;">
+                                <h4 style="color: #45b7d1;">Beautiful Section</h4>
+                                <p style="color: #666; font-size: 14px;">Select me for your layout!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="scene-indicator" id="sceneIndicator">Scene 1 of 3</div>
+                <div class="progress-bar" id="progressBar" style="width: 33%;"></div>
+                
+                <div class="narration-text" id="narrationText">
+                    What if you could grab ANY piece from ANY website and build something completely new?
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn active" onclick="showScene(1)">Intro</button>
+                <button class="control-btn" onclick="showScene(2)">Selection</button>
+                <button class="control-btn" onclick="showScene(3)">Canvas</button>
+                <button class="control-btn" onclick="startAutoDemo()">▶️ Auto Demo</button>
+                <button class="control-btn" onclick="downloadVideo()">📥 Download Guide</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentScene = 1;
+        let autoDemo = false;
+        
+        const narrations = {
+            1: "What if you could grab ANY piece from ANY website and build something completely new?",
+            2: "Meet Web Lego - hover over any element, click to select, and watch the magic happen!",
+            3: "Now drag, resize, edit text, and create professional layouts. Export as real HTML files!"
+        };
+        
+        function showScene(sceneNum) {
+            // Hide all scenes
+            document.querySelectorAll('.demo-scene').forEach(scene => {
+                scene.classList.remove('active');
+            });
+            
+            // Show target scene
+            document.getElementById(`scene${sceneNum}`).classList.add('active');
+            
+            // Update controls
+            document.querySelectorAll('.control-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Update indicators
+            document.getElementById('sceneIndicator').textContent = `Scene ${sceneNum} of 3`;
+            document.getElementById('progressBar').style.width = (sceneNum * 33) + '%';
+            document.getElementById('narrationText').textContent = narrations[sceneNum];
+            
+            currentScene = sceneNum;
+        }
+        
+        function selectElement(element) {
+            element.style.outline = '3px solid #48bb78';
+            element.style.transform = 'scale(1.02)';
+            
+            // Add checkmark
+            if (!element.querySelector('.checkmark')) {
+                const checkmark = document.createElement('div');
+                checkmark.className = 'checkmark';
+                checkmark.innerHTML = '✓';
+                checkmark.style.cssText = `
+                    position: absolute;
+                    top: -10px;
+                    right: -10px;
+                    width: 25px;
+                    height: 25px;
+                    background: #48bb78;
+                    color: white;
+                    border-radius: 50%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-weight: bold;
+                    animation: checkmarkBounce 0.5s ease-out;
+                `;
+                element.style.position = 'relative';
+                element.appendChild(checkmark);
+            }
+            
+            // Add to selection count
+            setTimeout(() => {
+                if (currentScene === 2) {
+                    showScene(3);
+                }
+            }, 1000);
+        }
+        
+        function startAutoDemo() {
+            autoDemo = true;
+            showScene(1);
+            
+            setTimeout(() => showScene(2), 3000);
+            setTimeout(() => {
+                // Auto-select elements
+                document.querySelectorAll('.demo-element').forEach((el, i) => {
+                    setTimeout(() => selectElement(el), i * 800);
+                });
+            }, 5000);
+            setTimeout(() => showScene(3), 8000);
+            
+            // Update button
+            event.target.textContent = '⏸️ Stop Demo';
+            event.target.onclick = stopAutoDemo;
+        }
+        
+        function stopAutoDemo() {
+            autoDemo = false;
+            event.target.textContent = '▶️ Auto Demo';
+            event.target.onclick = startAutoDemo;
+        }
+        
+        function downloadVideo() {
+            // Create a comprehensive guide
+            const guide = `
+# 🎬 Web Lego Demo Video Creation Guide
+
+## 🎯 Record This Interactive Demo
+
+1. **Open this HTML file** in full-screen browser
+2. **Start screen recording** (OBS, QuickTime, etc.)
+3. **Click "Auto Demo"** to see the full showcase
+4. **Record for 30-60 seconds** showing all scenes
+5. **Add your own narration** over the recording
+
+## 🎵 Add These Elements in Post-Production
+
+### Audio:
+- Upbeat electronic music (YouTube Audio Library)
+- Your narration following the text prompts
+- Sound effects for clicks and selections
+
+### Visual Effects:
+- Zoom in on important actions
+- Add text overlays for key features
+- Include your face/reaction in corner
+- Add subscribe button at end
+
+## 📈 YouTube Optimization
+
+**Title**: "This Chrome Extension Lets You Steal Any Website Design (Legally!)"
+**Thumbnail**: Split screen showing before/after
+**Description**: Include extension download link and key features
+
+## 🚀 Expected Results
+
+This demo format has high viral potential:
+- Visual storytelling
+- Interactive elements
+- Professional presentation
+- Clear value proposition
+
+Record multiple takes and choose the best one!
+            `;
+            
+            const blob = new Blob([guide], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'web-lego-video-guide.md';
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+        
+        // Add some dynamic effects
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add CSS animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes blockAppear {
+                    from { opacity: 0; transform: translateY(20px) scale(0.8); }
+                    to { opacity: 1; transform: translateY(0) scale(1); }
+                }
+                
+                @keyframes checkmarkBounce {
+                    0% { transform: scale(0) rotate(-180deg); }
+                    50% { transform: scale(1.2) rotate(-90deg); }
+                    100% { transform: scale(1) rotate(0deg); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Auto-advance scenes every 8 seconds
+            setInterval(() => {
+                if (autoDemo) {
+                    currentScene = currentScene >= 3 ? 1 : currentScene + 1;
+                    showScene(currentScene);
+                }
+            }, 8000);
+        });
+    </script>
+</body>
+</html>

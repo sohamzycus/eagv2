@@ -68,6 +68,9 @@
         getDemoBlocksBtn.addEventListener('click', addDemoBlocks);
         openTutorialBtn.addEventListener('click', openTutorial);
         
+        // Editing tools
+        setupEditingTools();
+        
         // Canvas controls
         undoBtn.addEventListener('click', undo);
         redoBtn.addEventListener('click', redo);
@@ -357,7 +360,113 @@
         resizeHandle.addEventListener('mousedown', e => startResize(e, blockEl, blockData));
     }
     
-    // Block selection
+    // Setup editing tools
+    function setupEditingTools() {
+        const textColorPicker = document.getElementById('textColorPicker');
+        const bgColorPicker = document.getElementById('bgColorPicker');
+        const fontSizeSlider = document.getElementById('fontSizeSlider');
+        const fontSizeValue = document.getElementById('fontSizeValue');
+        const fontWeightSelect = document.getElementById('fontWeightSelect');
+        const alignLeft = document.getElementById('alignLeft');
+        const alignCenter = document.getElementById('alignCenter');
+        const alignRight = document.getElementById('alignRight');
+        
+        // Color pickers
+        if (textColorPicker) {
+            textColorPicker.addEventListener('change', (e) => {
+                if (selectedBlock) {
+                    applyTextColor(selectedBlock, e.target.value);
+                }
+            });
+        }
+        
+        if (bgColorPicker) {
+            bgColorPicker.addEventListener('change', (e) => {
+                if (selectedBlock) {
+                    applyBackgroundColor(selectedBlock, e.target.value);
+                }
+            });
+        }
+        
+        // Font size slider
+        if (fontSizeSlider) {
+            fontSizeSlider.addEventListener('input', (e) => {
+                const size = e.target.value;
+                if (fontSizeValue) fontSizeValue.textContent = size + 'px';
+                if (selectedBlock) {
+                    applyFontSize(selectedBlock, size + 'px');
+                }
+            });
+        }
+        
+        // Font weight
+        if (fontWeightSelect) {
+            fontWeightSelect.addEventListener('change', (e) => {
+                if (selectedBlock) {
+                    applyFontWeight(selectedBlock, e.target.value);
+                }
+            });
+        }
+        
+        // Text alignment
+        [alignLeft, alignCenter, alignRight].forEach(btn => {
+            if (btn) {
+                btn.addEventListener('click', (e) => {
+                    if (selectedBlock) {
+                        const align = e.target.dataset.align;
+                        applyTextAlign(selectedBlock, align);
+                        
+                        // Update button states
+                        document.querySelectorAll('.align-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                    }
+                });
+            }
+        });
+    }
+    
+    // Apply styling functions
+    function applyTextColor(selectedBlock, color) {
+        const content = selectedBlock.element.querySelector('.block-content');
+        content.style.color = color;
+        selectedBlock.data.content = content.innerHTML;
+        saveBlocks();
+        showNotification('Text color updated!');
+    }
+    
+    function applyBackgroundColor(selectedBlock, color) {
+        const content = selectedBlock.element.querySelector('.block-content');
+        content.style.backgroundColor = color;
+        selectedBlock.data.content = content.innerHTML;
+        saveBlocks();
+        showNotification('Background color updated!');
+    }
+    
+    function applyFontSize(selectedBlock, size) {
+        const content = selectedBlock.element.querySelector('.block-content');
+        content.style.fontSize = size;
+        selectedBlock.data.content = content.innerHTML;
+        saveBlocks();
+        showNotification('Font size updated!');
+    }
+    
+    function applyFontWeight(selectedBlock, weight) {
+        const content = selectedBlock.element.querySelector('.block-content');
+        content.style.fontWeight = weight;
+        selectedBlock.data.content = content.innerHTML;
+        saveBlocks();
+        showNotification('Font weight updated!');
+    }
+    
+    function applyTextAlign(selectedBlock, align) {
+        const content = selectedBlock.element.querySelector('.block-content');
+        content.style.textAlign = align;
+        selectedBlock.data.content = content.innerHTML;
+        saveBlocks();
+        showNotification('Text alignment updated!');
+    }
+    
+    // Enhanced block selection
     function selectBlock(blockEl, blockData) {
         // Clear previous selection
         document.querySelectorAll('.block.selected').forEach(el => {
@@ -367,6 +476,75 @@
         // Select current block
         blockEl.classList.add('selected');
         selectedBlock = { element: blockEl, data: blockData };
+        
+        // Enable editing tools
+        const editingTools = document.getElementById('editingTools');
+        if (editingTools) {
+            editingTools.style.opacity = '1';
+        }
+        
+        // Update editing tool values based on current block
+        updateEditingToolValues(blockEl);
+    }
+    
+    // Update editing tool values to match selected block
+    function updateEditingToolValues(blockEl) {
+        const content = blockEl.querySelector('.block-content');
+        if (!content) return;
+        
+        const computedStyle = window.getComputedStyle(content);
+        
+        // Update color pickers
+        const textColorPicker = document.getElementById('textColorPicker');
+        const bgColorPicker = document.getElementById('bgColorPicker');
+        const fontSizeSlider = document.getElementById('fontSizeSlider');
+        const fontSizeValue = document.getElementById('fontSizeValue');
+        const fontWeightSelect = document.getElementById('fontWeightSelect');
+        
+        if (textColorPicker) {
+            const color = rgbToHex(computedStyle.color);
+            if (color) textColorPicker.value = color;
+        }
+        
+        if (bgColorPicker) {
+            const bgColor = rgbToHex(computedStyle.backgroundColor);
+            if (bgColor) bgColorPicker.value = bgColor;
+        }
+        
+        if (fontSizeSlider && fontSizeValue) {
+            const fontSize = parseInt(computedStyle.fontSize);
+            if (fontSize) {
+                fontSizeSlider.value = fontSize;
+                fontSizeValue.textContent = fontSize + 'px';
+            }
+        }
+        
+        if (fontWeightSelect) {
+            fontWeightSelect.value = computedStyle.fontWeight;
+        }
+        
+        // Update alignment buttons
+        const textAlign = computedStyle.textAlign;
+        document.querySelectorAll('.align-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.dataset.align === textAlign) {
+                btn.classList.add('active');
+            }
+        });
+    }
+    
+    // Convert RGB to HEX
+    function rgbToHex(rgb) {
+        if (!rgb || rgb === 'transparent') return null;
+        
+        const result = rgb.match(/\d+/g);
+        if (result && result.length >= 3) {
+            const r = parseInt(result[0]);
+            const g = parseInt(result[1]);
+            const b = parseInt(result[2]);
+            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+        return null;
     }
     
     // Start editing block content
@@ -378,29 +556,39 @@
             return;
         }
         
+        // Make content editable
         content.contentEditable = true;
+        content.style.outline = '2px dashed #4299e1';
+        content.style.outlineOffset = '2px';
         content.focus();
         
         // Select all text for easy editing
-        const range = document.createRange();
-        range.selectNodeContents(content);
-        const selection = window.getSelection();
-        selection.removeAllRanges();
-        selection.addRange(range);
+        setTimeout(() => {
+            const range = document.createRange();
+            range.selectNodeContents(content);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+        }, 10);
+        
+        // Show editing notification
+        showNotification('Editing mode active - click outside to finish');
         
         // Handle finish editing
         const finishEditing = () => {
             content.contentEditable = false;
+            content.style.outline = 'none';
+            content.style.outlineOffset = 'initial';
             blockData.content = content.innerHTML;
             saveBlocks();
             saveToHistory();
             showNotification('Block updated!');
         };
         
-        // Finish editing on blur or Enter key
+        // Finish editing on blur or Escape key
         content.addEventListener('blur', finishEditing, { once: true });
         content.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
+            if (e.key === 'Escape') {
                 e.preventDefault();
                 finishEditing();
             }
@@ -648,9 +836,15 @@
         }
     }
     
-    // Add event listener for modal backdrop click
+    // Add event listener for modal and export events
     function setupModalEvents() {
         const modal = document.getElementById('exportModal');
+        const closeBtn = document.getElementById('closeExportModalBtn');
+        const exportHTMLBtn = document.getElementById('exportHTMLBtn');
+        const exportImageBtn = document.getElementById('exportImageBtn');
+        const exportCodeBtn = document.getElementById('exportCodeBtn');
+        const shareLayoutBtn = document.getElementById('shareLayoutBtn');
+        
         if (modal) {
             modal.addEventListener('click', function(e) {
                 if (e.target === modal) {
@@ -658,10 +852,29 @@
                 }
             });
         }
+        
+        if (closeBtn) {
+            closeBtn.addEventListener('click', closeExportModal);
+        }
+        
+        if (exportHTMLBtn) {
+            exportHTMLBtn.addEventListener('click', exportAsHTML);
+        }
+        
+        if (exportImageBtn) {
+            exportImageBtn.addEventListener('click', exportAsImage);
+        }
+        
+        if (exportCodeBtn) {
+            exportCodeBtn.addEventListener('click', exportAsCode);
+        }
+        
+        if (shareLayoutBtn) {
+            shareLayoutBtn.addEventListener('click', shareLayout);
+        }
     }
     
-    // Make closeExportModal globally available
-    window.closeExportModal = closeExportModal;
+    // closeExportModal is now handled via event listeners
     
     function exportAsHTML() {
         const html = generateHTML();
@@ -799,11 +1012,8 @@
         });
     }
     
-    // Make export functions globally available
-    window.exportAsHTML = exportAsHTML;
-    window.exportAsImage = exportAsImage;
-    window.exportAsCode = exportAsCode;
-    window.shareLayout = shareLayout;
+    // Export functions are now handled via event listeners
+    // No need for global assignments that violate CSP
     
     function generateHTML() {
         let html = `<!DOCTYPE html>
@@ -939,6 +1149,12 @@
                 el.classList.remove('selected');
             });
             selectedBlock = null;
+            
+            // Disable editing tools
+            const editingTools = document.getElementById('editingTools');
+            if (editingTools) {
+                editingTools.style.opacity = '0.5';
+            }
         }
     }
     

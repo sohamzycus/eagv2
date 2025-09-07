@@ -315,12 +315,9 @@
         }
     }
     
-    // Extract content from DOM element
+    // Extract content from DOM element with full styling
     function extractElementContent(element, index) {
         const rect = element.getBoundingClientRect();
-        
-        // Get computed styles
-        const computedStyle = window.getComputedStyle(element);
         
         // Clone element to preserve styling
         const clonedElement = element.cloneNode(true);
@@ -328,18 +325,87 @@
         // Remove any Web Lego classes
         clonedElement.classList.remove('web-lego-hover', 'web-lego-selected');
         
+        // Capture computed styles for the element and all its children
+        const styleHTML = captureElementStyles(element);
+        
+        // Wrap content with styles
+        const styledContent = `
+            <style>
+                ${styleHTML}
+            </style>
+            ${clonedElement.outerHTML}
+        `;
+        
         return {
             id: `block-${Date.now()}-${index}`,
-            content: clonedElement.outerHTML,
+            content: styledContent,
             type: element.tagName.toLowerCase(),
             width: Math.max(200, Math.min(400, rect.width)),
             height: Math.max(100, Math.min(300, rect.height)),
             x: 50 + (index * 20),
             y: 50 + (index * 20),
             timestamp: Date.now(),
-            editable: true,  // Make all webpage blocks editable
-            source: 'webpage'  // Track source for better handling
+            editable: true,
+            source: 'webpage'
         };
+    }
+    
+    // Capture styles for an element and its children
+    function captureElementStyles(element) {
+        let styles = '';
+        
+        // Get all stylesheets
+        const sheets = Array.from(document.styleSheets);
+        
+        try {
+            sheets.forEach(sheet => {
+                try {
+                    const rules = Array.from(sheet.cssRules || sheet.rules || []);
+                    rules.forEach(rule => {
+                        if (rule.type === CSSRule.STYLE_RULE) {
+                            // Check if rule applies to our element or its children
+                            try {
+                                if (element.matches(rule.selectorText) || 
+                                    element.querySelector(rule.selectorText)) {
+                                    styles += rule.cssText + '\n';
+                                }
+                            } catch (e) {
+                                // Ignore invalid selectors
+                            }
+                        }
+                    });
+                } catch (e) {
+                    // Ignore cross-origin stylesheets
+                }
+            });
+        } catch (e) {
+            console.log('Could not capture all styles:', e);
+        }
+        
+        // Also capture inline styles
+        const computedStyle = window.getComputedStyle(element);
+        const importantStyles = [
+            'background', 'background-color', 'background-image', 'background-size',
+            'color', 'font-family', 'font-size', 'font-weight', 'line-height',
+            'padding', 'margin', 'border', 'border-radius', 'box-shadow',
+            'text-align', 'display', 'flex-direction', 'align-items', 'justify-content'
+        ];
+        
+        let inlineStyles = '';
+        importantStyles.forEach(prop => {
+            const value = computedStyle.getPropertyValue(prop);
+            if (value && value !== 'initial' && value !== 'normal') {
+                inlineStyles += `${prop}: ${value}; `;
+            }
+        });
+        
+        if (inlineStyles) {
+            const className = `web-lego-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+            element.classList.add(className);
+            styles += `.${className} { ${inlineStyles} }\n`;
+        }
+        
+        return styles;
     }
     
     // Get stored blocks from chrome storage

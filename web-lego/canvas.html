@@ -525,6 +525,28 @@
             font-size: 13px;
             color: #4a5568;
         }
+        
+        .align-btn {
+            flex: 1;
+            padding: 6px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+        
+        .align-btn:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+        }
+        
+        .align-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
     </style>
 </head>
 <body>
@@ -552,7 +574,7 @@
                 </div>
                 
                 <div class="section">
-                    <div class="section-title">🎨 Tools</div>
+                    <div class="section-title">🎨 Add Content</div>
                     <button id="addTextBtn" class="tool-button">
                         <span>📝</span> Add Text Block
                     </button>
@@ -565,6 +587,43 @@
                     <button id="selectModeBtn" class="tool-button">
                         <span>🎯</span> Selection Mode
                     </button>
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">🖌️ Edit Selected</div>
+                    <div id="editingTools" style="opacity: 0.5;">
+                        <div style="margin-bottom: 10px;">
+                            <label style="font-size: 12px; color: #4a5568; display: block; margin-bottom: 5px;">Text Color</label>
+                            <input type="color" id="textColorPicker" value="#000000" style="width: 100%; height: 35px; border: none; border-radius: 6px; cursor: pointer;">
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <label style="font-size: 12px; color: #4a5568; display: block; margin-bottom: 5px;">Background</label>
+                            <input type="color" id="bgColorPicker" value="#ffffff" style="width: 100%; height: 35px; border: none; border-radius: 6px; cursor: pointer;">
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <label style="font-size: 12px; color: #4a5568; display: block; margin-bottom: 5px;">Font Size</label>
+                            <input type="range" id="fontSizeSlider" min="10" max="48" value="16" style="width: 100%;">
+                            <span id="fontSizeValue" style="font-size: 11px; color: #718096;">16px</span>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <label style="font-size: 12px; color: #4a5568; display: block; margin-bottom: 5px;">Font Weight</label>
+                            <select id="fontWeightSelect" style="width: 100%; padding: 6px; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 12px;">
+                                <option value="normal">Normal</option>
+                                <option value="bold">Bold</option>
+                                <option value="lighter">Light</option>
+                                <option value="bolder">Extra Bold</option>
+                            </select>
+                        </div>
+                        <div style="margin-bottom: 10px;">
+                            <label style="font-size: 12px; color: #4a5568; display: block; margin-bottom: 5px;">Text Align</label>
+                            <div style="display: flex; gap: 5px;">
+                                <button id="alignLeft" class="align-btn" data-align="left">⬅️</button>
+                                <button id="alignCenter" class="align-btn" data-align="center">↔️</button>
+                                <button id="alignRight" class="align-btn" data-align="right">➡️</button>
+                            </div>
+                        </div>
+                    </div>
+                    <p style="font-size: 11px; color: #718096; font-style: italic;">Select a block to edit its styling</p>
                 </div>
                 
                 <div class="section">
@@ -633,23 +692,23 @@
         <div class="modal-content">
             <div class="modal-header">
                 <div class="modal-title">Export Your Layout</div>
-                <button class="modal-close" onclick="closeExportModal()">×</button>
+                <button id="closeExportModalBtn" class="modal-close">×</button>
             </div>
             
             <div class="export-options">
-                <div class="export-option" onclick="exportAsHTML()">
+                <div id="exportHTMLBtn" class="export-option">
                     <h4>📄 HTML File</h4>
                     <p>Download as a complete HTML page</p>
                 </div>
-                <div class="export-option" onclick="exportAsImage()">
+                <div id="exportImageBtn" class="export-option">
                     <h4>🖼️ Image</h4>
                     <p>Save as PNG or JPEG image</p>
                 </div>
-                <div class="export-option" onclick="exportAsCode()">
+                <div id="exportCodeBtn" class="export-option">
                     <h4>💻 Code</h4>
                     <p>Get HTML/CSS code to copy</p>
                 </div>
-                <div class="export-option" onclick="shareLayout()">
+                <div id="shareLayoutBtn" class="export-option">
                     <h4>🔗 Share Link</h4>
                     <p>Create a shareable link</p>
                 </div>
