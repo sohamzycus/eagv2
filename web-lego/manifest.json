@@ -43,7 +43,7 @@
   
   "web_accessible_resources": [
     {
-      "resources": ["canvas.html", "styles.css", "assets/*"],
+      "resources": ["canvas.html", "demo-page.html", "styles.css", "assets/*"],
       "matches": ["<all_urls>"]
     }
   ]

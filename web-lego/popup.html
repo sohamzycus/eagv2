@@ -76,6 +76,30 @@
             transform: translateY(0);
         }
         
+        .demo-btn {
+            width: 100%;
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+            box-shadow: 0 3px 12px rgba(76, 205, 196, 0.3);
+        }
+        
+        .demo-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(76, 205, 196, 0.4);
+        }
+        
+        .demo-btn:active {
+            transform: translateY(0);
+        }
+        
         .status {
             margin-top: 16px;
             padding: 8px 12px;
@@ -101,6 +125,10 @@
         
         <button id="activateBtn" class="activate-btn">
             Activate Web Lego
+        </button>
+        
+        <button id="demoBtn" class="demo-btn">
+            📺 Open Demo Page
         </button>
         
         <div id="status" class="status">

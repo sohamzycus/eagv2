@@ -3,10 +3,23 @@
 
 document.addEventListener('DOMContentLoaded', function() {
     const activateBtn = document.getElementById('activateBtn');
+    const demoBtn = document.getElementById('demoBtn');
     const status = document.getElementById('status');
     
     // Check if extension is already active on current tab
     checkExtensionStatus();
+    
+    // Handle demo button click
+    demoBtn.addEventListener('click', function() {
+        try {
+            const demoUrl = chrome.runtime.getURL('demo-page.html');
+            chrome.tabs.create({ url: demoUrl });
+            window.close();
+        } catch (error) {
+            console.error('Error opening demo page:', error);
+            showError('Could not open demo page');
+        }
+    });
     
     // Handle activation button click
     activateBtn.addEventListener('click', async function() {

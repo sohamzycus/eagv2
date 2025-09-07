@@ -355,7 +355,14 @@
     // Open canvas in new tab
     function openCanvas() {
         try {
-            // Open canvas in a new tab for better user experience
+            // Check if extension context is still valid
+            if (!chrome || !chrome.runtime || !chrome.runtime.getURL) {
+                console.log('Extension context invalidated, using modal fallback');
+                openCanvasModal();
+                return;
+            }
+            
+            // Try to get canvas URL
             const canvasUrl = chrome.runtime.getURL('canvas.html');
             window.open(canvasUrl, '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
             
@@ -376,6 +383,21 @@
             return;
         }
         
+        // Get canvas URL with fallback
+        let canvasUrl;
+        try {
+            if (chrome && chrome.runtime && chrome.runtime.getURL) {
+                canvasUrl = chrome.runtime.getURL('canvas.html');
+            } else {
+                // Fallback: try to construct URL manually
+                canvasUrl = 'chrome-extension://' + (chrome?.runtime?.id || 'unknown') + '/canvas.html';
+            }
+        } catch (error) {
+            console.error('Cannot get canvas URL:', error);
+            showNotification('Cannot open canvas - extension context invalidated. Please reload the page and try again.');
+            return;
+        }
+        
         // Create full-screen modal canvas
         canvas = document.createElement('div');
         canvas.id = 'webLegoCanvas';
@@ -385,14 +407,16 @@
                     <div style="font-weight: 600;">🧱 Web Lego Canvas</div>
                     <button onclick="this.closest('#webLegoCanvas').remove()" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 8px 12px; border-radius: 6px; cursor: pointer;">✕ Close</button>
                 </div>
-                <iframe src="${chrome.runtime.getURL('canvas.html')}" 
+                <iframe src="${canvasUrl}" 
                         frameborder="0" 
-                        style="flex: 1; width: 100%; border: none;">
+                        style="flex: 1; width: 100%; border: none;"
+                        onerror="this.parentElement.innerHTML='<div style=\\'padding: 50px; text-align: center; color: #666;\\'>Canvas could not load. Please reload the page and try again.</div>'">
                 </iframe>
             </div>
         `;
         
         document.body.appendChild(canvas);
+        showNotification('Canvas opened in modal (extension context issue detected)');
     }
     
     // Show notification
