@@ -16,6 +16,13 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (!tab) {
                 console.error('No active tab found');
+                showError('No active tab found');
+                return;
+            }
+            
+            // Check if the current page allows content scripts
+            if (!isValidUrl(tab.url)) {
+                showError('Web Lego cannot run on this page. Try a regular website like google.com');
                 return;
             }
             
@@ -35,7 +42,15 @@ document.addEventListener('DOMContentLoaded', function() {
             
         } catch (error) {
             console.error('Error activating Web Lego:', error);
-            showError();
+            
+            // Provide more specific error messages
+            if (error.message.includes('Cannot access')) {
+                showError('Cannot access this page. Try a regular website.');
+            } else if (error.message.includes('chrome://')) {
+                showError('Web Lego cannot run on browser pages. Try a regular website.');
+            } else {
+                showError('Activation failed. Try refreshing the page.');
+            }
         }
     });
     
@@ -53,12 +68,47 @@ document.addEventListener('DOMContentLoaded', function() {
         document.dispatchEvent(new CustomEvent('webLegoActivate'));
     }
     
+    // Check if URL is valid for content script injection
+    function isValidUrl(url) {
+        if (!url) return false;
+        
+        // List of restricted URL patterns
+        const restrictedPatterns = [
+            'chrome://',
+            'chrome-extension://',
+            'moz-extension://',
+            'edge://',
+            'about:',
+            'file://',
+            'data:',
+            'javascript:'
+        ];
+        
+        // Check if URL starts with any restricted pattern
+        return !restrictedPatterns.some(pattern => url.startsWith(pattern));
+    }
+    
     // Check current extension status
     async function checkExtensionStatus() {
         try {
             const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
             
             if (!tab) return;
+            
+            // Skip status check for restricted URLs
+            if (!isValidUrl(tab.url)) {
+                // Show info that extension can't run on this page
+                status.textContent = 'Web Lego cannot run on this page. Try a regular website.';
+                status.style.display = 'block';
+                status.style.background = '#fef3c7';
+                status.style.color = '#92400e';
+                
+                // Disable the activate button
+                activateBtn.disabled = true;
+                activateBtn.textContent = 'Not Available';
+                activateBtn.style.opacity = '0.6';
+                return;
+            }
             
             // Check if Web Lego is already active
             const results = await chrome.scripting.executeScript({
@@ -84,15 +134,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Show error state
-    function showError() {
-        activateBtn.textContent = 'Error - Try Again';
+    function showError(message = 'Error - Try Again') {
+        activateBtn.textContent = message.length > 20 ? 'Error - Try Again' : message;
         activateBtn.style.background = 'linear-gradient(135deg, #f56565 0%, #e53e3e 100%)';
         
-        // Reset after 2 seconds
+        // Show detailed message in status if it's long
+        if (message.length > 20) {
+            status.textContent = message;
+            status.style.display = 'block';
+            status.style.background = '#fed7d7';
+            status.style.color = '#9b2c2c';
+        }
+        
+        // Reset after 3 seconds
         setTimeout(() => {
             activateBtn.textContent = 'Activate Web Lego';
             activateBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-        }, 2000);
+            status.style.display = 'none';
+        }, 3000);
     }
 });
 
