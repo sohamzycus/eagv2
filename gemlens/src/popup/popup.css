@@ -161,9 +161,30 @@ body {
   padding: 16px 20px;
   background: #F2F2F7;
   display: flex;
-  justify-content: between;
+  justify-content: space-between;
   align-items: center;
   border-bottom: 1px solid #E5E5EA;
+}
+
+.summary-header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.history-btn {
+  background: #007AFF;
+  color: white;
+  border: none;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s;
+}
+
+.history-btn:hover {
+  background: #0056CC;
 }
 
 .summary-header h3 {
@@ -213,6 +234,111 @@ body {
 
 .copy-btn:hover {
   background: #0056CC;
+}
+
+.save-btn {
+  background: #34C759;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.save-btn:hover {
+  background: #30D158;
+}
+
+.history-container {
+  margin: 0 20px 20px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  max-height: 400px;
+}
+
+.history-header {
+  padding: 16px 20px;
+  background: #F2F2F7;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #E5E5EA;
+}
+
+.history-header h3 {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.close-history {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  color: #666;
+}
+
+.close-history:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.history-content {
+  max-height: 300px;
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.history-item {
+  padding: 12px;
+  border-bottom: 1px solid #F0F0F0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.history-item:hover {
+  background: #F8F9FA;
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-item-title {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 4px;
+  color: #1D1D1F;
+}
+
+.history-item-url {
+  font-size: 11px;
+  color: #666;
+  margin-bottom: 6px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-item-preview {
+  font-size: 12px;
+  color: #333;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.history-item-date {
+  font-size: 10px;
+  color: #999;
+  margin-top: 4px;
 }
 
 .footer {

@@ -25,7 +25,33 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         }
 
         const text: string = message.text ?? "";
-        const summary = await container.gemini.summarize(text);
+        if (!text || text.length < 50) {
+          sendResponse({ error: "Not enough content to summarize" });
+          return;
+        }
+
+        // Request longer summary with specific instructions
+        const prompt = `Please provide a comprehensive summary of the following content. The summary should be detailed and include:
+        - Main topics and key points
+        - Important details and context
+        - Any conclusions or recommendations
+        - Structure the summary in clear paragraphs
+        - Aim for at least 10-15 sentences to capture all important information
+        
+        Content to summarize:
+        ${text}`;
+
+        const summary = await container.gemini.summarize(prompt, { maxTokens: 1024 });
+        
+        // Store in history
+        await container.storage.addToHistory({
+          url,
+          title: message.title || 'Untitled Page',
+          summary,
+          timestamp: Date.now(),
+          type: message.type || 'webpage'
+        });
+        
         await container.cache.set(url, summary);
         sendResponse({ summary });
         return;
@@ -42,6 +68,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         // Check if API key exists
         const key = await container.storage.getApiKey();
         sendResponse({ hasKey: !!key, isValid: !!key });
+        return;
+      }
+
+      if (message.action === "getHistory") {
+        // Get summary history
+        const history = await container.storage.getHistory();
+        sendResponse({ history });
         return;
       }
 

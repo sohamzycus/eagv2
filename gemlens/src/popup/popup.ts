@@ -14,12 +14,16 @@ class GemLensPopup {
   private statusText: HTMLElement;
   private summaryContainer: HTMLElement;
   private summaryContent: HTMLElement;
+  private historyContainer: HTMLElement;
+  private historyContent: HTMLElement;
 
   constructor() {
     this.statusIndicator = document.getElementById('statusIndicator')!;
     this.statusText = document.getElementById('statusText')!;
     this.summaryContainer = document.getElementById('summaryContainer')!;
     this.summaryContent = document.getElementById('summaryContent')!;
+    this.historyContainer = document.getElementById('historyContainer')!;
+    this.historyContent = document.getElementById('historyContent')!;
 
     this.init();
   }
@@ -99,6 +103,21 @@ class GemLensPopup {
     document.getElementById('copyBtn')?.addEventListener('click', () => {
       this.copySummary();
     });
+
+    // History
+    document.getElementById('historyBtn')?.addEventListener('click', () => {
+      this.showHistory();
+    });
+
+    // Close history
+    document.getElementById('closeHistory')?.addEventListener('click', () => {
+      this.closeHistory();
+    });
+
+    // Save summary
+    document.getElementById('saveBtn')?.addEventListener('click', () => {
+      this.saveSummary();
+    });
   }
 
   private async summarizePage() {
@@ -131,7 +150,9 @@ class GemLensPopup {
       const response = await chrome.runtime.sendMessage({
         action: 'summarizePage',
         text: content.text,
-        url: content.url
+        url: content.url,
+        title: content.title || this.currentTab?.title || 'Untitled Page',
+        type: content.type || 'webpage'
       });
 
       if (response?.error) {
@@ -269,6 +290,71 @@ class GemLensPopup {
     } catch (error) {
       console.error('Failed to copy summary:', error);
     }
+  }
+
+  private async showHistory() {
+    try {
+      this.historyContainer.style.display = 'block';
+      this.historyContent.innerHTML = '<div class="loading">Loading history...</div>';
+      
+      const response = await chrome.runtime.sendMessage({ action: 'getHistory' });
+      
+      if (response?.history && response.history.length > 0) {
+        this.displayHistory(response.history);
+      } else {
+        this.historyContent.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">No summaries yet</div>';
+      }
+    } catch (error) {
+      this.historyContent.innerHTML = '<div style="padding: 20px; text-align: center; color: #ff3b30;">Failed to load history</div>';
+    }
+  }
+
+  private displayHistory(history: any[]) {
+    this.historyContent.innerHTML = '';
+    
+    history.forEach((item, index) => {
+      const historyItem = document.createElement('div');
+      historyItem.className = 'history-item';
+      
+      const date = new Date(item.timestamp).toLocaleDateString();
+      const preview = item.summary.substring(0, 100) + (item.summary.length > 100 ? '...' : '');
+      
+      historyItem.innerHTML = `
+        <div class="history-item-title">${item.title}</div>
+        <div class="history-item-url">${item.url}</div>
+        <div class="history-item-preview">${preview}</div>
+        <div class="history-item-date">${date}</div>
+      `;
+      
+      historyItem.addEventListener('click', () => {
+        this.showHistoryItem(item);
+      });
+      
+      this.historyContent.appendChild(historyItem);
+    });
+  }
+
+  private showHistoryItem(item: any) {
+    this.summaryContent.textContent = item.summary;
+    this.summaryContainer.style.display = 'block';
+    this.historyContainer.style.display = 'none';
+  }
+
+  private closeHistory() {
+    this.historyContainer.style.display = 'none';
+  }
+
+  private async saveSummary() {
+    // Summary is already saved automatically, just show feedback
+    const saveBtn = document.getElementById('saveBtn') as HTMLButtonElement;
+    const originalText = saveBtn.textContent;
+    saveBtn.textContent = 'Saved!';
+    saveBtn.style.background = '#34C759';
+    
+    setTimeout(() => {
+      saveBtn.textContent = originalText;
+      saveBtn.style.background = '#34C759';
+    }, 1000);
   }
 }
 
