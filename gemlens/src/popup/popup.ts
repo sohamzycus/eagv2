@@ -251,41 +251,124 @@ class GemLensPopup {
         throw new Error('Video summarization currently supports YouTube only');
       }
 
-      // Extract video content
-      const [result] = await chrome.scripting.executeScript({
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Video content extraction timed out after 15 seconds')), 15000);
+      });
+
+      // Extract video content directly
+      const extractionPromise = chrome.scripting.executeScript({
         target: { tabId: this.currentTab.id },
         func: () => {
-          return new Promise((resolve) => {
-            chrome.runtime.sendMessage({ action: 'extractContent' }, (response) => {
-              resolve(response);
-            });
-          });
+          const extractVideoContent = () => {
+            const url = window.location.href;
+            const title = document.title;
+            
+            // Get video title and description
+            let text = '';
+            
+            // YouTube video title
+            const videoTitle = document.querySelector('h1.ytd-video-primary-info-renderer') || 
+                              document.querySelector('h1.title') ||
+                              document.querySelector('.watch-main-col h1');
+            
+            if (videoTitle) {
+              text += 'Video Title: ' + videoTitle.textContent + '\n\n';
+            }
+            
+            // YouTube video description
+            const description = document.querySelector('#description') ||
+                               document.querySelector('.watch-main-col .content') ||
+                               document.querySelector('ytd-video-secondary-info-renderer');
+            
+            if (description) {
+              text += 'Description: ' + description.textContent + '\n\n';
+            }
+            
+            // Try to get transcript/captions
+            const transcriptButton = document.querySelector('[aria-label*="transcript" i], [aria-label*="captions" i]');
+            if (transcriptButton) {
+              text += 'Transcript available but requires user interaction to access.\n\n';
+            }
+            
+            // Get comments as additional context
+            const comments = document.querySelectorAll('#content-text, .comment-text');
+            if (comments.length > 0) {
+              text += 'Top Comments:\n';
+              Array.from(comments).slice(0, 5).forEach((comment, i) => {
+                text += `${i + 1}. ${comment.textContent?.trim()}\n`;
+              });
+            }
+            
+            // Fallback to page content
+            if (!text || text.length < 100) {
+              const body = document.body.cloneNode(true) as HTMLElement;
+              
+              // Remove non-content elements
+              const removeSelectors = [
+                'nav', 'header', 'footer', 'aside', '.navigation', 
+                '.sidebar', '#chat', '.live-chat', 'script', 'style'
+              ];
+              
+              removeSelectors.forEach(selector => {
+                const elements = body.querySelectorAll(selector);
+                elements.forEach(el => el.remove());
+              });
+              
+              text = body.textContent || body.innerText || '';
+            }
+            
+            // Clean up text
+            text = text.replace(/\s+/g, ' ').trim();
+            
+            return {
+              text,
+              title,
+              url,
+              type: 'video'
+            };
+          };
+          
+          return extractVideoContent();
         }
       });
 
-      if (!result?.result?.success) {
+      // Race between extraction and timeout
+      const [result] = await Promise.race([extractionPromise, timeoutPromise]) as any[];
+
+      if (!result?.result) {
         throw new Error('Failed to extract video content');
       }
 
-      const content = result.result.content;
-      if (content.type !== 'video') {
-        throw new Error('No video content detected on this page');
+      const content = result.result;
+      
+      console.log('Video content extracted:', content.text.length, 'characters');
+      console.log('Video content preview:', content.text.substring(0, 300) + '...');
+      
+      if (!content.text || content.text.length < 50) {
+        throw new Error(`Not enough video content extracted (${content.text.length} characters). Try refreshing the page.`);
       }
 
-      this.showLoading('Generating video summary...');
+      this.showLoading(`Generating video summary... (${content.text.length} chars extracted)`);
 
-      // Use video-specific content for summarization
-      const textToSummarize = content.captions || content.text;
+      // Send to background for summarization with video-specific prompt
       const response = await chrome.runtime.sendMessage({
         action: 'summarizePage',
-        text: `Video content: ${textToSummarize}`,
-        url: content.url
+        text: `YouTube Video Content:\n${content.text}`,
+        url: content.url,
+        title: content.title || this.currentTab?.title || 'YouTube Video',
+        type: 'video'
       });
 
       if (response?.error) {
         throw new Error(response.error);
       }
 
+      if (!response?.summary) {
+        throw new Error('No video summary received from AI service');
+      }
+
+      console.log('Video summary received:', response.summary.length, 'characters');
       this.showSummary(response.summary);
     } catch (error) {
       this.showError('Failed to summarize video: ' + (error as Error).message);
@@ -296,16 +379,62 @@ class GemLensPopup {
     if (!this.currentTab?.id) return;
 
     try {
-      // Inject overlay into current tab
+      this.showLoading('Opening Gemini chat...');
+
+      // Inject the overlay directly
       await chrome.scripting.executeScript({
         target: { tabId: this.currentTab.id },
         func: () => {
-          chrome.runtime.sendMessage({ action: 'showOverlay' });
+          // Check if overlay already exists
+          if (document.getElementById('gemlens-overlay')) {
+            return;
+          }
+          
+          // Create overlay iframe
+          const overlay = document.createElement('iframe');
+          overlay.id = 'gemlens-overlay';
+          overlay.src = chrome.runtime.getURL('content/overlay/overlay.html');
+          overlay.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 400px;
+            height: 600px;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 10000;
+            background: white;
+          `;
+          
+          document.body.appendChild(overlay);
+          
+          // Add close functionality
+          overlay.addEventListener('load', () => {
+            // Send page content to overlay for context
+            const pageContent = {
+              title: document.title,
+              url: window.location.href,
+              text: document.body.textContent?.substring(0, 2000) || ''
+            };
+            
+            overlay.contentWindow?.postMessage({
+              action: 'setPageContext',
+              content: pageContent
+            }, '*');
+          });
         }
       });
 
-      // Close popup
-      window.close();
+      // Update status and close popup
+      this.updateStatus('ready', 'Chat opened');
+      this.enableButtons(true);
+      
+      // Close popup after a short delay
+      setTimeout(() => {
+        window.close();
+      }, 500);
+      
     } catch (error) {
       this.showError('Failed to open chat: ' + (error as Error).message);
     }

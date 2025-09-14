@@ -15,6 +15,7 @@ class GeminiOverlay {
   private port: chrome.runtime.Port | null = null;
   private messages: ChatMessage[] = [];
   private currentStreamingMessage: HTMLElement | null = null;
+  private pageContext: any = null;
 
   constructor() {
     this.chatContainer = document.getElementById('chatContainer')!;
@@ -26,9 +27,24 @@ class GeminiOverlay {
   }
 
   private setupEventListeners() {
+    // Listen for page context from parent
+    window.addEventListener('message', (event) => {
+      if (event.data.action === 'setPageContext') {
+        this.pageContext = event.data.content;
+        console.log('Page context received:', this.pageContext);
+      }
+    });
+
     // Close overlay
     document.getElementById('closeOverlay')?.addEventListener('click', () => {
-      window.parent.postMessage({ action: 'closeOverlay' }, '*');
+      // Remove overlay from parent page
+      if (window.parent !== window) {
+        window.parent.postMessage({ action: 'closeOverlay' }, '*');
+      } else {
+        // Direct removal if not in iframe
+        const overlay = document.getElementById('gemlens-overlay');
+        if (overlay) overlay.remove();
+      }
     });
 
     // Send message on button click
@@ -78,9 +94,16 @@ class GeminiOverlay {
     this.setInputEnabled(false);
 
     try {
-      // Get page content for context
-      const pageContent = await this.getPageContent();
-      const contextualPrompt = `Based on this webpage content: "${pageContent.text.substring(0, 2000)}...", please answer: ${text}`;
+      // Use page context if available, otherwise get it
+      let contextText = '';
+      if (this.pageContext) {
+        contextText = this.pageContext.text;
+      } else {
+        const pageContent = await this.getPageContent();
+        contextText = pageContent.text;
+      }
+
+      const contextualPrompt = `Based on this webpage content: "${contextText.substring(0, 2000)}...", please answer: ${text}`;
 
       // Start streaming response
       this.startStreamingMessage();
