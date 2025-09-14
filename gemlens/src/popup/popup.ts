@@ -75,7 +75,7 @@ class GemLensPopup {
 
   private setupEventListeners() {
     // Summarize page
-    document.getElementById('summarizeBtn')?.addEventListener('click', () => {
+    document.getElementById('summarizePageBtn')?.addEventListener('click', () => {
       this.summarizePage();
     });
 
@@ -422,6 +422,13 @@ class GemLensPopup {
               action: 'setPageContext',
               content: pageContent
             }, '*');
+          });
+
+          // Listen for close message from overlay
+          window.addEventListener('message', (event) => {
+            if (event.data.action === 'closeOverlay') {
+              overlay.remove();
+            }
           });
         }
       });
