@@ -13,6 +13,30 @@ export default defineConfig({
         {
           src: 'assets/*',
           dest: 'assets'
+        },
+        {
+          src: 'src/popup/popup.html',
+          dest: 'popup'
+        },
+        {
+          src: 'src/popup/popup.css',
+          dest: 'popup'
+        },
+        {
+          src: 'src/options/options.html',
+          dest: 'options'
+        },
+        {
+          src: 'src/options/options.css',
+          dest: 'options'
+        },
+        {
+          src: 'src/content/overlay/overlay.html',
+          dest: 'content/overlay'
+        },
+        {
+          src: 'src/content/overlay/overlay.css',
+          dest: 'content/overlay'
         }
       ]
     })
