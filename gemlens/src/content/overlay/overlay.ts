@@ -27,6 +27,15 @@ class GeminiOverlay {
   }
 
   private setupEventListeners() {
+    // Example question clicks
+    document.querySelectorAll('.example-questions li').forEach(li => {
+      li.addEventListener('click', () => {
+        const question = li.textContent?.replace('💡 ', '') || '';
+        this.chatInput.value = question;
+        this.chatInput.focus();
+      });
+    });
+
     // Listen for page context from parent
     window.addEventListener('message', (event) => {
       if (event.data.action === 'setPageContext') {

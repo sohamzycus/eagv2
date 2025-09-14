@@ -426,14 +426,9 @@ class GemLensPopup {
         }
       });
 
-      // Update status and close popup
+      // Update status
       this.updateStatus('ready', 'Chat opened');
       this.enableButtons(true);
-      
-      // Close popup after a short delay
-      setTimeout(() => {
-        window.close();
-      }, 500);
       
     } catch (error) {
       this.showError('Failed to open chat: ' + (error as Error).message);
