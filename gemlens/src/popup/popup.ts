@@ -126,25 +126,95 @@ class GemLensPopup {
     try {
       this.showLoading('Extracting page content...');
 
-      // Extract content from current tab
-      const [result] = await chrome.scripting.executeScript({
+      // Add timeout to prevent hanging
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Content extraction timed out after 10 seconds')), 10000);
+      });
+
+      // Extract content directly from current tab
+      const extractionPromise = chrome.scripting.executeScript({
         target: { tabId: this.currentTab.id },
         func: () => {
-          // This function runs in the content script context
-          return new Promise((resolve) => {
-            chrome.runtime.sendMessage({ action: 'extractContent' }, (response) => {
-              resolve(response);
-            });
-          });
+          // Direct content extraction function
+          const extractPageContent = () => {
+            const url = window.location.href;
+            const title = document.title;
+            
+            let text = '';
+            
+            // Try to find main content areas
+            const contentSelectors = [
+              'article',
+              'main',
+              '[role="main"]',
+              '.content',
+              '#content',
+              '.post-content',
+              '.entry-content'
+            ];
+            
+            for (const selector of contentSelectors) {
+              const element = document.querySelector(selector);
+              if (element) {
+                text = element.textContent || element.innerText || '';
+                break;
+              }
+            }
+            
+            // Fallback to body content, but filter out navigation and footer
+            if (!text) {
+              const body = document.body.cloneNode(true) as HTMLElement;
+              
+              // Remove common non-content elements
+              const removeSelectors = [
+                'nav', 'header', 'footer', 'aside',
+                '.navigation', '.nav', '.menu',
+                '.sidebar', '.footer', '.header'
+              ];
+              
+              removeSelectors.forEach(selector => {
+                const elements = body.querySelectorAll(selector);
+                elements.forEach(el => el.remove());
+              });
+              
+              text = body.textContent || body.innerText || '';
+            }
+            
+            // Clean up text
+            text = text.replace(/\s+/g, ' ').trim();
+            
+            const result = {
+              text,
+              title,
+              url,
+              type: window.location.hostname.includes('youtube.com') ? 'video' : 'webpage'
+            };
+            
+            return result;
+          };
+          
+          return extractPageContent();
         }
       });
 
-      if (!result?.result?.success) {
+      // Race between extraction and timeout
+      const [result] = await Promise.race([extractionPromise, timeoutPromise]) as any[];
+
+      if (!result?.result) {
         throw new Error('Failed to extract page content');
       }
 
-      const content = result.result.content;
-      this.showLoading('Generating summary...');
+      const content = result.result;
+      
+      // Show extracted content length for debugging
+      console.log('Extracted content length:', content.text.length);
+      console.log('Extracted content preview:', content.text.substring(0, 200) + '...');
+      
+      if (!content.text || content.text.length < 50) {
+        throw new Error(`Not enough content extracted (${content.text.length} characters). Try refreshing the page.`);
+      }
+      
+      this.showLoading(`Generating summary... (${content.text.length} chars extracted)`);
 
       // Send to background for summarization
       const response = await chrome.runtime.sendMessage({
@@ -159,6 +229,11 @@ class GemLensPopup {
         throw new Error(response.error);
       }
 
+      if (!response?.summary) {
+        throw new Error('No summary received from AI service');
+      }
+
+      console.log('Summary received:', response.summary.length, 'characters');
       this.showSummary(response.summary);
     } catch (error) {
       this.showError('Failed to summarize page: ' + (error as Error).message);
@@ -245,6 +320,9 @@ class GemLensPopup {
     if (activeBtn) {
       activeBtn.classList.add('loading');
     }
+    
+    // Keep popup open longer during processing
+    console.log('GemLens:', message);
   }
 
   private showSummary(summary: string) {

@@ -53,6 +53,14 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         });
         
         await container.cache.set(url, summary);
+        
+        // Update badge to show completion
+        chrome.action.setBadgeText({ text: '✓' });
+        chrome.action.setBadgeBackgroundColor({ color: '#34C759' });
+        setTimeout(() => {
+          chrome.action.setBadgeText({ text: '' });
+        }, 3000);
+        
         sendResponse({ summary });
         return;
       }

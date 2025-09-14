@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GemLens Debug Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .debug-info {
+            background: #f0f8ff;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #007AFF;
+        }
+        .test-content {
+            background: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-info">
+        <h2>🔍 GemLens Debug Test Page</h2>
+        <p><strong>Instructions:</strong></p>
+        <ol>
+            <li>Make sure you've reloaded the GemLens extension in Chrome</li>
+            <li>Click the GemLens icon in your browser toolbar</li>
+            <li>Click "Summarize Page" button</li>
+            <li>Open browser console (F12) to see debug logs</li>
+            <li>Check if content extraction and summarization works</li>
+        </ol>
+    </div>
+
+    <main class="test-content">
+        <article>
+            <h1>Test Article for GemLens Summarization</h1>
+            
+            <p>This is a comprehensive test article designed to verify that GemLens can properly extract and summarize webpage content. The article contains multiple paragraphs with substantial content to ensure the AI has enough material to work with.</p>
+            
+            <h2>Introduction to AI Summarization</h2>
+            <p>Artificial Intelligence has revolutionized how we process and understand large amounts of text. Modern AI systems like Google's Gemini can analyze complex documents and extract the most important information, presenting it in a concise and readable format.</p>
+            
+            <h2>Key Benefits of AI Summarization</h2>
+            <p>The primary advantages of using AI for text summarization include:</p>
+            <ul>
+                <li><strong>Time Efficiency:</strong> Quickly understand lengthy documents without reading every word</li>
+                <li><strong>Consistency:</strong> AI provides objective summaries without human bias</li>
+                <li><strong>Scalability:</strong> Process hundreds of documents in minutes</li>
+                <li><strong>Accuracy:</strong> Modern AI models maintain high fidelity to source material</li>
+            </ul>
+            
+            <h2>Technical Implementation</h2>
+            <p>GemLens uses Google's Gemini Flash 2.0 model to analyze webpage content. The system extracts text from various HTML elements, cleans the content, and sends it to the AI service for processing. The resulting summary is then displayed to the user with options to save, copy, or view in the history.</p>
+            
+            <h2>Future Developments</h2>
+            <p>As AI technology continues to advance, we can expect even more sophisticated summarization capabilities. Future versions may include multi-language support, sentiment analysis, and the ability to generate summaries in different styles based on user preferences.</p>
+            
+            <h2>Conclusion</h2>
+            <p>AI-powered summarization tools like GemLens represent a significant step forward in information processing technology. By automating the summarization process, users can quickly extract valuable insights from large volumes of text, improving productivity and decision-making capabilities.</p>
+        </article>
+    </main>
+
+    <div class="debug-info">
+        <h3>Expected Results:</h3>
+        <ul>
+            <li>✅ Content extraction should find ~1500+ characters</li>
+            <li>✅ Summary should be 10-15 sentences long</li>
+            <li>✅ Summary should cover main topics: AI benefits, technical implementation, future developments</li>
+            <li>✅ History button (📚) should appear after summarization</li>
+            <li>✅ Copy and Save buttons should work</li>
+        </ul>
+        
+        <h3>Debug Console Commands:</h3>
+        <p>Open browser console (F12) and run these to check extension state:</p>
+        <code>
+            chrome.storage.local.get(null, console.log); // Check stored data<br>
+            chrome.runtime.getManifest(); // Check extension manifest
+        </code>
+    </div>
+
+    <script>
+        // Add some dynamic content for testing
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('GemLens Debug Page Loaded');
+            console.log('Page content length:', document.body.textContent.length);
+            console.log('Article content:', document.querySelector('article')?.textContent?.length, 'characters');
+        });
+    </script>
+</body>
+</html>
