@@ -31,12 +31,25 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         }
 
         // Request longer summary with specific instructions
-        const prompt = `Please provide a comprehensive summary of the following content. The summary should be detailed and include:
-        - Main topics and key points
-        - Important details and context
-        - Any conclusions or recommendations
-        - Structure the summary in clear paragraphs
-        - Aim for at least 10-15 sentences to capture all important information
+        const prompt = `Please provide a comprehensive, well-formatted summary of the following content. Format your response with:
+
+        **📋 OVERVIEW:**
+        Brief 2-3 sentence overview of the main topic
+
+        **🔑 KEY POINTS:**
+        • Use bullet points for main ideas
+        • Highlight important concepts
+        • Include specific details and numbers
+
+        **💡 INSIGHTS:**
+        • Notable conclusions or findings
+        • Important implications
+        • Recommendations if any
+
+        **📊 DETAILS:**
+        Additional context and supporting information in clear paragraphs
+
+        Make the summary detailed (10-15 sentences) and easy to scan with proper formatting, bullets, and emphasis.
         
         Content to summarize:
         ${text}`;

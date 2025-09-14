@@ -6,9 +6,22 @@ interface SummaryHistoryItem {
   type: 'webpage' | 'video';
 }
 
+interface ChatHistoryItem {
+  id: string;
+  url: string;
+  title: string;
+  messages: Array<{
+    role: 'user' | 'assistant';
+    content: string;
+    timestamp: number;
+  }>;
+  timestamp: number;
+}
+
 export class StorageService {
   private API_KEY_KEY = "GEMINI_API_KEY";
   private HISTORY_KEY = "SUMMARY_HISTORY";
+  private CHAT_HISTORY_KEY = "CHAT_HISTORY";
   private MAX_HISTORY_ITEMS = 50;
 
   async getApiKey(): Promise<string | null> {
@@ -60,6 +73,27 @@ export class StorageService {
   async clearHistory(): Promise<void> {
     return new Promise((resolve) => {
       chrome.storage.local.remove([this.HISTORY_KEY], () => resolve());
+    });
+  }
+
+  async addChatHistory(item: ChatHistoryItem): Promise<void> {
+    return new Promise((resolve) => {
+      chrome.storage.local.get([this.CHAT_HISTORY_KEY], (res) => {
+        const history: ChatHistoryItem[] = res[this.CHAT_HISTORY_KEY] || [];
+        history.unshift(item);
+        if (history.length > this.MAX_HISTORY_ITEMS) {
+          history.splice(this.MAX_HISTORY_ITEMS);
+        }
+        chrome.storage.local.set({ [this.CHAT_HISTORY_KEY]: history }, () => resolve());
+      });
+    });
+  }
+
+  async getChatHistory(): Promise<ChatHistoryItem[]> {
+    return new Promise((resolve) => {
+      chrome.storage.local.get([this.CHAT_HISTORY_KEY], (res) => {
+        resolve(res[this.CHAT_HISTORY_KEY] || []);
+      });
     });
   }
 }

@@ -68,17 +68,28 @@ class GeminiOverlay {
   }
 
   private connectToBackground() {
-    this.port = chrome.runtime.connect({ name: 'gemini-stream' });
-    
-    this.port.onMessage.addListener((message) => {
-      if (message.type === 'delta') {
-        this.appendToStreamingMessage(message.chunk);
-      } else if (message.type === 'complete') {
-        this.finishStreamingMessage();
-      } else if (message.type === 'error') {
-        this.showError(message.error);
-      }
-    });
+    try {
+      this.port = chrome.runtime.connect({ name: 'gemini-stream' });
+      
+      this.port.onMessage.addListener((message) => {
+        if (message.type === 'delta') {
+          this.appendToStreamingMessage(message.chunk);
+        } else if (message.type === 'complete') {
+          this.finishStreamingMessage();
+        } else if (message.type === 'error') {
+          this.showError(message.error);
+        }
+      });
+
+      this.port.onDisconnect.addListener(() => {
+        console.log('Port disconnected, attempting to reconnect...');
+        setTimeout(() => this.connectToBackground(), 1000);
+      });
+    } catch (error) {
+      console.error('Failed to connect to background:', error);
+      // Fallback to direct messaging
+      this.port = null;
+    }
   }
 
   private async sendMessage() {
@@ -113,9 +124,26 @@ class GeminiOverlay {
           action: 'streamSummarize',
           text: contextualPrompt
         });
+      } else {
+        // Fallback to direct messaging if port failed
+        try {
+          const response = await chrome.runtime.sendMessage({
+            action: 'summarizePage',
+            text: contextualPrompt
+          });
+          
+          if (response?.error) {
+            throw new Error(response.error);
+          }
+          
+          // Simulate streaming for non-streaming response
+          this.simulateStreaming(response.summary || 'No response received');
+        } catch (fallbackError) {
+          this.showError('Connection failed: ' + (fallbackError as Error).message);
+        }
       }
     } catch (error) {
-      this.showError('Failed to send message');
+      this.showError('Failed to send message: ' + (error as Error).message);
       this.setInputEnabled(true);
     }
   }
@@ -211,6 +239,19 @@ class GeminiOverlay {
 
   private scrollToBottom() {
     this.chatContainer.scrollTop = this.chatContainer.scrollHeight;
+  }
+
+  private async simulateStreaming(text: string) {
+    const words = text.split(' ');
+    const chunkSize = 3;
+    
+    for (let i = 0; i < words.length; i += chunkSize) {
+      const chunk = words.slice(i, i + chunkSize).join(' ') + ' ';
+      this.appendToStreamingMessage(chunk);
+      await new Promise(resolve => setTimeout(resolve, 50));
+    }
+    
+    this.finishStreamingMessage();
   }
 }
 

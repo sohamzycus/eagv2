@@ -455,7 +455,8 @@ class GemLensPopup {
   }
 
   private showSummary(summary: string) {
-    this.summaryContent.textContent = summary;
+    // Format and display summary with proper HTML rendering
+    this.summaryContent.innerHTML = this.formatSummary(summary);
     this.summaryContainer.style.display = 'block';
     this.updateStatus('ready', 'Summary generated');
     this.enableButtons(true);
@@ -464,6 +465,20 @@ class GemLensPopup {
     document.querySelectorAll('.action-btn').forEach(btn => {
       btn.classList.remove('loading');
     });
+  }
+
+  private formatSummary(text: string): string {
+    return text
+      // Convert **text** to <strong>text</strong>
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      // Convert bullet points
+      .replace(/^• (.+)$/gm, '<li>$1</li>')
+      // Wrap consecutive li elements in ul
+      .replace(/(<li>.*<\/li>)/gs, '<ul>$1</ul>')
+      // Convert line breaks to paragraphs
+      .split('\n\n')
+      .map(paragraph => paragraph.trim() ? `<p>${paragraph.replace(/\n/g, '<br>')}</p>` : '')
+      .join('');
   }
 
   private showError(message: string) {
