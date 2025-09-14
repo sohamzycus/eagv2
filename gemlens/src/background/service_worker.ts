@@ -38,6 +38,13 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         sendResponse({ status: "ok" });
       }
 
+      if (message.action === "checkApiKey") {
+        // Check if API key exists
+        const key = await container.storage.getApiKey();
+        sendResponse({ hasKey: !!key, isValid: !!key });
+        return;
+      }
+
       if (message.action === "refreshApiKey") {
         // Recompose container when API key changed in Options page
         const key = await container.storage.getApiKey();
