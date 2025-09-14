@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GemLens Demo Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .header {
+      background: #f4f4f4;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .content {
+      background: white;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    .demo-controls {
+      background: #e8f4f8;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .demo-btn {
+      background: #007AFF;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .demo-btn:hover {
+      background: #0056CC;
+    }
+    .summary-card {
+      background: #f8f9fa;
+      border: 1px solid #dee2e6;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 10px 0;
+      display: none;
+    }
+    .gemlens-summary-card {
+      background: #e3f2fd;
+      border-left: 4px solid #2196f3;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>GemLens Demo Page</h1>
+    <p>This is a test page for demonstrating GemLens functionality in automated tests.</p>
+  </div>
+
+  <div class="demo-controls">
+    <h3>Test Controls</h3>
+    <button id="gemlens-run-demo-summarize" class="demo-btn">Run Demo Summarize</button>
+    <button id="gemlens-run-demo-chat" class="demo-btn">Run Demo Chat</button>
+    <button id="gemlens-simulate-error" class="demo-btn">Simulate Error</button>
+  </div>
+
+  <main class="content">
+    <article>
+      <h2>The Future of AI-Powered Web Browsing</h2>
+      
+      <p>Artificial Intelligence is revolutionizing how we interact with web content. Modern AI systems can now understand, summarize, and provide insights about any webpage in seconds.</p>
+      
+      <h3>Key Benefits</h3>
+      <ul>
+        <li><strong>Time Saving:</strong> Get instant summaries instead of reading entire articles</li>
+        <li><strong>Better Understanding:</strong> AI can explain complex topics in simple terms</li>
+        <li><strong>Interactive Learning:</strong> Ask questions about any content you're reading</li>
+        <li><strong>Accessibility:</strong> Makes information more accessible to everyone</li>
+      </ul>
+      
+      <h3>How It Works</h3>
+      <p>Advanced language models like Google's Gemini can process large amounts of text and extract the most important information. They understand context, identify key points, and present information in a clear, concise manner.</p>
+      
+      <p>This technology is particularly useful for:</p>
+      <ol>
+        <li>Research and academic work</li>
+        <li>News consumption and staying informed</li>
+        <li>Learning new topics quickly</li>
+        <li>Professional development and training</li>
+      </ol>
+      
+      <blockquote>
+        "The best way to predict the future is to invent it." - Alan Kay
+      </blockquote>
+      
+      <p>As we continue to develop more sophisticated AI tools, the way we consume and interact with information will continue to evolve. The future of web browsing is not just about finding information, but about understanding it deeply and quickly.</p>
+    </article>
+  </main>
+
+  <div id="test-results" class="summary-card">
+    <h3>Test Results</h3>
+    <div id="test-output"></div>
+  </div>
+
+  <div class="gemlens-summary-card" style="display: none;">
+    <h4>GemLens Summary</h4>
+    <p>This is a mock summary for testing purposes.</p>
+  </div>
+
+  <script>
+    // Demo functionality for testing
+    document.addEventListener('DOMContentLoaded', function() {
+      const summarizeBtn = document.getElementById('gemlens-run-demo-summarize');
+      const chatBtn = document.getElementById('gemlens-run-demo-chat');
+      const errorBtn = document.getElementById('gemlens-simulate-error');
+      const resultsDiv = document.getElementById('test-results');
+      const outputDiv = document.getElementById('test-output');
+      const summaryCard = document.querySelector('.gemlens-summary-card');
+
+      summarizeBtn?.addEventListener('click', function() {
+        // Simulate GemLens summarization
+        outputDiv.innerHTML = '<p>✅ Summarization test completed</p>';
+        resultsDiv.style.display = 'block';
+        summaryCard.style.display = 'block';
+        
+        // Simulate extension message for testing
+        if (window.chrome && chrome.runtime) {
+          chrome.runtime.sendMessage({
+            action: 'summarizePage',
+            text: document.querySelector('article').textContent,
+            url: window.location.href
+          });
+        }
+      });
+
+      chatBtn?.addEventListener('click', function() {
+        outputDiv.innerHTML = '<p>✅ Chat overlay test completed</p>';
+        resultsDiv.style.display = 'block';
+        
+        // Simulate chat overlay
+        if (window.chrome && chrome.runtime) {
+          chrome.runtime.sendMessage({ action: 'showOverlay' });
+        }
+      });
+
+      errorBtn?.addEventListener('click', function() {
+        outputDiv.innerHTML = '<p>❌ Error simulation completed</p>';
+        resultsDiv.style.display = 'block';
+      });
+    });
+
+    // Expose test functions for Playwright
+    window.gemLensTest = {
+      getSummaryText: () => document.querySelector('.gemlens-summary-card p')?.textContent,
+      getArticleText: () => document.querySelector('article')?.textContent,
+      isExtensionLoaded: () => !!(window.chrome && chrome.runtime),
+      simulateSummarize: () => document.getElementById('gemlens-run-demo-summarize')?.click(),
+      simulateChat: () => document.getElementById('gemlens-run-demo-chat')?.click()
+    };
+  </script>
+</body>
+</html>

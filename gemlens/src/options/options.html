@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GemLens Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="logo">
+        <svg width="40" height="40" viewBox="0 0 128 128" fill="none">
+          <path d="M64 20 L90 45 L90 75 L64 100 L38 75 L38 45 Z" fill="url(#gemGradient)" stroke="currentColor" stroke-width="2"/>
+          <circle cx="85" cy="43" r="8" fill="none" stroke="url(#lensGradient)" stroke-width="2"/>
+          <line x1="91" y1="49" x2="96" y2="54" stroke="url(#lensGradient)" stroke-width="2" stroke-linecap="round"/>
+          <defs>
+            <linearGradient id="gemGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="lensGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#f093fb;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#f5576c;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="header-content">
+        <h1>GemLens Settings</h1>
+        <p>Configure your AI-powered summarization experience</p>
+      </div>
+    </header>
+
+    <main class="main">
+      <section class="section">
+        <h2>🔑 API Configuration</h2>
+        <div class="card">
+          <div class="form-group">
+            <label for="apiKey">Google Gemini API Key</label>
+            <div class="input-group">
+              <input 
+                type="password" 
+                id="apiKey" 
+                placeholder="Enter your Gemini API key..."
+                autocomplete="off"
+              >
+              <button type="button" id="toggleApiKey" class="toggle-btn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+              </button>
+            </div>
+            <div class="help-text">
+              <p>🔒 <strong>Security Notice:</strong> Your API key is stored locally in your browser and never sent to our servers.</p>
+              <p>📖 <a href="https://makersuite.google.com/app/apikey" target="_blank">Get your free API key from Google AI Studio</a></p>
+            </div>
+          </div>
+          
+          <div class="button-group">
+            <button type="button" id="saveBtn" class="btn primary">Save API Key</button>
+            <button type="button" id="testBtn" class="btn secondary">Test Connection</button>
+            <button type="button" id="clearBtn" class="btn danger">Clear Key</button>
+          </div>
+          
+          <div class="status-message" id="statusMessage" style="display: none;"></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>⚙️ Preferences</h2>
+        <div class="card">
+          <div class="form-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="autoSummarize">
+              <span class="checkmark"></span>
+              Auto-summarize on page load
+            </label>
+            <p class="help-text">Automatically generate summaries when you visit supported pages</p>
+          </div>
+          
+          <div class="form-group">
+            <label for="summaryLength">Summary Length</label>
+            <select id="summaryLength">
+              <option value="short">Short (1-2 sentences)</option>
+              <option value="medium" selected>Medium (3-5 sentences)</option>
+              <option value="long">Long (6-10 sentences)</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="language">Preferred Language</label>
+            <select id="language">
+              <option value="en" selected>English</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
+              <option value="de">Deutsch</option>
+              <option value="it">Italiano</option>
+              <option value="pt">Português</option>
+              <option value="ja">日本語</option>
+              <option value="ko">한국어</option>
+              <option value="zh">中文</option>
+            </select>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>🛡️ Privacy & Security</h2>
+        <div class="card">
+          <div class="privacy-info">
+            <h3>How we protect your data:</h3>
+            <ul>
+              <li>✅ API keys are stored locally in your browser only</li>
+              <li>✅ Page content is sent directly to Google's Gemini API</li>
+              <li>✅ We never store or access your personal data</li>
+              <li>✅ All communication is encrypted (HTTPS)</li>
+              <li>⚠️ For production use, consider using a server-side proxy</li>
+            </ul>
+          </div>
+          
+          <div class="warning-box">
+            <h4>⚠️ Important Security Considerations</h4>
+            <p>Client-side API keys are visible to websites you visit. For enhanced security in production environments, we recommend:</p>
+            <ul>
+              <li>Using a server-side proxy to handle API calls</li>
+              <li>Implementing proper API key rotation</li>
+              <li>Monitoring your API usage in Google Cloud Console</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>📊 Usage Statistics</h2>
+        <div class="card">
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-number" id="totalSummaries">0</div>
+              <div class="stat-label">Summaries Generated</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number" id="totalChats">0</div>
+              <div class="stat-label">Chat Sessions</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number" id="timesSaved">0h</div>
+              <div class="stat-label">Time Saved</div>
+            </div>
+          </div>
+          
+          <button type="button" id="resetStatsBtn" class="btn secondary small">Reset Statistics</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>&copy; 2024 GemLens. Made with ❤️ for productivity enthusiasts.</p>
+      <div class="footer-links">
+        <a href="https://github.com/your-username/gemlens" target="_blank">GitHub</a>
+        <a href="#" id="reportIssue">Report Issue</a>
+        <a href="#" id="showVersion">Version 1.0.0</a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>
