@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CarbonLens Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .spec-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            background: #f9f9f9;
+        }
+        .highlight {
+            background: yellow;
+            padding: 2px 4px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🌱 CarbonLens Extension Test Page</h1>
+    
+    <div class="spec-card">
+        <h2>Cloud Computing Instance Specifications</h2>
+        <ul>
+            <li><strong>Instance Type:</strong> High-Performance Compute</li>
+            <li><strong>vCPUs:</strong> <span class="highlight">8 vCPU</span></li>
+            <li><strong>Memory:</strong> <span class="highlight">32 GB RAM</span></li>
+            <li><strong>Storage:</strong> <span class="highlight">500 GB SSD</span></li>
+            <li><strong>Network:</strong> 10 Gbps</li>
+            <li><strong>Power Consumption:</strong> <span class="highlight">150 Watts</span></li>
+            <li><strong>Count:</strong> <span class="highlight">200 instances</span></li>
+        </ul>
+    </div>
+
+    <div class="spec-card">
+        <h2>Regional Comparison</h2>
+        <h3>🇺🇸 US East (Virginia) - us-east-1</h3>
+        <ul>
+            <li><strong>Grid Intensity:</strong> 450 g CO2e/kWh</li>
+            <li><strong>Renewable %:</strong> 25%</li>
+            <li><strong>Primary Sources:</strong> Natural Gas, Coal</li>
+            <li><strong>Cost:</strong> $0.096/hour per instance</li>
+        </ul>
+        
+        <h3>🇮🇪 EU West (Ireland) - eu-west-1</h3>
+        <ul>
+            <li><strong>Grid Intensity:</strong> 350 g CO2e/kWh</li>
+            <li><strong>Renewable %:</strong> 45%</li>
+            <li><strong>Primary Sources:</strong> Wind, Natural Gas</li>
+            <li><strong>Cost:</strong> $0.108/hour per instance</li>
+        </ul>
+    </div>
+
+    <div class="spec-card">
+        <h2>🧪 Test the CarbonLens Extension</h2>
+        <p><strong>Instructions:</strong></p>
+        <ol>
+            <li>Install the CarbonLens extension from the <code>dist/</code> folder</li>
+            <li>Click the CarbonLens icon in your browser toolbar</li>
+            <li>Try these sample prompts:</li>
+        </ol>
+        
+        <h3>📝 Sample Prompts to Test:</h3>
+        <ul>
+            <li><strong>Basic Comparison:</strong><br>
+                "Compare compute carbon intensity us-east-1 vs eu-west-1 for 200 8-vCPU VMs"
+            </li>
+            <li><strong>Migration Analysis:</strong><br>
+                "Analyze migration of 200 servers from us-east-1 to eu-west-1 with uncertainty analysis"
+            </li>
+            <li><strong>Cost vs Carbon:</strong><br>
+                "Calculate annual emissions and cost difference between these regions for 200 instances"
+            </li>
+        </ul>
+        
+        <h3>✅ Expected Behavior:</h3>
+        <ul>
+            <li>Extension should extract the instance specs from this page</li>
+            <li>AI agent should plan the analysis step by step</li>
+            <li>Tools should be called to get carbon factors</li>
+            <li>Monte Carlo analysis should run</li>
+            <li>Final recommendation should be provided</li>
+            <li>Trace overlay should show the agent's decision process</li>
+        </ul>
+    </div>
+
+    <div class="spec-card">
+        <h2>🔧 Troubleshooting</h2>
+        <p>If the extension doesn't work:</p>
+        <ul>
+            <li>Check the browser console for errors</li>
+            <li>Verify the extension is loaded in <code>chrome://extensions/</code></li>
+            <li>Make sure "Developer mode" is enabled</li>
+            <li>Try refreshing this page</li>
+            <li>Check that all files are present in the <code>dist/</code> folder</li>
+        </ul>
+    </div>
+
+    <script>
+        // Add some dynamic content for testing
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('CarbonLens test page loaded');
+            
+            // Simulate some dynamic data that the extension might extract
+            window.carbonTestData = {
+                instances: 200,
+                vcpus: 8,
+                memory: 32,
+                storage: 500,
+                power: 150,
+                regions: ['us-east-1', 'eu-west-1'],
+                costPerHour: {
+                    'us-east-1': 0.096,
+                    'eu-west-1': 0.108
+                },
+                gridIntensity: {
+                    'us-east-1': 450,
+                    'eu-west-1': 350
+                }
+            };
+            
+            // Add a test button
+            const testButton = document.createElement('button');
+            testButton.textContent = '🧪 Test Page Content Extraction';
+            testButton.style.cssText = `
+                background: #4CAF50;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+                margin: 20px 0;
+            `;
+            testButton.onclick = function() {
+                alert('Test data available in window.carbonTestData');
+                console.log('Test data:', window.carbonTestData);
+            };
+            
+            document.body.appendChild(testButton);
+        });
+    </script>
+</body>
+</html>
