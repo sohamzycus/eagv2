@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carbon Comparison Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .spec-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+            margin: 16px 0;
+            background: #f9f9f9;
+        }
+        .region-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .mock-indicator {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 4px;
+            padding: 8px 12px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Carbon Comparison Demo</h1>
+    
+    <div class="mock-indicator" id="mock-mode-indicator">
+        🧪 Mock Mode - Using test data for demonstration
+    </div>
+    
+    <div class="spec-card" id="instance-specs">
+        <h2>Instance Specifications</h2>
+        <ul>
+            <li><strong>Type:</strong> High-Performance Compute</li>
+            <li><strong>vCPUs:</strong> 8 vCPU</li>
+            <li><strong>Memory:</strong> 32 GB RAM</li>
+            <li><strong>Storage:</strong> 500 GB SSD</li>
+            <li><strong>Network:</strong> 10 Gbps</li>
+            <li><strong>Count:</strong> 200 instances</li>
+        </ul>
+    </div>
+
+    <div class="region-comparison" id="regions">
+        <div class="spec-card">
+            <h3>Region: us-east-1 (Virginia)</h3>
+            <ul>
+                <li><strong>Grid Intensity:</strong> 450 g CO2e/kWh</li>
+                <li><strong>Renewable %:</strong> 25%</li>
+                <li><strong>Primary Sources:</strong> Natural Gas, Coal</li>
+                <li><strong>Cost:</strong> $0.096/hour per instance</li>
+            </ul>
+        </div>
+        
+        <div class="spec-card">
+            <h3>Region: eu-west-1 (Ireland)</h3>
+            <ul>
+                <li><strong>Grid Intensity:</strong> 350 g CO2e/kWh</li>
+                <li><strong>Renewable %:</strong> 45%</li>
+                <li><strong>Primary Sources:</strong> Wind, Natural Gas</li>
+                <li><strong>Cost:</strong> $0.108/hour per instance</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="spec-card">
+        <h2>Expected Analysis</h2>
+        <p>CarbonLens should extract this data and perform:</p>
+        <ol>
+            <li>Query carbon factors for both regions</li>
+            <li>Calculate emissions for 200 instances</li>
+            <li>Perform Monte Carlo uncertainty analysis</li>
+            <li>Compare total emissions and costs</li>
+            <li>Provide recommendation based on carbon footprint</li>
+        </ol>
+    </div>
+
+    <div class="spec-card">
+        <h2>Sample Prompts to Test</h2>
+        <ul>
+            <li>"Compare compute carbon intensity us-east-1 vs eu-west-1 for 200 8-vCPU VMs"</li>
+            <li>"Analyze migration of these instances to lowest carbon region with uncertainty"</li>
+            <li>"Calculate annual emissions and cost difference between these regions"</li>
+        </ul>
+    </div>
+
+    <script>
+        // Add some dynamic content for testing
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Demo page loaded for CarbonLens testing');
+            
+            // Simulate some dynamic data that the extension might extract
+            window.carbonDemoData = {
+                instances: 200,
+                vcpus: 8,
+                memory: 32,
+                regions: ['us-east-1', 'eu-west-1'],
+                costPerHour: {
+                    'us-east-1': 0.096,
+                    'eu-west-1': 0.108
+                },
+                gridIntensity: {
+                    'us-east-1': 450,
+                    'eu-west-1': 350
+                }
+            };
+        });
+    </script>
+</body>
+</html>

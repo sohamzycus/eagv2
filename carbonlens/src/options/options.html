@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CarbonLens Settings</title>
+  <link rel="stylesheet" href="options.css">
+</head>
+<body>
+  <div class="options-container">
+    <!-- Header -->
+    <div class="header">
+      <div class="logo">
+        <svg width="48" height="48" viewBox="0 0 128 128" fill="none">
+          <circle cx="64" cy="64" r="60" fill="url(#carbonGradient)" stroke="url(#borderGradient)" stroke-width="2"/>
+          <g transform="translate(64, 64)">
+            <circle cx="0" cy="0" r="8" fill="#2D3748" stroke="#4A5568" stroke-width="2"/>
+            <circle cx="-20" cy="-20" r="6" fill="#38A169" stroke="#48BB78" stroke-width="1.5"/>
+            <circle cx="20" cy="-20" r="6" fill="#38A169" stroke="#48BB78" stroke-width="1.5"/>
+            <circle cx="20" cy="20" r="6" fill="#38A169" stroke="#48BB78" stroke-width="1.5"/>
+            <circle cx="-20" cy="20" r="6" fill="#38A169" stroke="#48BB78" stroke-width="1.5"/>
+            <line x1="0" y1="0" x2="-20" y2="-20" stroke="#4A5568" stroke-width="2"/>
+            <line x1="0" y1="0" x2="20" y2="-20" stroke="#4A5568" stroke-width="2"/>
+            <line x1="0" y1="0" x2="20" y2="20" stroke="#4A5568" stroke-width="2"/>
+            <line x1="0" y1="0" x2="-20" y2="20" stroke="#4A5568" stroke-width="2"/>
+          </g>
+          <defs>
+            <linearGradient id="carbonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#E6FFFA;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#81E6D9;stop-opacity:1" />
+            </linearGradient>
+            <linearGradient id="borderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#38A169;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#2F855A;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="title">
+        <h1>CarbonLens Settings</h1>
+        <p>Configure your emissions research assistant</p>
+      </div>
+    </div>
+
+    <!-- Mode Selection -->
+    <div class="section">
+      <h2>🔧 Operation Mode</h2>
+      <div class="mode-selector">
+        <label class="radio-card">
+          <input type="radio" name="mode" value="mock" id="mockMode" checked>
+          <div class="card-content">
+            <div class="card-header">
+              <span class="icon">🧪</span>
+              <span class="title">Mock Mode</span>
+              <span class="badge recommended">Recommended</span>
+            </div>
+            <p>Uses deterministic test data. Perfect for development, testing, and demonstrations.</p>
+          </div>
+        </label>
+        
+        <label class="radio-card">
+          <input type="radio" name="mode" value="real" id="realMode">
+          <div class="card-content">
+            <div class="card-header">
+              <span class="icon">🌐</span>
+              <span class="title">Real Mode</span>
+              <span class="badge warning">API Keys Required</span>
+            </div>
+            <p>Uses real APIs for live data. Requires API keys or backend deployment.</p>
+          </div>
+        </label>
+      </div>
+    </div>
+
+    <!-- Backend Configuration -->
+    <div class="section" id="backendSection">
+      <h2>🖥️ Backend Configuration</h2>
+      <div class="warning-box">
+        <span class="icon">⚠️</span>
+        <div>
+          <strong>Recommended:</strong> Deploy the backend service for secure API key management.
+          <a href="#" id="backendDocsLink">View deployment guide</a>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="backendUrl">Backend URL</label>
+        <input type="url" id="backendUrl" placeholder="https://your-backend.herokuapp.com">
+        <small>Leave empty to use direct API calls (not recommended for production)</small>
+      </div>
+      
+      <button class="test-btn" id="testBackendBtn">Test Connection</button>
+      <div class="test-result" id="backendTestResult"></div>
+    </div>
+
+    <!-- API Keys Section -->
+    <div class="section" id="apiKeysSection">
+      <h2>🔑 API Keys</h2>
+      <div class="danger-box">
+        <span class="icon">🚨</span>
+        <div>
+          <strong>Security Warning:</strong> API keys stored here are visible in browser storage. 
+          Only use for development/testing. For production, use backend proxy.
+        </div>
+      </div>
+
+      <div class="api-key-group">
+        <h3>Google Gemini 2.0 Flash</h3>
+        <div class="form-group">
+          <label for="geminiKey">Gemini API Key</label>
+          <div class="key-input-group">
+            <input type="password" id="geminiKey" placeholder="Enter your Gemini API key">
+            <button class="toggle-visibility" data-target="geminiKey">👁️</button>
+          </div>
+          <small>Get your key from <a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a></small>
+        </div>
+      </div>
+
+      <div class="api-key-group">
+        <h3>Carbon Data APIs</h3>
+        <div class="form-group">
+          <label for="carbonInterfaceKey">Carbon Interface API Key</label>
+          <div class="key-input-group">
+            <input type="password" id="carbonInterfaceKey" placeholder="Optional - for carbon emission factors">
+            <button class="toggle-visibility" data-target="carbonInterfaceKey">👁️</button>
+          </div>
+          <small>Free tier: 1000 requests/month at <a href="https://carboninterface.com" target="_blank">carboninterface.com</a></small>
+        </div>
+
+        <div class="form-group">
+          <label for="climatiqKey">Climatiq API Key</label>
+          <div class="key-input-group">
+            <input type="password" id="climatiqKey" placeholder="Optional - alternative carbon data source">
+            <button class="toggle-visibility" data-target="climatiqKey">👁️</button>
+          </div>
+          <small>Free tier available at <a href="https://climatiq.io" target="_blank">climatiq.io</a></small>
+        </div>
+
+        <div class="form-group">
+          <label for="electricityMapKey">ElectricityMap API Key</label>
+          <div class="key-input-group">
+            <input type="password" id="electricityMapKey" placeholder="Optional - for real-time grid intensity">
+            <button class="toggle-visibility" data-target="electricityMapKey">👁️</button>
+          </div>
+          <small>Academic use available at <a href="https://electricitymap.org/api" target="_blank">electricitymap.org</a></small>
+        </div>
+
+        <div class="form-group">
+          <label for="newsApiKey">NewsAPI Key</label>
+          <div class="key-input-group">
+            <input type="password" id="newsApiKey" placeholder="Optional - for climate news search">
+            <button class="toggle-visibility" data-target="newsApiKey">👁️</button>
+          </div>
+          <small>Free tier: 1000 requests/day at <a href="https://newsapi.org" target="_blank">newsapi.org</a></small>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notifications -->
+    <div class="section">
+      <h2>🔔 Notifications</h2>
+      <div class="notification-channels" id="notificationChannels">
+        <div class="empty-state">
+          <span class="icon">📢</span>
+          <p>No notification channels configured</p>
+          <button class="add-btn" id="addChannelBtn">Add Channel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="actions">
+      <button class="save-btn" id="saveBtn">Save Settings</button>
+      <button class="reset-btn" id="resetBtn">Reset to Defaults</button>
+      <button class="export-btn" id="exportConfigBtn">Export Config</button>
+    </div>
+
+    <!-- Status -->
+    <div class="status-message" id="statusMessage"></div>
+  </div>
+
+  <!-- Add Channel Modal -->
+  <div class="modal" id="addChannelModal" style="display: none;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add Notification Channel</h3>
+        <button class="modal-close" id="closeModalBtn">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="channelType">Channel Type</label>
+          <select id="channelType">
+            <option value="slack">Slack</option>
+            <option value="telegram">Telegram</option>
+            <option value="webhook">Webhook</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="channelName">Channel Name</label>
+          <input type="text" id="channelName" placeholder="e.g., 'Team Alerts'">
+        </div>
+        <div class="form-group">
+          <label for="channelEndpoint">Webhook URL</label>
+          <input type="url" id="channelEndpoint" placeholder="https://hooks.slack.com/...">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="cancel-btn" id="cancelChannelBtn">Cancel</button>
+        <button class="add-btn" id="confirmAddChannelBtn">Add Channel</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="options.js"></script>
+</body>
+</html>

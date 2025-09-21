@@ -1,0 +1,45 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle with gradient -->
+  <circle cx="64" cy="64" r="60" fill="url(#carbonGradient)" stroke="url(#borderGradient)" stroke-width="2"/>
+  
+  <!-- Carbon molecule structure -->
+  <g transform="translate(64, 64)">
+    <!-- Central carbon atom -->
+    <circle cx="0" cy="0" r="8" fill="#2D3748" stroke="#4A5568" stroke-width="2"/>
+    
+    <!-- Surrounding atoms -->
+    <circle cx="-20" cy="-20" r="6" fill="#38A169" stroke="#48BB78" stroke-width="1.5"/>
+    <circle cx="20" cy="-20" r="6" fill="#38A169" stroke="#48BB78" stroke-width="1.5"/>
+    <circle cx="20" cy="20" r="6" fill="#38A169" stroke="#48BB78" stroke-width="1.5"/>
+    <circle cx="-20" cy="20" r="6" fill="#38A169" stroke="#48BB78" stroke-width="1.5"/>
+    
+    <!-- Bonds -->
+    <line x1="0" y1="0" x2="-20" y2="-20" stroke="#4A5568" stroke-width="2"/>
+    <line x1="0" y1="0" x2="20" y2="-20" stroke="#4A5568" stroke-width="2"/>
+    <line x1="0" y1="0" x2="20" y2="20" stroke="#4A5568" stroke-width="2"/>
+    <line x1="0" y1="0" x2="-20" y2="20" stroke="#4A5568" stroke-width="2"/>
+    
+    <!-- Lens overlay -->
+    <circle cx="15" cy="-15" r="12" fill="none" stroke="url(#lensGradient)" stroke-width="3" opacity="0.8"/>
+    <line x1="24" y1="-6" x2="30" y2="0" stroke="url(#lensGradient)" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  
+  <!-- CO2 indicator -->
+  <text x="64" y="110" text-anchor="middle" font-family="Arial, sans-serif" font-size="12" font-weight="bold" fill="#4A5568">CO₂</text>
+  
+  <defs>
+    <linearGradient id="carbonGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#E6FFFA;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#B2F5EA;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#81E6D9;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="borderGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#38A169;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2F855A;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="lensGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#3182CE;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#2B6CB0;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+</svg>
