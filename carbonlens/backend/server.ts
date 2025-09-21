@@ -37,7 +37,7 @@ app.use(express.json({ limit: '10mb' }));
 // Rate limiting middleware
 app.use(async (req, res, next) => {
   try {
-    await rateLimiter.consume(req.ip);
+    await rateLimiter.consume(req.ip || 'unknown');
     next();
   } catch {
     res.status(429).json({ error: 'Too many requests' });
