@@ -142,12 +142,12 @@ Evaluate how changing electricity grid carbon intensity over the next 10 years w
 3. **Watch the trace** - you should see detailed API calls like Perplexity
 4. **Check the results** - real data from your configured services
 
-The queries are specifically designed to use your:
-- 🗝️ **Carbon Interface**: `CZ1VP4SAb4ELDGh48Wbg`
-- 🗝️ **Climatiq**: `56YVAJ6QN57VB5SW73DWYKVRNG`  
-- 🗝️ **ElectricityMap**: `crLjCySqrX6rpWzyMgIP`
-- 🗝️ **News API**: `dcd44938a99d4f31af1956215cc933cf`
-- 🗝️ **Gemini 2.0 Flash**: `AIzaSyBomWfEWE4Usj9FVbWQs5NvNV2dMjuIiDs`
+The queries are designed to use your configured API keys:
+- 🗝️ **Carbon Interface**: Configure in Settings page
+- 🗝️ **Climatiq**: Configure in Settings page  
+- 🗝️ **ElectricityMap**: Configure in Settings page
+- 🗝️ **News API**: Configure in Settings page
+- 🗝️ **Gemini 2.0 Flash**: Configure in Settings page
 
 Try these queries and you should see the full research trail with real API calls! 🌱✨
 

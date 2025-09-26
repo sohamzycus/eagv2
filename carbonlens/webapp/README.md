@@ -9,6 +9,32 @@ A beautiful, modern web application that provides intelligent carbon footprint a
 ![React](https://img.shields.io/badge/Frontend-React%2018-61dafb)
 ![TypeScript](https://img.shields.io/badge/Code-TypeScript-3178c6)
 
+## 🔐 API Key Configuration
+
+**IMPORTANT**: This application requires API keys to function. For security reasons, no API keys are included in the repository.
+
+### **Method 1: Settings Page (Recommended)**
+1. Start the application: `npm run dev`
+2. Navigate to **Settings** page
+3. Enter your API keys for each service:
+   - **Gemini 2.0 Flash**: Get from [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - **Carbon Interface**: Get from [Carbon Interface Docs](https://www.carboninterface.com/docs/)
+   - **Climatiq**: Get from [Climatiq Docs](https://www.climatiq.io/docs)
+   - **ElectricityMap**: Get from [ElectricityMap API Portal](https://api-portal.electricitymaps.com/)
+   - **News API**: Get from [News API](https://newsapi.org/)
+
+### **Method 2: Environment Variables**
+1. Copy `env.example` to `.env.local`
+2. Add your API keys to `.env.local`
+3. Keys will be loaded as defaults (can be overridden in Settings)
+
+### **Required APIs**
+- **Gemini 2.0 Flash**: Core AI agent (required)
+- **Carbon Interface**: Emission calculations (recommended)
+- **Climatiq**: Lifecycle assessment data (recommended)
+- **ElectricityMap**: Real-time grid data (recommended)
+- **News API**: Sustainability news (optional)
+
 ## ✨ Features
 
 ### 🤖 **Intelligent AI Agent**

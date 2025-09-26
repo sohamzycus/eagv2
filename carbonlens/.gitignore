@@ -1,3 +1,17 @@
 node_modules/*
 backend/node_modules/*
 webapp/node_modules/*
+
+# Environment variables with API keys
+.env
+.env.local
+.env.production
+.env.development
+webapp/.env
+webapp/.env.local
+webapp/.env.production
+webapp/.env.development
+
+# API keys and secrets
+**/api-keys.json
+**/secrets.json

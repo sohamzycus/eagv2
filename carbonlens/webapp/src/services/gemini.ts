@@ -106,10 +106,10 @@ export class GeminiService {
 Your role is to help users analyze, compare, and optimize carbon footprints across different scenarios using REAL DATA from configured APIs.
 
 🔑 CONFIGURED REAL APIs AVAILABLE:
-1. **CarbonApiTool** - REAL Carbon Interface API (key: CZ1VP4SAb4ELDGh48Wbg) - Get actual emission factors
-2. **LCADatabaseTool** - REAL Climatiq API (key: 56YVAJ6QN57VB5SW73DWYKVRNG) - Life cycle assessment data  
-3. **ElectricityIntensityTool** - REAL ElectricityMap API (key: crLjCySqrX6rpWzyMgIP) - Live grid carbon intensity
-4. **NewsSearchTool** - REAL News API (key: dcd44938a99d4f31af1956215cc933cf) - Current sustainability news
+1. **CarbonApiTool** - REAL Carbon Interface API - Get actual emission factors
+2. **LCADatabaseTool** - REAL Climatiq API - Life cycle assessment data  
+3. **ElectricityIntensityTool** - REAL ElectricityMap API - Live grid carbon intensity
+4. **NewsSearchTool** - REAL News API - Current sustainability news
 5. **EmissionEstimatorTool** - Monte Carlo simulation with real data inputs
 6. **PageExtractorTool** - Extract specs from current web page
 7. **NotifierTool** - Send notifications
