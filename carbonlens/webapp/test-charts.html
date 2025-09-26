@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chart Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .chart { width: 100%; height: 400px; margin: 20px 0; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>🌱 CarbonLens Chart Test</h1>
+    <p>Testing Apache ECharts integration for carbon emissions visualization.</p>
+    
+    <h2>📊 Gaming Console Comparison</h2>
+    <div id="barChart" class="chart"></div>
+    
+    <h2>🥧 PlayStation 5 Breakdown</h2>
+    <div id="pieChart" class="chart"></div>
+    
+    <script>
+        // Bar chart for comparison
+        const barChart = echarts.init(document.getElementById('barChart'));
+        const barOption = {
+            title: {
+                text: 'Gaming Console Carbon Emissions',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'axis',
+                formatter: (params) => {
+                    const item = params[0];
+                    return `${item.name}<br/>Emissions: ${item.value} kg CO2e`;
+                }
+            },
+            xAxis: {
+                type: 'category',
+                data: ['PlayStation 5', 'Xbox Series X', 'Gaming PC']
+            },
+            yAxis: {
+                type: 'value',
+                name: 'kg CO2e'
+            },
+            series: [{
+                name: 'Carbon Emissions',
+                type: 'bar',
+                data: [
+                    {value: 318.4, itemStyle: {color: '#10b981'}},
+                    {value: 315.2, itemStyle: {color: '#3b82f6'}},
+                    {value: 736.8, itemStyle: {color: '#ef4444'}}
+                ]
+            }]
+        };
+        barChart.setOption(barOption);
+        
+        // Pie chart for breakdown
+        const pieChart = echarts.init(document.getElementById('pieChart'));
+        const pieOption = {
+            title: {
+                text: 'PlayStation 5 Emissions Breakdown',
+                left: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}: {c} kg CO2e ({d}%)'
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left'
+            },
+            series: [{
+                name: 'Emissions',
+                type: 'pie',
+                radius: '50%',
+                data: [
+                    {value: 150, name: 'Manufacturing'},
+                    {value: 10, name: 'Shipping'},
+                    {value: 158.4, name: 'Usage (5 years)'}
+                ]
+            }]
+        };
+        pieChart.setOption(pieOption);
+        
+        // Responsive charts
+        window.addEventListener('resize', () => {
+            barChart.resize();
+            pieChart.resize();
+        });
+    </script>
+</body>
+</html>

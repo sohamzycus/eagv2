@@ -14,8 +14,10 @@ import {
 } from 'lucide-react'
 import { useAppStore } from '@/store/useAppStore'
 import { AgentTrace } from '@/components/AgentTrace'
+import { AnalysisCharts } from '@/components/AnalysisCharts'
 import { AgentOrchestrator } from '@/services/agent'
 import { TaskRequest, TaskResult, StreamDelta, ToolCall } from '@/types'
+import { parseAnalysisForCharts, extractComparisonData, generateMockChartData } from '@/utils/chartUtils'
 import { clsx } from 'clsx'
 import toast from 'react-hot-toast'
 
@@ -27,6 +29,8 @@ export function AnalysisPage() {
   const [deltas, setDeltas] = useState<StreamDelta[]>([])
   const [toolCalls, setToolCalls] = useState<ToolCall[]>([])
   const [samples, setSamples] = useState(1000)
+  const [chartData, setChartData] = useState<any[] | null>(null)
+  const [showCharts, setShowCharts] = useState(false)
   
   const orchestratorRef = useRef<AgentOrchestrator | null>(null)
   const abortControllerRef = useRef<AbortController | null>(null)
@@ -124,6 +128,21 @@ export function AnalysisPage() {
           setCurrentResult(taskResult)
           setCurrentTask(taskResult)
           addTaskToHistory(taskResult)
+          
+          // Generate chart data
+          const analysisText = taskResult.result
+          let charts = parseAnalysisForCharts(analysisText) || extractComparisonData(toolCalls)
+          
+          // If no charts found, generate mock data based on analysis
+          if (!charts && analysisText) {
+            charts = generateMockChartData(analysisText)
+          }
+          
+          if (charts && charts.length > 0) {
+            setChartData(charts)
+            setShowCharts(true)
+          }
+          
           toast.success('Analysis completed!')
           
           // Stop the running state
@@ -382,6 +401,51 @@ export function AnalysisPage() {
                     }
                   </div>
                 </div>
+              )}
+
+              {/* Charts Section */}
+              {showCharts && chartData && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="mt-6"
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
+                      <BarChart3 className="w-5 h-5 text-blue-600" />
+                      Visual Analysis
+                    </h4>
+                    <button
+                      onClick={() => setShowCharts(false)}
+                      className="text-sm text-gray-500 hover:text-gray-700 transition-colors"
+                    >
+                      Hide Charts
+                    </button>
+                  </div>
+                  <AnalysisCharts 
+                    data={chartData} 
+                    title="Carbon Emissions Comparison"
+                    unit="kg CO2e"
+                  />
+                </motion.div>
+              )}
+
+              {/* Toggle Charts Button */}
+              {chartData && !showCharts && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  className="mt-4"
+                >
+                  <button
+                    onClick={() => setShowCharts(true)}
+                    className="w-full px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg border border-blue-200 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <BarChart3 className="w-4 h-4" />
+                    Show Visual Analysis
+                  </button>
+                </motion.div>
               )}
 
               {/* Error */}

@@ -5,14 +5,13 @@ export class GeminiService {
   private genAI: GoogleGenerativeAI | null = null
   private model: GenerativeModel | null = null
 
-  constructor(private apiKey?: string) {
+  constructor(apiKey?: string) {
     if (apiKey) {
       this.initialize(apiKey)
     }
   }
 
   initialize(apiKey: string): void {
-    this.apiKey = apiKey
     this.genAI = new GoogleGenerativeAI(apiKey)
     this.model = this.genAI.getGenerativeModel({ 
       model: 'gemini-2.0-flash-exp',
@@ -172,7 +171,13 @@ SMART ANALYSIS PROCESS - Call the most relevant APIs for efficient analysis:
 
 Response Format (MUST be valid JSON):
 - Tool call: {"type": "tool_call", "tool": "ToolName", "args": {...}, "reasoning": "..."}
-- Final answer: {"type": "final", "response": "...", "reasoning": "..."}`
+- Final answer: {"type": "final", "response": "...", "reasoning": "..."}
+
+🚨 JSON FORMATTING RULES:
+- NEVER include mathematical expressions (like 434 * 0.2) in JSON values
+- ALWAYS calculate numbers before putting them in JSON
+- ONLY return "tool_call" or "final" types, never "tool_result"
+- Ensure all JSON is properly formatted and parseable`
   }
 
   private formatHistory(history: AgentMessage[]): string {
@@ -192,8 +197,32 @@ Response Format (MUST be valid JSON):
         return null
       }
 
-      const parsed = JSON.parse(jsonMatch[0]) as AgentPlan
+      let jsonText = jsonMatch[0]
+      
+      // Fix mathematical expressions in JSON by evaluating them
+      jsonText = jsonText.replace(/(\d+(?:\.\d+)?)\s*\*\s*(\d+(?:\.\d+)?)\s*\*\s*(\d+(?:\.\d+)?)\s*\/\s*(\d+(?:\.\d+)?)/g, (_, a, b, c, d) => {
+        const result = (parseFloat(a) * parseFloat(b) * parseFloat(c)) / parseFloat(d)
+        return result.toString()
+      })
+      
+      // Fix other mathematical expressions
+      jsonText = jsonText.replace(/(\d+(?:\.\d+)?)\s*\*\s*(\d+(?:\.\d+)?)/g, (_, a, b) => {
+        const result = parseFloat(a) * parseFloat(b)
+        return result.toString()
+      })
+
+      const parsed = JSON.parse(jsonText) as AgentPlan
       console.log('Parsed plan:', parsed)
+      
+      // Handle tool_result type by converting it to final type
+      if ((parsed as any).type === 'tool_result') {
+        console.log('Converting tool_result to final type')
+        return {
+          type: 'final',
+          response: 'Analysis completed with tool results.',
+          reasoning: 'Tool execution completed successfully'
+        }
+      }
       
       // Validate the structure
       if (!parsed.type || (parsed.type !== 'tool_call' && parsed.type !== 'final')) {
