@@ -11,7 +11,7 @@ import time
 import logging
 
 # Set up the Google Gemini API key
-GOOGLE_API_KEY = "AIzaSyBomWfEWE4Usj9FVbWQs5NvNV2dMjuIiDs"
+GOOGLE_API_KEY = "GEMINI_API_KEY"
 
 def setup_environment():
     """Set up environment variables"""

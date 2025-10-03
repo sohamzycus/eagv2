@@ -6,8 +6,8 @@ Write-Host "MSPaint MCP Production v2 - Quick Start" -ForegroundColor Cyan
 Write-Host "========================================" -ForegroundColor Cyan
 
 # Set the Google Gemini API key
-$env:GOOGLE_API_KEY = "AIzaSyBomWfEWE4Usj9FVbWQs5NvNV2dMjuIiDs"
-$env:GEMINI_API_KEY = "AIzaSyBomWfEWE4Usj9FVbWQs5NvNV2dMjuIiDs"
+$env:GOOGLE_API_KEY = "GEMINI_API_KEY"
+$env:GEMINI_API_KEY = "GEMINI_API_KEY"
 
 $apiKeyPreview = $env:GOOGLE_API_KEY.Substring(0, [Math]::Min(20, $env:GOOGLE_API_KEY.Length))
 Write-Host "✅ API Key configured: $apiKeyPreview..." -ForegroundColor Green

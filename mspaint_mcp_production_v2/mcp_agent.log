@@ -1634,3 +1634,60 @@ TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "lin
 2025-10-03 23:03:55,694 - INFO - 127.0.0.1 - - [03/Oct/2025 23:03:55] "POST /tool/draw_rectangle HTTP/1.1" 200 -
 2025-10-03 23:03:55,702 - INFO - Saved session to llm_session.json
 2025-10-03 23:03:55,718 - INFO - RETURN run_agent elapsed=26.987503
+2025-10-03 23:06:42,008 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 23:06:42,111 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 23:06:42,112 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 23:07:00,665 - INFO - CALL run_agent args=('draw a rectangle', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 23:07:03,831 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 23:07:05,001 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 23:07:05,001 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 23:07:06,842 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 23:07:06,847 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "your text here", "font_size": 24}
+
+2025-10-03 23:07:06,856 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 23:07:06,857 - INFO - RETURN http_get_monitor_info elapsed=0.000996
+2025-10-03 23:07:06,859 - INFO - 127.0.0.1 - - [03/Oct/2025 23:07:06] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 23:07:06,891 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 23:07:06,893 - INFO - Starting MS Paint...
+2025-10-03 23:07:13,111 - INFO - Started new Paint process
+2025-10-03 23:07:15,112 - INFO - Attempt 1: Finding Paint window...
+2025-10-03 23:07:15,114 - INFO - ✅ Found Paint window via app_obj
+2025-10-03 23:07:15,397 - INFO - ✅ Paint window focused
+2025-10-03 23:07:15,397 - INFO - RETURN http_open_paint elapsed=8.506249
+2025-10-03 23:07:15,397 - INFO - 127.0.0.1 - - [03/Oct/2025 23:07:15] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 23:07:15,407 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 23:07:15,413 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 23:07:15,416 - INFO - 🔧 FORCING rectangle tool selection...
+2025-10-03 23:07:15,595 - INFO - Method 1: Looking for Rectangle button...
+2025-10-03 23:07:16,470 - INFO - ✅ Found and clicked Rectangle button!
+2025-10-03 23:07:17,708 - INFO - Paint window rectangle: (L-11, T-11, R1931, B1019)
+2025-10-03 23:07:17,708 - INFO - Safe drawing area: (89, 239) to (1831, 919)
+2025-10-03 23:07:17,708 - INFO - ✅ Rectangle coordinates: start=(760, 429) end=(1160, 729)
+2025-10-03 23:07:18,715 - INFO - 🖱️  ACTIVATING CANVAS: Clicking canvas to ensure it's ready
+2025-10-03 23:07:19,336 - INFO - ✅ Canvas activated
+2025-10-03 23:07:19,338 - INFO - 🎯 STARTING RECTANGLE DRAW
+2025-10-03 23:07:19,340 - INFO - 🖱️  METHOD 1: Standard press-drag-release
+2025-10-03 23:07:21,841 - INFO - ✅ Method 1 complete
+2025-10-03 23:07:21,842 - INFO - 🖱️  METHOD 2: Click-and-drag
+2025-10-03 23:07:23,756 - INFO - ✅ Method 2 complete
+2025-10-03 23:07:23,756 - INFO - 🖱️  METHOD 3: Multiple small rectangles
+2025-10-03 23:07:27,621 - INFO - 🎉 AGGRESSIVE DRAWING COMPLETE!
+2025-10-03 23:07:27,621 - INFO - Rectangle drawn successfully
+2025-10-03 23:07:27,623 - INFO - RETURN http_draw_rectangle elapsed=12.216316
+2025-10-03 23:07:27,623 - INFO - 127.0.0.1 - - [03/Oct/2025 23:07:27] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 23:07:27,639 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 23:07:27,642 - INFO - Selecting text tool in MS Paint
+2025-10-03 23:07:28,616 - INFO - Clicked Text tool via _find_text_tool
+2025-10-03 23:07:29,287 - INFO - Paint window rectangle for text: (L-11, T-11, R1931, B1019)
+2025-10-03 23:07:29,287 - INFO - Text position: (960, 579)
+2025-10-03 23:07:29,289 - INFO - Placing text "your text here" at (960, 579)
+2025-10-03 23:07:31,551 - INFO - Text "your text here" added successfully
+2025-10-03 23:07:31,551 - INFO - RETURN http_add_text_in_paint elapsed=3.911933
+2025-10-03 23:07:31,551 - INFO - 127.0.0.1 - - [03/Oct/2025 23:07:31] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 23:07:31,561 - INFO - Saved session to llm_session.json
+2025-10-03 23:07:31,570 - INFO - RETURN run_agent elapsed=30.904807
