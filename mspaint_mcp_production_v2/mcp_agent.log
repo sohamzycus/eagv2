@@ -1,0 +1,1636 @@
+2025-10-03 21:05:23,933 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 21:05:23,984 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 21:05:23,984 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 21:05:53,966 - INFO - CALL run_agent args=("Draw a rectangle on paint and type 'It is fun to play with agents'", 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 21:05:57,672 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 21:05:59,344 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 21:05:59,344 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 21:06:01,337 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 21:06:01,346 - INFO - LLM raw response:
+I am unable to draw on paint or generate images. I'm a text-based AI. However, I can describe what you would need to do in Paint to achieve this:
+
+1.  **Open Paint:** Open the Paint application on your computer.
+
+2.  **Draw a Rectangle:**
+    *   Select the rectangle tool from the toolbox.
+    *   Click and drag on the canvas to create a rectangle of your desired size and position.
+
+3.  **Add Text:**
+    *   Select the text tool (the 'A' icon).
+    *   Click inside the rectangle (or wherever you want the text to appear).
+    *   Type the following text: `It is fun to play with agents`
+    *   You can adjust the font, size, and color of the text using the options at the top of the Paint window.
+
+4.  **Save (Optional):** You can save your image if you want to keep it.
+
+2025-10-03 21:06:01,351 - INFO - Saved session to llm_session.json
+2025-10-03 21:06:01,357 - INFO - RETURN run_agent elapsed=7.390635
+2025-10-03 21:08:32,832 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 21:08:32,895 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 21:08:32,895 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 21:08:53,747 - INFO - CALL run_agent args=("Draw a rectangle and write 'It is fun to play with agents'", 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 21:08:57,215 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 21:08:59,060 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 21:08:59,061 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 21:09:01,046 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 21:09:01,053 - INFO - LLM raw response:
+This query cannot be fulfilled. I am a text-based AI and do not have the capacity to generate images.
+
+2025-10-03 21:09:01,059 - INFO - Saved session to llm_session.json
+2025-10-03 21:09:01,064 - INFO - RETURN run_agent elapsed=7.317928
+2025-10-03 21:11:33,614 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 21:11:33,706 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 21:11:33,710 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 21:11:45,621 - INFO - CALL run_agent args=('Draw a rectangle', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 21:11:50,270 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 21:11:52,377 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 21:11:52,377 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 21:11:54,212 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 21:11:54,220 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "your text here", "font_size": 24}
+
+2025-10-03 21:11:54,229 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 21:11:54,231 - INFO - RETURN http_get_monitor_info elapsed=0.002010
+2025-10-03 21:11:54,233 - INFO - 127.0.0.1 - - [03/Oct/2025 21:11:54] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 21:11:54,244 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 21:12:02,063 - WARNING - Unable to reposition Paint window; continuing.
+2025-10-03 21:12:04,834 - INFO - RETURN http_open_paint elapsed=10.589568
+2025-10-03 21:12:04,834 - INFO - 127.0.0.1 - - [03/Oct/2025 21:12:04] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 21:12:04,845 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 21:12:06,356 - INFO - RETURN http_draw_rectangle elapsed=1.510876
+2025-10-03 21:12:06,359 - INFO - 127.0.0.1 - - [03/Oct/2025 21:12:06] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 21:12:06,366 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 21:12:08,695 - INFO - RETURN http_add_text_in_paint elapsed=2.328478
+2025-10-03 21:12:08,697 - INFO - 127.0.0.1 - - [03/Oct/2025 21:12:08] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 21:12:08,708 - INFO - Saved session to llm_session.json
+2025-10-03 21:12:08,720 - INFO - RETURN run_agent elapsed=23.098809
+2025-10-03 21:16:43,077 - INFO - CALL run_agent args=("Draw a big red rectangle and write 'HELLO WORLD' in large text inside it", 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 21:16:43,077 - INFO - Using fallback API key
+2025-10-03 21:16:49,507 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 21:16:49,509 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 21:16:50,881 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 21:16:50,886 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "HELLO WORLD", "font_size": 24}
+
+2025-10-03 21:16:52,937 - ERROR - EXCEPTION in run_agent after 9.859678 sec: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001CEBA099400>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 198, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\connection.py", line 85, in create_connection
+    raise err
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 493, in _make_request
+    conn.request(
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 445, in request
+    self.endheaders()
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1331, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1091, in _send_output
+    self.send(msg)
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1035, in send
+    self.connect()
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 276, in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 213, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x000001CEBA099400>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001CEBA099400>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Codebase\personal\eagv2\mspaint_mcp_production_v2\utils.py", line 24, in wrapper
+    res = func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Codebase\personal\eagv2\mspaint_mcp_production_v2\agent.py", line 108, in run_agent
+    resp = requests.post(f'{server_url}/tool/get_monitor_info', json=payload, timeout=timeout); res_json = resp.json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\adapters.py", line 519, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001CEBA099400>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-10-03 21:17:22,641 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 21:17:22,768 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 21:17:22,768 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 21:18:11,891 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 21:18:11,967 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 21:18:11,967 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 21:18:19,352 - INFO - CALL run_agent args=('Create a simple house drawing with a door and windows', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 21:18:23,307 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 21:18:25,268 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 21:18:25,268 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 21:18:27,666 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 21:18:27,670 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 300, "line_width": 3}
+TOOL_CALL: draw_rectangle {"x": 200, "y": 250, "width": 100, "height": 150, "line_width": 3}
+TOOL_CALL: draw_rectangle {"x": 150, "y": 150, "width": 50, "height": 50, "line_width": 3}
+TOOL_CALL: draw_rectangle {"x": 350, "y": 150, "width": 50, "height": 50, "line_width": 3}
+
+2025-10-03 21:18:27,674 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 21:18:27,676 - INFO - RETURN http_get_monitor_info elapsed=0.002189
+2025-10-03 21:18:27,678 - INFO - 127.0.0.1 - - [03/Oct/2025 21:18:27] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 21:18:27,683 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 21:18:34,770 - WARNING - Unable to reposition Paint window; continuing.
+2025-10-03 21:18:36,542 - INFO - RETURN http_open_paint elapsed=8.859015
+2025-10-03 21:18:36,542 - INFO - 127.0.0.1 - - [03/Oct/2025 21:18:36] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 21:18:36,557 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 21:18:38,045 - INFO - RETURN http_draw_rectangle elapsed=1.487602
+2025-10-03 21:18:38,045 - INFO - 127.0.0.1 - - [03/Oct/2025 21:18:38] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 21:18:38,048 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 21:18:39,527 - INFO - RETURN http_draw_rectangle elapsed=1.478571
+2025-10-03 21:18:39,528 - INFO - 127.0.0.1 - - [03/Oct/2025 21:18:39] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 21:18:39,536 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 21:18:41,007 - INFO - RETURN http_draw_rectangle elapsed=1.470322
+2025-10-03 21:18:41,007 - INFO - 127.0.0.1 - - [03/Oct/2025 21:18:41] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 21:18:41,022 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 21:18:42,493 - INFO - RETURN http_draw_rectangle elapsed=1.470737
+2025-10-03 21:18:42,494 - INFO - 127.0.0.1 - - [03/Oct/2025 21:18:42] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 21:18:42,502 - INFO - Saved session to llm_session.json
+2025-10-03 21:18:42,511 - INFO - RETURN run_agent elapsed=23.158826
+2025-10-03 21:21:12,027 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 21:21:12,095 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 21:21:12,097 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 21:21:49,655 - INFO - CALL run_agent args=("Draw a big red rectangle at position 200,200 with size 300x150, then add the text 'HELLO WORLD' in the center", 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 21:21:53,506 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 21:21:55,010 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 21:21:55,010 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 21:21:57,007 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 21:21:57,015 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 200, "y": 200, "width": 300, "height": 150, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 250, "y": 260, "text": "HELLO WORLD", "font_size": 24}
+
+2025-10-03 21:21:57,029 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 21:21:57,031 - INFO - RETURN http_get_monitor_info elapsed=0.002015
+2025-10-03 21:21:57,034 - INFO - 127.0.0.1 - - [03/Oct/2025 21:21:57] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 21:21:57,046 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 21:21:59,125 - WARNING - Unable to reposition Paint window; continuing.
+2025-10-03 21:21:59,757 - INFO - RETURN http_open_paint elapsed=2.711354
+2025-10-03 21:21:59,761 - INFO - 127.0.0.1 - - [03/Oct/2025 21:21:59] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 21:21:59,767 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 21:22:01,240 - INFO - RETURN http_draw_rectangle elapsed=1.473627
+2025-10-03 21:22:01,240 - INFO - 127.0.0.1 - - [03/Oct/2025 21:22:01] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 21:22:01,249 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 21:22:03,322 - INFO - RETURN http_add_text_in_paint elapsed=2.073038
+2025-10-03 21:22:03,322 - INFO - 127.0.0.1 - - [03/Oct/2025 21:22:03] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 21:22:03,328 - INFO - Saved session to llm_session.json
+2025-10-03 21:22:03,332 - INFO - RETURN run_agent elapsed=13.676746
+2025-10-03 21:27:55,270 - INFO - CALL run_agent args=("Draw a large red rectangle at position 100,100 with size 400x200, then add the text 'TEST DRAWING' in large font at position 200,150", 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 21:27:55,270 - INFO - Using fallback API key
+2025-10-03 21:28:00,250 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 21:28:00,254 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 21:28:01,571 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 21:28:01,586 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 200, "y": 150, "text": "TEST DRAWING", "font_size": 24}
+
+2025-10-03 21:28:03,633 - ERROR - EXCEPTION in run_agent after 8.362567 sec: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001B2849C95E0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 198, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\connection.py", line 85, in create_connection
+    raise err
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 493, in _make_request
+    conn.request(
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 445, in request
+    self.endheaders()
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1331, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1091, in _send_output
+    self.send(msg)
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1035, in send
+    self.connect()
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 276, in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 213, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x000001B2849C95E0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001B2849C95E0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Codebase\personal\eagv2\mspaint_mcp_production_v2\utils.py", line 24, in wrapper
+    res = func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Codebase\personal\eagv2\mspaint_mcp_production_v2\agent.py", line 108, in run_agent
+    resp = requests.post(f'{server_url}/tool/get_monitor_info', json=payload, timeout=timeout); res_json = resp.json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\adapters.py", line 519, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001B2849C95E0>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-10-03 21:28:37,750 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 21:28:37,822 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 21:28:37,823 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 21:29:08,202 - INFO - CALL run_agent args=('draw rectangle and fill with red color', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 21:29:11,410 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 21:29:12,921 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 21:29:12,921 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 21:29:14,514 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 21:29:14,521 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "your text here", "font_size": 24}
+
+2025-10-03 21:29:14,561 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 21:29:14,575 - INFO - RETURN http_get_monitor_info elapsed=0.013384
+2025-10-03 21:29:14,584 - INFO - 127.0.0.1 - - [03/Oct/2025 21:29:14] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 21:29:14,600 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 21:29:21,545 - WARNING - Unable to reposition Paint window; continuing.
+2025-10-03 21:29:23,430 - INFO - RETURN http_open_paint elapsed=8.829377
+2025-10-03 21:29:23,432 - INFO - 127.0.0.1 - - [03/Oct/2025 21:29:23] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 21:29:23,437 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 21:29:24,909 - INFO - RETURN http_draw_rectangle elapsed=1.472097
+2025-10-03 21:29:24,909 - INFO - 127.0.0.1 - - [03/Oct/2025 21:29:24] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 21:29:24,909 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 21:29:27,065 - INFO - RETURN http_add_text_in_paint elapsed=2.156060
+2025-10-03 21:29:27,065 - INFO - 127.0.0.1 - - [03/Oct/2025 21:29:27] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 21:29:27,075 - INFO - Saved session to llm_session.json
+2025-10-03 21:29:27,081 - INFO - RETURN run_agent elapsed=18.879373
+2025-10-03 21:43:23,353 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 21:43:23,409 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 21:43:23,419 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 21:46:32,089 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 21:46:32,127 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 21:46:32,127 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 21:46:52,165 - INFO - CALL run_agent args=('draw rectangle and fill with red color', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 21:46:55,180 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 21:46:56,442 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 21:46:56,442 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 21:46:58,221 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 21:46:58,226 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "your text here", "font_size": 24}
+
+2025-10-03 21:46:58,234 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 21:46:58,234 - INFO - RETURN http_get_monitor_info elapsed=0.000000
+2025-10-03 21:46:58,238 - INFO - 127.0.0.1 - - [03/Oct/2025 21:46:58] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 21:46:58,253 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 21:47:00,115 - WARNING - Unable to reposition Paint window; continuing.
+2025-10-03 21:47:00,917 - INFO - RETURN http_open_paint elapsed=2.664326
+2025-10-03 21:47:00,933 - INFO - 127.0.0.1 - - [03/Oct/2025 21:47:00] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 21:47:01,018 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 21:47:01,050 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 21:47:01,804 - INFO - Clicked Rectangle tool button
+2025-10-03 21:47:02,105 - INFO - Drawing rectangle from (150, 150) to (550, 350)
+2025-10-03 21:47:03,297 - INFO - Rectangle drawn successfully
+2025-10-03 21:47:03,297 - INFO - RETURN http_draw_rectangle elapsed=2.279082
+2025-10-03 21:47:03,299 - INFO - 127.0.0.1 - - [03/Oct/2025 21:47:03] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 21:47:03,308 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 21:47:05,351 - INFO - RETURN http_add_text_in_paint elapsed=2.041153
+2025-10-03 21:47:05,352 - INFO - 127.0.0.1 - - [03/Oct/2025 21:47:05] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 21:47:05,360 - INFO - Saved session to llm_session.json
+2025-10-03 21:47:05,369 - INFO - RETURN run_agent elapsed=13.204072
+2025-10-03 21:50:15,722 - INFO - CALL run_agent args=("Draw a red rectangle at position 200,150 with size 300x200, then add the text 'HELLO WORLD' at position 250,200", 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 21:50:15,722 - INFO - Using fallback API key
+2025-10-03 21:50:20,630 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 21:50:20,630 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 21:50:22,651 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 21:50:22,654 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 200, "y": 150, "width": 300, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 250, "y": 200, "text": "HELLO WORLD", "font_size": 24}
+
+2025-10-03 21:50:24,694 - ERROR - EXCEPTION in run_agent after 8.971701 sec: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001D5FC505700>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 198, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\connection.py", line 85, in create_connection
+    raise err
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 493, in _make_request
+    conn.request(
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 445, in request
+    self.endheaders()
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1331, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1091, in _send_output
+    self.send(msg)
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1035, in send
+    self.connect()
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 276, in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 213, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x000001D5FC505700>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001D5FC505700>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Codebase\personal\eagv2\mspaint_mcp_production_v2\utils.py", line 24, in wrapper
+    res = func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Codebase\personal\eagv2\mspaint_mcp_production_v2\agent.py", line 108, in run_agent
+    resp = requests.post(f'{server_url}/tool/get_monitor_info', json=payload, timeout=timeout); res_json = resp.json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\adapters.py", line 519, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001D5FC505700>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-10-03 21:50:48,791 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 21:50:48,871 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 21:50:48,871 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 21:51:14,241 - INFO - CALL run_agent args=('draw rectangle and fill with red color', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 21:51:17,213 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 21:51:18,415 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 21:51:18,415 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 21:51:20,262 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 21:51:20,262 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "your text here", "font_size": 24}
+
+2025-10-03 21:51:20,282 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 21:51:20,284 - INFO - RETURN http_get_monitor_info elapsed=0.001998
+2025-10-03 21:51:20,285 - INFO - 127.0.0.1 - - [03/Oct/2025 21:51:20] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 21:51:20,301 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 21:51:26,446 - WARNING - Unable to reposition Paint window; continuing.
+2025-10-03 21:51:27,963 - INFO - RETURN http_open_paint elapsed=7.661175
+2025-10-03 21:51:27,963 - INFO - 127.0.0.1 - - [03/Oct/2025 21:51:27] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 21:51:27,976 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 21:51:27,978 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 21:51:29,135 - INFO - Clicked Rectangle tool button
+2025-10-03 21:51:30,534 - WARNING - Could not find canvas, using original coordinates: There are 4 elements that match the criteria {'control_type': 'Pane', 'title': '', 'top_level_only': False, 'enabled_only': False, 'visible_only': False, 'parent': <uia_element_info.UIAElementInfo - 'Untitled - Paint', MSPaintApp, 21500744>, 'backend': 'uia'}
+2025-10-03 21:51:30,534 - INFO - Drawing rectangle from (150, 150) to (550, 350)
+2025-10-03 21:51:32,038 - INFO - Rectangle drawn successfully
+2025-10-03 21:51:32,038 - INFO - RETURN http_draw_rectangle elapsed=4.061843
+2025-10-03 21:51:32,039 - INFO - 127.0.0.1 - - [03/Oct/2025 21:51:32] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 21:51:32,048 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 21:51:32,048 - INFO - Selecting text tool in MS Paint
+2025-10-03 21:51:33,248 - INFO - Clicked Text tool via _find_text_tool
+2025-10-03 21:51:34,795 - WARNING - Could not find canvas for text, using original coordinates: There are 7 elements that match the criteria {'control_type': 'Pane', 'title': '', 'top_level_only': False, 'enabled_only': False, 'visible_only': False, 'parent': <uia_element_info.UIAElementInfo - 'Untitled - Paint', MSPaintApp, 21500744>, 'backend': 'uia'}
+2025-10-03 21:51:34,796 - INFO - Placing text "your text here" at (225, 270)
+2025-10-03 21:51:37,047 - INFO - Text "your text here" added successfully
+2025-10-03 21:51:37,047 - INFO - RETURN http_add_text_in_paint elapsed=4.999444
+2025-10-03 21:51:37,047 - INFO - 127.0.0.1 - - [03/Oct/2025 21:51:37] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 21:51:37,058 - INFO - Saved session to llm_session.json
+2025-10-03 21:51:37,097 - INFO - RETURN run_agent elapsed=22.856019
+2025-10-03 21:56:33,214 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 21:56:33,262 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 21:56:33,262 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 21:57:07,532 - INFO - CALL run_agent args=('draw rectangke & fill in red', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 21:57:10,483 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 21:57:11,611 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 21:57:11,611 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 21:57:13,507 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 21:57:13,511 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "your text here", "font_size": 24}
+
+2025-10-03 21:57:13,524 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 21:57:13,524 - INFO - RETURN http_get_monitor_info elapsed=0.000000
+2025-10-03 21:57:13,524 - INFO - 127.0.0.1 - - [03/Oct/2025 21:57:13] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 21:57:13,545 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 21:57:16,263 - WARNING - Unable to reposition Paint window; continuing.
+2025-10-03 21:57:17,322 - INFO - RETURN http_open_paint elapsed=3.776990
+2025-10-03 21:57:17,322 - INFO - 127.0.0.1 - - [03/Oct/2025 21:57:17] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 21:57:17,331 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 21:57:17,331 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 21:57:18,139 - INFO - Clicked Rectangle tool button
+2025-10-03 21:57:18,783 - INFO - Paint window rectangle: (L-11, T-11, R1931, B1019)
+2025-10-03 21:57:18,785 - INFO - Drawing area: (-1, 139) to (1921, 989)
+2025-10-03 21:57:18,785 - INFO - Drawing area size: 1922 x 850
+2025-10-03 21:57:18,785 - INFO - Scaled coordinates: (239, 280) to (1200, 564)
+2025-10-03 21:57:19,286 - INFO - Drawing rectangle from (239, 280) to (1200, 564)
+2025-10-03 21:57:20,072 - ERROR - draw_rectangle failed
+Traceback (most recent call last):
+  File "C:\Codebase\personal\eagv2\mspaint_mcp_production_v2\mcp_server.py", line 220, in http_draw_rectangle
+    mouse.move(coords=(actual_ex, actual_ey), duration=0.5)
+TypeError: move() got an unexpected keyword argument 'duration'
+2025-10-03 21:57:20,074 - INFO - RETURN http_draw_rectangle elapsed=2.743435
+2025-10-03 21:57:20,074 - INFO - 127.0.0.1 - - [03/Oct/2025 21:57:20] "[35m[1mPOST /tool/draw_rectangle HTTP/1.1[0m" 500 -
+2025-10-03 21:57:20,080 - INFO - Saved session to llm_session.json
+2025-10-03 21:57:20,091 - INFO - RETURN run_agent elapsed=12.558649
+2025-10-03 21:58:49,809 - INFO - CALL run_agent args=('Draw a blue rectangle at position 150,100 with size 300x200', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 21:58:49,809 - INFO - Using fallback API key
+2025-10-03 21:58:54,613 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 21:58:54,613 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 21:58:56,180 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 21:58:56,191 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 150, "y": 100, "width": 300, "height": 200, "line_width": 3}
+
+2025-10-03 21:58:58,244 - ERROR - EXCEPTION in run_agent after 8.434478 sec: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000286D2379760>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 198, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\connection.py", line 85, in create_connection
+    raise err
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 493, in _make_request
+    conn.request(
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 445, in request
+    self.endheaders()
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1331, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1091, in _send_output
+    self.send(msg)
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1035, in send
+    self.connect()
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 276, in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 213, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x00000286D2379760>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000286D2379760>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Codebase\personal\eagv2\mspaint_mcp_production_v2\utils.py", line 24, in wrapper
+    res = func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Codebase\personal\eagv2\mspaint_mcp_production_v2\agent.py", line 108, in run_agent
+    resp = requests.post(f'{server_url}/tool/get_monitor_info', json=payload, timeout=timeout); res_json = resp.json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\adapters.py", line 519, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x00000286D2379760>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-10-03 21:59:20,587 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 21:59:20,689 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 21:59:20,689 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 21:59:47,759 - INFO - CALL run_agent args=('draw blue rectangle', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 21:59:50,973 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 21:59:52,223 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 21:59:52,223 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 21:59:54,040 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 21:59:54,040 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "your text here", "font_size": 24}
+
+2025-10-03 21:59:54,056 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 21:59:54,060 - INFO - RETURN http_get_monitor_info elapsed=0.003867
+2025-10-03 21:59:54,065 - INFO - 127.0.0.1 - - [03/Oct/2025 21:59:54] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 21:59:54,083 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 21:59:56,513 - WARNING - Unable to reposition Paint window; continuing.
+2025-10-03 21:59:57,464 - INFO - RETURN http_open_paint elapsed=3.381433
+2025-10-03 21:59:57,464 - INFO - 127.0.0.1 - - [03/Oct/2025 21:59:57] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 21:59:57,477 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 21:59:57,477 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 21:59:58,249 - INFO - Clicked Rectangle tool button
+2025-10-03 21:59:58,946 - INFO - Paint window rectangle: (L-11, T-11, R1931, B1019)
+2025-10-03 21:59:58,946 - INFO - Drawing area: (-1, 139) to (1921, 989)
+2025-10-03 21:59:58,946 - INFO - Drawing area size: 1922 x 850
+2025-10-03 21:59:58,946 - INFO - Scaled coordinates: (239, 280) to (1200, 564)
+2025-10-03 21:59:59,459 - INFO - Drawing rectangle from (239, 280) to (1200, 564)
+2025-10-03 22:00:01,254 - INFO - Rectangle drawn successfully
+2025-10-03 22:00:01,254 - INFO - RETURN http_draw_rectangle elapsed=3.777146
+2025-10-03 22:00:01,254 - INFO - 127.0.0.1 - - [03/Oct/2025 22:00:01] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 22:00:01,254 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 22:00:01,268 - INFO - Selecting text tool in MS Paint
+2025-10-03 22:00:02,998 - INFO - Clicked Text tool via _find_text_tool
+2025-10-03 22:00:03,771 - INFO - Paint window rectangle for text: (L-11, T-11, R1931, B1019)
+2025-10-03 22:00:03,771 - INFO - Scaled text position: (359, 394)
+2025-10-03 22:00:03,773 - INFO - Placing text "your text here" at (359, 394)
+2025-10-03 22:00:05,965 - INFO - Text "your text here" added successfully
+2025-10-03 22:00:05,965 - INFO - RETURN http_add_text_in_paint elapsed=4.711436
+2025-10-03 22:00:05,967 - INFO - 127.0.0.1 - - [03/Oct/2025 22:00:05] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 22:00:05,977 - INFO - Saved session to llm_session.json
+2025-10-03 22:00:05,987 - INFO - RETURN run_agent elapsed=18.227411
+2025-10-03 22:01:45,137 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 22:01:45,200 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 22:01:45,201 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 22:02:00,752 - INFO - CALL run_agent args=('draw a big rectangle and write hello world', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 22:02:03,991 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 22:02:05,201 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 22:02:05,201 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 22:02:07,229 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 22:02:07,239 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "hello world", "font_size": 24}
+
+2025-10-03 22:02:07,250 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 22:02:07,250 - INFO - RETURN http_get_monitor_info elapsed=0.000000
+2025-10-03 22:02:07,252 - INFO - 127.0.0.1 - - [03/Oct/2025 22:02:07] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 22:02:07,270 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 22:02:13,986 - WARNING - Unable to reposition Paint window; continuing.
+2025-10-03 22:02:15,665 - INFO - RETURN http_open_paint elapsed=8.395535
+2025-10-03 22:02:15,665 - INFO - 127.0.0.1 - - [03/Oct/2025 22:02:15] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 22:02:15,673 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 22:02:15,674 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 22:02:16,499 - INFO - Clicked Rectangle tool button
+2025-10-03 22:02:17,093 - INFO - Paint window rectangle: (L-11, T-11, R1931, B1019)
+2025-10-03 22:02:17,093 - INFO - Drawing area: (-1, 139) to (1921, 989)
+2025-10-03 22:02:17,093 - INFO - Drawing area size: 1922 x 850
+2025-10-03 22:02:17,093 - INFO - Scaled coordinates: (239, 280) to (1200, 564)
+2025-10-03 22:02:17,601 - INFO - Drawing rectangle from (239, 280) to (1200, 564)
+2025-10-03 22:02:19,386 - INFO - Rectangle drawn successfully
+2025-10-03 22:02:19,387 - INFO - RETURN http_draw_rectangle elapsed=3.713791
+2025-10-03 22:02:19,388 - INFO - 127.0.0.1 - - [03/Oct/2025 22:02:19] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 22:02:19,393 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 22:02:19,393 - INFO - Selecting text tool in MS Paint
+2025-10-03 22:02:20,066 - INFO - Clicked Text tool via _find_text_tool
+2025-10-03 22:02:20,839 - INFO - Paint window rectangle for text: (L-11, T-11, R1931, B1019)
+2025-10-03 22:02:20,839 - INFO - Scaled text position: (359, 394)
+2025-10-03 22:02:20,839 - INFO - Placing text "hello world" at (359, 394)
+2025-10-03 22:02:22,954 - INFO - Text "hello world" added successfully
+2025-10-03 22:02:22,958 - INFO - RETURN http_add_text_in_paint elapsed=3.564892
+2025-10-03 22:02:22,960 - INFO - 127.0.0.1 - - [03/Oct/2025 22:02:22] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 22:02:22,974 - INFO - Saved session to llm_session.json
+2025-10-03 22:02:22,983 - INFO - RETURN run_agent elapsed=22.229785
+2025-10-03 22:05:19,798 - INFO - CALL run_agent args=('Draw a simple rectangle', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 22:05:19,798 - INFO - Using fallback API key
+2025-10-03 22:05:25,202 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 22:05:25,202 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 22:05:26,726 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 22:05:26,728 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+
+2025-10-03 22:05:28,759 - ERROR - EXCEPTION in run_agent after 8.960855 sec: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001A24AD81220>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 198, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\connection.py", line 85, in create_connection
+    raise err
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 493, in _make_request
+    conn.request(
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 445, in request
+    self.endheaders()
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1331, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1091, in _send_output
+    self.send(msg)
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1035, in send
+    self.connect()
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 276, in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 213, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x000001A24AD81220>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001A24AD81220>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Codebase\personal\eagv2\mspaint_mcp_production_v2\utils.py", line 24, in wrapper
+    res = func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Codebase\personal\eagv2\mspaint_mcp_production_v2\agent.py", line 108, in run_agent
+    resp = requests.post(f'{server_url}/tool/get_monitor_info', json=payload, timeout=timeout); res_json = resp.json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\adapters.py", line 519, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001A24AD81220>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-10-03 22:07:58,662 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 22:07:58,706 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 22:07:58,706 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 22:08:26,780 - INFO - CALL run_agent args=('draw large rectangle & type hello world', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 22:08:30,010 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 22:08:31,091 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 22:08:31,091 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 22:08:32,938 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 22:08:32,940 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "hello world", "font_size": 24}
+
+2025-10-03 22:08:32,946 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 22:08:32,946 - INFO - RETURN http_get_monitor_info elapsed=0.000529
+2025-10-03 22:08:32,948 - INFO - 127.0.0.1 - - [03/Oct/2025 22:08:32] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 22:08:32,956 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 22:08:39,181 - WARNING - Unable to reposition Paint window; continuing.
+2025-10-03 22:08:40,835 - INFO - RETURN http_open_paint elapsed=7.879403
+2025-10-03 22:08:40,835 - INFO - 127.0.0.1 - - [03/Oct/2025 22:08:40] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 22:08:40,844 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 22:08:40,844 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 22:08:41,619 - INFO - Clicked Rectangle tool button
+2025-10-03 22:08:42,152 - INFO - Paint window rectangle: (L-11, T-11, R1931, B1019)
+2025-10-03 22:08:42,167 - INFO - Drawing area: (39, 189) to (1881, 969)
+2025-10-03 22:08:42,167 - INFO - Drawing area size: 1842 x 780
+2025-10-03 22:08:42,167 - INFO - Scaled coordinates: (269, 319) to (1190, 579)
+2025-10-03 22:08:42,669 - INFO - Drawing rectangle from (269, 319) to (1190, 579)
+2025-10-03 22:08:42,669 - INFO - Testing canvas click at center: (729, 449)
+2025-10-03 22:08:42,988 - INFO - Starting rectangle draw sequence...
+2025-10-03 22:08:43,393 - INFO - Moved to start position: (269, 319)
+2025-10-03 22:08:43,883 - INFO - Pressed mouse at: (269, 319)
+2025-10-03 22:08:44,287 - INFO - Dragged to end position: (1190, 579)
+2025-10-03 22:08:44,893 - INFO - Released mouse at: (1190, 579)
+2025-10-03 22:08:44,893 - INFO - Rectangle drawn successfully
+2025-10-03 22:08:44,895 - INFO - RETURN http_draw_rectangle elapsed=4.051174
+2025-10-03 22:08:44,897 - INFO - 127.0.0.1 - - [03/Oct/2025 22:08:44] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 22:08:44,903 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 22:08:44,903 - INFO - Selecting text tool in MS Paint
+2025-10-03 22:08:45,549 - INFO - Clicked Text tool via _find_text_tool
+2025-10-03 22:08:46,283 - INFO - Paint window rectangle for text: (L-11, T-11, R1931, B1019)
+2025-10-03 22:08:46,283 - INFO - Scaled text position: (384, 423)
+2025-10-03 22:08:46,283 - INFO - Placing text "hello world" at (384, 423)
+2025-10-03 22:08:48,368 - INFO - Text "hello world" added successfully
+2025-10-03 22:08:48,368 - INFO - RETURN http_add_text_in_paint elapsed=3.464881
+2025-10-03 22:08:48,368 - INFO - 127.0.0.1 - - [03/Oct/2025 22:08:48] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 22:08:48,368 - INFO - Saved session to llm_session.json
+2025-10-03 22:08:48,388 - INFO - RETURN run_agent elapsed=21.608685
+2025-10-03 22:11:39,787 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 22:11:39,825 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 22:11:39,826 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 22:11:55,001 - INFO - CALL run_agent args=('draw rectangle and write hello world', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 22:11:58,203 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 22:11:59,690 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 22:11:59,695 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 22:12:01,034 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 22:12:01,034 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "Hello World", "font_size": 24}
+
+2025-10-03 22:12:01,051 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 22:12:01,051 - INFO - RETURN http_get_monitor_info elapsed=0.000000
+2025-10-03 22:12:01,051 - INFO - 127.0.0.1 - - [03/Oct/2025 22:12:01] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 22:12:01,070 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 22:12:08,649 - WARNING - Unable to reposition Paint window; continuing.
+2025-10-03 22:12:10,282 - INFO - RETURN http_open_paint elapsed=9.211127
+2025-10-03 22:12:10,282 - INFO - 127.0.0.1 - - [03/Oct/2025 22:12:10] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 22:12:10,289 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 22:12:10,290 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 22:12:11,050 - INFO - Clicked Rectangle tool button
+2025-10-03 22:12:11,678 - INFO - Paint window rectangle: (L-11, T-11, R1931, B1019)
+2025-10-03 22:12:11,678 - INFO - Drawing area: (89, 239) to (1831, 919)
+2025-10-03 22:12:11,678 - INFO - Drawing area size: 1742 x 680
+2025-10-03 22:12:11,678 - INFO - Scaled coordinates: (306, 352) to (1177, 579)
+2025-10-03 22:12:12,181 - INFO - Drawing rectangle from (306, 352) to (1177, 579)
+2025-10-03 22:12:12,783 - INFO - Moved to start position
+2025-10-03 22:12:13,098 - INFO - Pressed mouse button
+2025-10-03 22:12:13,701 - INFO - Dragged to end position
+2025-10-03 22:12:14,306 - INFO - Released mouse button
+2025-10-03 22:12:14,306 - INFO - Rectangle drawn successfully
+2025-10-03 22:12:14,308 - INFO - RETURN http_draw_rectangle elapsed=4.018968
+2025-10-03 22:12:14,309 - INFO - 127.0.0.1 - - [03/Oct/2025 22:12:14] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 22:12:14,315 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 22:12:14,315 - INFO - Selecting text tool in MS Paint
+2025-10-03 22:12:15,098 - INFO - Clicked Text tool via _find_text_tool
+2025-10-03 22:12:15,908 - INFO - Paint window rectangle for text: (L-11, T-11, R1931, B1019)
+2025-10-03 22:12:15,910 - INFO - Scaled text position: (415, 443)
+2025-10-03 22:12:15,910 - INFO - Placing text "Hello World" at (415, 443)
+2025-10-03 22:12:18,017 - INFO - Text "Hello World" added successfully
+2025-10-03 22:12:18,017 - INFO - RETURN http_add_text_in_paint elapsed=3.702428
+2025-10-03 22:12:18,020 - INFO - 127.0.0.1 - - [03/Oct/2025 22:12:18] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 22:12:18,028 - INFO - Saved session to llm_session.json
+2025-10-03 22:12:18,042 - INFO - RETURN run_agent elapsed=23.040713
+2025-10-03 22:16:11,081 - INFO - CALL run_agent args=('draw a rectangle and write hello world', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 22:16:11,081 - INFO - Using fallback API key
+2025-10-03 22:16:15,710 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 22:16:15,710 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 22:16:17,445 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 22:16:17,460 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "Hello World", "font_size": 24}
+
+2025-10-03 22:16:19,523 - ERROR - EXCEPTION in run_agent after 8.442010 sec: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001D051815190>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 198, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\connection.py", line 85, in create_connection
+    raise err
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 493, in _make_request
+    conn.request(
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 445, in request
+    self.endheaders()
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1331, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1091, in _send_output
+    self.send(msg)
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1035, in send
+    self.connect()
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 276, in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 213, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x000001D051815190>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001D051815190>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Codebase\personal\eagv2\mspaint_mcp_production_v2\utils.py", line 24, in wrapper
+    res = func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Codebase\personal\eagv2\mspaint_mcp_production_v2\agent.py", line 108, in run_agent
+    resp = requests.post(f'{server_url}/tool/get_monitor_info', json=payload, timeout=timeout); res_json = resp.json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\adapters.py", line 519, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000001D051815190>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-10-03 22:16:39,925 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 22:16:39,972 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 22:16:39,973 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 22:16:54,493 - INFO - CALL run_agent args=('draw rectangle and write hello world', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 22:16:57,514 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 22:16:58,900 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 22:16:58,902 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 22:17:00,865 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 22:17:00,869 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "hello world", "font_size": 24}
+
+2025-10-03 22:17:00,874 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 22:17:00,874 - INFO - RETURN http_get_monitor_info elapsed=0.000000
+2025-10-03 22:17:00,878 - INFO - 127.0.0.1 - - [03/Oct/2025 22:17:00] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 22:17:00,900 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 22:17:07,242 - WARNING - Unable to reposition Paint window; continuing.
+2025-10-03 22:17:09,009 - INFO - RETURN http_open_paint elapsed=8.108901
+2025-10-03 22:17:09,011 - INFO - 127.0.0.1 - - [03/Oct/2025 22:17:09] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 22:17:09,018 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 22:17:09,018 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 22:17:10,035 - INFO - Clicked Rectangle tool button
+2025-10-03 22:17:10,536 - INFO - Paint window rectangle: (L-11, T-11, R1931, B1019)
+2025-10-03 22:17:10,536 - INFO - Using SIMPLE center-based coordinates: (760, 404) to (1160, 604)
+2025-10-03 22:17:11,051 - INFO - Drawing rectangle from (760, 404) to (1160, 604)
+2025-10-03 22:17:11,665 - INFO - Moved to start position
+2025-10-03 22:17:12,003 - INFO - Pressed mouse button
+2025-10-03 22:17:12,619 - INFO - Dragged to end position
+2025-10-03 22:17:13,237 - INFO - Released mouse button
+2025-10-03 22:17:13,237 - INFO - Rectangle drawn successfully
+2025-10-03 22:17:13,238 - INFO - RETURN http_draw_rectangle elapsed=4.219854
+2025-10-03 22:17:13,238 - INFO - 127.0.0.1 - - [03/Oct/2025 22:17:13] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 22:17:13,247 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 22:17:13,247 - INFO - Selecting text tool in MS Paint
+2025-10-03 22:17:14,150 - INFO - Clicked Text tool via _find_text_tool
+2025-10-03 22:17:14,945 - INFO - Paint window rectangle for text: (L-11, T-11, R1931, B1019)
+2025-10-03 22:17:14,946 - INFO - Using SIMPLE center-based text position: (910, 504)
+2025-10-03 22:17:14,946 - INFO - Placing text "hello world" at (910, 504)
+2025-10-03 22:17:16,806 - INFO - Text "hello world" added successfully
+2025-10-03 22:17:16,808 - INFO - RETURN http_add_text_in_paint elapsed=3.560852
+2025-10-03 22:17:16,808 - INFO - 127.0.0.1 - - [03/Oct/2025 22:17:16] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 22:17:16,814 - INFO - Saved session to llm_session.json
+2025-10-03 22:17:16,844 - INFO - RETURN run_agent elapsed=22.351229
+2025-10-03 22:20:18,801 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 22:20:18,901 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 22:20:18,901 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 22:20:41,001 - INFO - CALL run_agent args=('draw a large rectangle & write hello world', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 22:20:44,443 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 22:20:45,976 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 22:20:45,976 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 22:20:47,301 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 22:20:47,304 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "hello world", "font_size": 24}
+
+2025-10-03 22:20:47,314 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 22:20:47,315 - INFO - RETURN http_get_monitor_info elapsed=0.001012
+2025-10-03 22:20:47,316 - INFO - 127.0.0.1 - - [03/Oct/2025 22:20:47] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 22:20:47,331 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 22:20:54,591 - WARNING - Unable to reposition Paint window; continuing.
+2025-10-03 22:20:56,390 - INFO - RETURN http_open_paint elapsed=9.059184
+2025-10-03 22:20:56,390 - INFO - 127.0.0.1 - - [03/Oct/2025 22:20:56] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 22:20:56,404 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 22:20:56,405 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 22:20:57,227 - INFO - Clicked Rectangle tool button
+2025-10-03 22:20:57,732 - INFO - Paint window rectangle: (L-11, T-11, R1931, B1019)
+2025-10-03 22:20:57,732 - INFO - Safe drawing area: (89, 239) to (1831, 919)
+2025-10-03 22:20:57,732 - INFO - Rectangle coordinates: (860, 529) to (1060, 629)
+2025-10-03 22:20:58,235 - INFO - Drawing rectangle from (860, 529) to (1060, 629)
+2025-10-03 22:20:58,840 - INFO - Moved to start position
+2025-10-03 22:20:59,158 - INFO - Pressed mouse button
+2025-10-03 22:20:59,761 - INFO - Dragged to end position
+2025-10-03 22:21:00,365 - INFO - Released mouse button
+2025-10-03 22:21:00,365 - INFO - Rectangle drawn successfully
+2025-10-03 22:21:00,367 - INFO - RETURN http_draw_rectangle elapsed=3.962482
+2025-10-03 22:21:00,369 - INFO - 127.0.0.1 - - [03/Oct/2025 22:21:00] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 22:21:00,377 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 22:21:00,381 - INFO - Selecting text tool in MS Paint
+2025-10-03 22:21:01,158 - INFO - Clicked Text tool via _find_text_tool
+2025-10-03 22:21:01,967 - INFO - Paint window rectangle for text: (L-11, T-11, R1931, B1019)
+2025-10-03 22:21:01,967 - INFO - Text position: (960, 579)
+2025-10-03 22:21:01,967 - INFO - Placing text "hello world" at (960, 579)
+2025-10-03 22:21:04,059 - INFO - Text "hello world" added successfully
+2025-10-03 22:21:04,059 - INFO - RETURN http_add_text_in_paint elapsed=3.682334
+2025-10-03 22:21:04,061 - INFO - 127.0.0.1 - - [03/Oct/2025 22:21:04] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 22:21:04,068 - INFO - Saved session to llm_session.json
+2025-10-03 22:21:04,073 - INFO - RETURN run_agent elapsed=23.071880
+2025-10-03 22:24:39,452 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 22:24:39,498 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 22:24:39,498 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 22:25:13,014 - INFO - CALL run_agent args=('draw rectangle & write hello world', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 22:25:16,058 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 22:25:17,364 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 22:25:17,364 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 22:25:19,194 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 22:25:19,199 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "Hello World", "font_size": 24}
+
+2025-10-03 22:25:19,204 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 22:25:19,205 - INFO - RETURN http_get_monitor_info elapsed=0.000999
+2025-10-03 22:25:19,206 - INFO - 127.0.0.1 - - [03/Oct/2025 22:25:19] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 22:25:19,218 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 22:25:22,365 - WARNING - Unable to reposition Paint window; continuing.
+2025-10-03 22:25:27,501 - ERROR - open_paint failed
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\pywinauto\application.py", line 250, in __resolve_control
+    ctrl = wait_until_passes(
+           ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\pywinauto\timings.py", line 458, in wait_until_passes
+    raise err
+pywinauto.timings.TimeoutError
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Codebase\personal\eagv2\mspaint_mcp_production_v2\mcp_server.py", line 103, in http_open_paint
+    win.set_focus()
+    ^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\pywinauto\application.py", line 396, in __getattribute__
+    ctrls = self.__resolve_control(self.criteria)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\pywinauto\application.py", line 261, in __resolve_control
+    raise e.original_exception
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\pywinauto\timings.py", line 436, in wait_until_passes
+    func_val = func(*args, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\pywinauto\application.py", line 203, in __get_ctrl
+    dialog = self.backend.generic_wrapper_class(findwindows.find_element(**criteria[0]))
+                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\pywinauto\findwindows.py", line 87, in find_element
+    raise ElementNotFoundError(kwargs)
+pywinauto.findwindows.ElementNotFoundError: {'class_name_re': '.*Paint.*', 'backend': 'uia', 'process': 43972}
+2025-10-03 22:25:27,516 - INFO - RETURN http_open_paint elapsed=8.298098
+2025-10-03 22:25:27,516 - INFO - 127.0.0.1 - - [03/Oct/2025 22:25:27] "[35m[1mPOST /tool/open_paint HTTP/1.1[0m" 500 -
+2025-10-03 22:25:27,516 - INFO - Saved session to llm_session.json
+2025-10-03 22:25:27,525 - INFO - RETURN run_agent elapsed=14.510874
+2025-10-03 22:25:49,520 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 22:25:49,587 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 22:25:49,587 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 22:26:02,674 - INFO - CALL run_agent args=('draw rectangle and write hello worpython setup_and_run.py', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 22:26:06,644 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 22:26:08,077 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 22:26:08,078 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 22:26:10,149 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 22:26:10,153 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "hello worpython", "font_size": 24}
+
+2025-10-03 22:26:10,164 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 22:26:10,165 - INFO - RETURN http_get_monitor_info elapsed=0.000984
+2025-10-03 22:26:10,167 - INFO - 127.0.0.1 - - [03/Oct/2025 22:26:10] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 22:26:10,186 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 22:26:16,187 - WARNING - Unable to reposition Paint window; continuing.
+2025-10-03 22:26:17,789 - INFO - RETURN http_open_paint elapsed=7.602766
+2025-10-03 22:26:17,794 - INFO - 127.0.0.1 - - [03/Oct/2025 22:26:17] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 22:26:17,800 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 22:26:17,802 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 22:26:17,803 - INFO - Attempting to select rectangle tool...
+2025-10-03 22:26:18,151 - INFO - Clicked rectangle tool area at (139, 89)
+2025-10-03 22:26:19,370 - INFO - Paint window rectangle: (L-11, T-11, R1931, B1019)
+2025-10-03 22:26:19,372 - INFO - Safe drawing area: (89, 239) to (1831, 919)
+2025-10-03 22:26:19,372 - INFO - Rectangle coordinates: (860, 529) to (1060, 629)
+2025-10-03 22:26:19,874 - INFO - 🎯 STARTING RECTANGLE DRAW: (860, 529) to (1060, 629)
+2025-10-03 22:26:19,876 - INFO - 🖱️  Step 1: Moving mouse to start position (860, 529)
+2025-10-03 22:26:20,479 - INFO - ✅ Mouse moved to start position
+2025-10-03 22:26:20,479 - INFO - 🖱️  Step 2: Pressing left mouse button at (860, 529)
+2025-10-03 22:26:20,800 - INFO - ✅ Mouse button pressed
+2025-10-03 22:26:20,800 - INFO - 🖱️  Step 3: Dragging to end position (1060, 629)
+2025-10-03 22:26:21,405 - INFO - ✅ Mouse dragged to end position
+2025-10-03 22:26:21,408 - INFO - 🖱️  Step 4: Releasing mouse button at (1060, 629)
+2025-10-03 22:26:22,013 - INFO - 🎉 RECTANGLE DRAWING COMPLETE!
+2025-10-03 22:26:22,013 - INFO - Rectangle drawn successfully
+2025-10-03 22:26:22,013 - INFO - RETURN http_draw_rectangle elapsed=4.212523
+2025-10-03 22:26:22,013 - INFO - 127.0.0.1 - - [03/Oct/2025 22:26:22] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 22:26:22,030 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 22:26:22,030 - INFO - Selecting text tool in MS Paint
+2025-10-03 22:26:23,001 - INFO - Clicked Text tool via _find_text_tool
+2025-10-03 22:26:23,672 - INFO - Paint window rectangle for text: (L-11, T-11, R1931, B1019)
+2025-10-03 22:26:23,673 - INFO - Text position: (960, 579)
+2025-10-03 22:26:23,674 - INFO - Placing text "hello worpython" at (960, 579)
+2025-10-03 22:26:26,916 - INFO - Text "hello worpython" added successfully
+2025-10-03 22:26:26,916 - INFO - RETURN http_add_text_in_paint elapsed=4.885829
+2025-10-03 22:26:26,916 - INFO - 127.0.0.1 - - [03/Oct/2025 22:26:26] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 22:26:26,926 - INFO - Saved session to llm_session.json
+2025-10-03 22:26:26,931 - INFO - RETURN run_agent elapsed=24.257048
+2025-10-03 22:27:54,777 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 22:27:54,821 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 22:27:54,821 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 22:28:16,213 - INFO - CALL run_agent args=('draw rectangle & write hello world', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 22:28:19,450 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 22:28:20,871 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 22:28:20,871 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 22:28:22,598 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 22:28:22,604 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "Hello World", "font_size": 24}
+
+2025-10-03 22:28:22,613 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 22:28:22,615 - INFO - RETURN http_get_monitor_info elapsed=0.001955
+2025-10-03 22:28:22,618 - INFO - 127.0.0.1 - - [03/Oct/2025 22:28:22] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 22:28:22,635 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 22:28:22,636 - INFO - Starting MS Paint...
+2025-10-03 22:28:29,247 - INFO - Started new Paint process
+2025-10-03 22:28:31,260 - INFO - Attempt 1: Finding Paint window...
+2025-10-03 22:28:31,261 - INFO - ✅ Found Paint window via app_obj
+2025-10-03 22:28:31,722 - INFO - ✅ Paint window focused
+2025-10-03 22:28:31,722 - INFO - RETURN http_open_paint elapsed=9.087642
+2025-10-03 22:28:31,722 - INFO - 127.0.0.1 - - [03/Oct/2025 22:28:31] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 22:28:31,730 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 22:28:31,730 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 22:28:31,730 - INFO - 🔧 FORCING rectangle tool selection...
+2025-10-03 22:28:32,104 - INFO - Method 1: Looking for Rectangle button...
+2025-10-03 22:28:33,074 - INFO - ✅ Found and clicked Rectangle button!
+2025-10-03 22:28:34,322 - INFO - Paint window rectangle: (L-11, T-11, R1931, B1019)
+2025-10-03 22:28:34,325 - INFO - Safe drawing area: (89, 239) to (1831, 919)
+2025-10-03 22:28:34,333 - INFO - Rectangle coordinates: (860, 529) to (1060, 629)
+2025-10-03 22:28:34,837 - INFO - 🎯 STARTING RECTANGLE DRAW: (860, 529) to (1060, 629)
+2025-10-03 22:28:34,837 - INFO - 🖱️  Step 1: Moving mouse to start position (860, 529)
+2025-10-03 22:28:35,440 - INFO - ✅ Mouse moved to start position
+2025-10-03 22:28:35,442 - INFO - 🖱️  Step 2: Pressing left mouse button at (860, 529)
+2025-10-03 22:28:35,755 - INFO - ✅ Mouse button pressed
+2025-10-03 22:28:35,755 - INFO - 🖱️  Step 3: Dragging to end position (1060, 629)
+2025-10-03 22:28:36,360 - INFO - ✅ Mouse dragged to end position
+2025-10-03 22:28:36,362 - INFO - 🖱️  Step 4: Releasing mouse button at (1060, 629)
+2025-10-03 22:28:36,967 - INFO - 🎉 RECTANGLE DRAWING COMPLETE!
+2025-10-03 22:28:36,968 - INFO - Rectangle drawn successfully
+2025-10-03 22:28:36,968 - INFO - RETURN http_draw_rectangle elapsed=5.238104
+2025-10-03 22:28:36,968 - INFO - 127.0.0.1 - - [03/Oct/2025 22:28:36] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 22:28:36,975 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 22:28:36,976 - INFO - Selecting text tool in MS Paint
+2025-10-03 22:28:37,753 - INFO - Clicked Text tool via _find_text_tool
+2025-10-03 22:28:38,622 - INFO - Paint window rectangle for text: (L-11, T-11, R1931, B1019)
+2025-10-03 22:28:38,622 - INFO - Text position: (960, 579)
+2025-10-03 22:28:38,622 - INFO - Placing text "Hello World" at (960, 579)
+2025-10-03 22:28:40,703 - INFO - Text "Hello World" added successfully
+2025-10-03 22:28:40,703 - INFO - RETURN http_add_text_in_paint elapsed=3.727323
+2025-10-03 22:28:40,703 - INFO - 127.0.0.1 - - [03/Oct/2025 22:28:40] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 22:28:40,709 - INFO - Saved session to llm_session.json
+2025-10-03 22:28:40,713 - INFO - RETURN run_agent elapsed=24.516450
+2025-10-03 22:31:32,571 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 22:31:32,618 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 22:31:32,618 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 22:31:56,878 - INFO - CALL run_agent args=('draw rectangle & write hello world', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 22:31:59,999 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 22:32:01,382 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 22:32:01,393 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 22:32:03,402 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 22:32:03,402 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "hello world", "font_size": 24}
+
+2025-10-03 22:32:03,416 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 22:32:03,417 - INFO - RETURN http_get_monitor_info elapsed=0.000998
+2025-10-03 22:32:03,420 - INFO - 127.0.0.1 - - [03/Oct/2025 22:32:03] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 22:32:03,437 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 22:32:03,438 - INFO - Starting MS Paint...
+2025-10-03 22:32:09,258 - INFO - Started new Paint process
+2025-10-03 22:32:11,262 - INFO - Attempt 1: Finding Paint window...
+2025-10-03 22:32:11,262 - INFO - ✅ Found Paint window via app_obj
+2025-10-03 22:32:11,533 - INFO - ✅ Paint window focused
+2025-10-03 22:32:11,535 - INFO - RETURN http_open_paint elapsed=8.097549
+2025-10-03 22:32:11,535 - INFO - 127.0.0.1 - - [03/Oct/2025 22:32:11] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 22:32:11,540 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 22:32:11,540 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 22:32:11,540 - INFO - 🔧 FORCING rectangle tool selection...
+2025-10-03 22:32:11,814 - INFO - Method 1: Looking for Rectangle button...
+2025-10-03 22:32:12,817 - INFO - ✅ Found and clicked Rectangle button!
+2025-10-03 22:32:14,118 - INFO - Paint window rectangle: (L-11, T-11, R1931, B1019)
+2025-10-03 22:32:14,118 - INFO - Safe drawing area: (89, 239) to (1831, 919)
+2025-10-03 22:32:14,119 - INFO - ✅ Rectangle coordinates: start=(860, 529) end=(1060, 629)
+2025-10-03 22:32:15,120 - INFO - 🎯 STARTING RECTANGLE DRAW
+2025-10-03 22:32:15,121 - INFO - 🖱️  Step 1: Moving to start (860, 529)
+2025-10-03 22:32:15,727 - INFO - ✅ Moved to start
+2025-10-03 22:32:15,727 - INFO - 🖱️  Step 2: Press mouse at start
+2025-10-03 22:32:16,047 - INFO - ✅ Mouse pressed
+2025-10-03 22:32:16,047 - INFO - 🖱️  Step 3: Drag to end (1060, 629)
+2025-10-03 22:32:16,651 - INFO - ✅ Dragged to end
+2025-10-03 22:32:16,653 - INFO - 🖱️  Step 4: Release mouse
+2025-10-03 22:32:17,257 - INFO - 🎉 RECTANGLE DRAWING COMPLETE!
+2025-10-03 22:32:17,257 - INFO - Rectangle drawn successfully
+2025-10-03 22:32:17,258 - INFO - RETURN http_draw_rectangle elapsed=5.717804
+2025-10-03 22:32:17,258 - INFO - 127.0.0.1 - - [03/Oct/2025 22:32:17] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 22:32:17,266 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 22:32:17,267 - INFO - Selecting text tool in MS Paint
+2025-10-03 22:32:18,346 - INFO - Clicked Text tool via _find_text_tool
+2025-10-03 22:32:18,899 - INFO - Paint window rectangle for text: (L-11, T-11, R1931, B1019)
+2025-10-03 22:32:18,900 - INFO - Text position: (960, 579)
+2025-10-03 22:32:18,901 - INFO - Placing text "hello world" at (960, 579)
+2025-10-03 22:32:21,014 - INFO - Text "hello world" added successfully
+2025-10-03 22:32:21,015 - INFO - RETURN http_add_text_in_paint elapsed=3.748893
+2025-10-03 22:32:21,017 - INFO - 127.0.0.1 - - [03/Oct/2025 22:32:21] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 22:32:21,022 - INFO - Saved session to llm_session.json
+2025-10-03 22:32:21,031 - INFO - RETURN run_agent elapsed=24.152875
+2025-10-03 22:33:25,949 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 22:33:25,989 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 22:33:25,989 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 22:33:31,973 - INFO - CALL run_agent args=('draw rectangl', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 22:33:35,278 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 22:33:36,746 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 22:33:36,749 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 22:33:38,372 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 22:33:38,376 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "your text here", "font_size": 24}
+
+2025-10-03 22:33:38,391 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 22:33:38,398 - INFO - RETURN http_get_monitor_info elapsed=0.007013
+2025-10-03 22:33:38,402 - INFO - 127.0.0.1 - - [03/Oct/2025 22:33:38] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 22:33:38,418 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 22:33:38,419 - INFO - Starting MS Paint...
+2025-10-03 22:33:45,554 - INFO - Started new Paint process
+2025-10-03 22:33:47,563 - INFO - Attempt 1: Finding Paint window...
+2025-10-03 22:33:47,563 - INFO - ✅ Found Paint window via app_obj
+2025-10-03 22:33:47,864 - INFO - ✅ Paint window focused
+2025-10-03 22:33:47,864 - INFO - RETURN http_open_paint elapsed=9.446648
+2025-10-03 22:33:47,864 - INFO - 127.0.0.1 - - [03/Oct/2025 22:33:47] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 22:33:47,870 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 22:33:47,870 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 22:33:47,870 - INFO - 🔧 FORCING rectangle tool selection...
+2025-10-03 22:33:48,074 - INFO - Method 1: Looking for Rectangle button...
+2025-10-03 22:33:49,334 - INFO - ✅ Found and clicked Rectangle button!
+2025-10-03 22:33:50,686 - INFO - Paint window rectangle: (L-11, T-11, R1931, B1019)
+2025-10-03 22:33:50,686 - INFO - Safe drawing area: (89, 239) to (1831, 919)
+2025-10-03 22:33:50,686 - INFO - ✅ Rectangle coordinates: start=(760, 429) end=(1160, 729)
+2025-10-03 22:33:51,692 - INFO - 🎯 STARTING RECTANGLE DRAW
+2025-10-03 22:33:51,692 - INFO - 🖱️  Step 1: Moving to start (760, 429)
+2025-10-03 22:33:52,297 - INFO - ✅ Moved to start
+2025-10-03 22:33:52,297 - INFO - 🖱️  Step 2: Press mouse at start
+2025-10-03 22:33:52,614 - INFO - ✅ Mouse pressed
+2025-10-03 22:33:52,614 - INFO - 🖱️  Step 3: Drag to end (1160, 729)
+2025-10-03 22:33:53,218 - INFO - ✅ Dragged to end
+2025-10-03 22:33:53,218 - INFO - 🖱️  Step 4: Release mouse
+2025-10-03 22:33:53,824 - INFO - 🎉 RECTANGLE DRAWING COMPLETE!
+2025-10-03 22:33:53,824 - INFO - Rectangle drawn successfully
+2025-10-03 22:33:53,824 - INFO - RETURN http_draw_rectangle elapsed=5.954828
+2025-10-03 22:33:53,824 - INFO - 127.0.0.1 - - [03/Oct/2025 22:33:53] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 22:33:53,827 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 22:33:53,827 - INFO - Selecting text tool in MS Paint
+2025-10-03 22:33:54,533 - INFO - Clicked Text tool via _find_text_tool
+2025-10-03 22:33:55,081 - INFO - Paint window rectangle for text: (L-11, T-11, R1931, B1019)
+2025-10-03 22:33:55,081 - INFO - Text position: (960, 579)
+2025-10-03 22:33:55,081 - INFO - Placing text "your text here" at (960, 579)
+2025-10-03 22:33:57,348 - INFO - Text "your text here" added successfully
+2025-10-03 22:33:57,348 - INFO - RETURN http_add_text_in_paint elapsed=3.521270
+2025-10-03 22:33:57,348 - INFO - 127.0.0.1 - - [03/Oct/2025 22:33:57] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 22:33:57,357 - INFO - Saved session to llm_session.json
+2025-10-03 22:33:57,362 - INFO - RETURN run_agent elapsed=25.388994
+2025-10-03 22:36:37,720 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 22:36:37,757 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 22:36:37,757 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 22:36:57,025 - INFO - CALL run_agent args=('draw rectangle & write hello world', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 22:37:00,785 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 22:37:02,479 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 22:37:02,481 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 22:37:04,471 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 22:37:04,480 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "Hello World", "font_size": 24}
+
+2025-10-03 22:37:04,491 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 22:37:04,496 - INFO - RETURN http_get_monitor_info elapsed=0.005117
+2025-10-03 22:37:04,500 - INFO - 127.0.0.1 - - [03/Oct/2025 22:37:04] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 22:37:04,507 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 22:37:04,511 - INFO - Starting MS Paint...
+2025-10-03 22:37:10,193 - INFO - Started new Paint process
+2025-10-03 22:37:12,196 - INFO - Attempt 1: Finding Paint window...
+2025-10-03 22:37:12,196 - INFO - ✅ Found Paint window via app_obj
+2025-10-03 22:37:12,521 - INFO - ✅ Paint window focused
+2025-10-03 22:37:12,521 - INFO - RETURN http_open_paint elapsed=8.013710
+2025-10-03 22:37:12,521 - INFO - 127.0.0.1 - - [03/Oct/2025 22:37:12] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 22:37:12,528 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 22:37:12,528 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 22:37:12,528 - INFO - 🔧 FORCING rectangle tool selection...
+2025-10-03 22:37:12,720 - INFO - Method 1: Looking for Rectangle button...
+2025-10-03 22:37:13,898 - INFO - ✅ Found and clicked Rectangle button!
+2025-10-03 22:37:15,131 - INFO - Paint window rectangle: (L-11, T-11, R1931, B1019)
+2025-10-03 22:37:15,131 - INFO - Safe drawing area: (89, 239) to (1831, 919)
+2025-10-03 22:37:15,131 - INFO - ✅ Rectangle coordinates: start=(760, 429) end=(1160, 729)
+2025-10-03 22:37:16,136 - INFO - 🖱️  ACTIVATING CANVAS: Clicking canvas to ensure it's ready
+2025-10-03 22:37:16,849 - INFO - ✅ Canvas activated
+2025-10-03 22:37:16,849 - INFO - 🎯 STARTING RECTANGLE DRAW
+2025-10-03 22:37:16,849 - INFO - 🖱️  METHOD 1: Standard press-drag-release
+2025-10-03 22:37:19,167 - INFO - ✅ Method 1 complete
+2025-10-03 22:37:19,169 - INFO - 🖱️  METHOD 2: Click-and-drag
+2025-10-03 22:37:19,171 - ERROR - draw_rectangle failed
+Traceback (most recent call last):
+  File "C:\Codebase\personal\eagv2\mspaint_mcp_production_v2\mcp_server.py", line 282, in http_draw_rectangle
+    mouse.click_input(coords=(actual_x, actual_y))
+    ^^^^^^^^^^^^^^^^^
+AttributeError: module 'pywinauto.mouse' has no attribute 'click_input'
+2025-10-03 22:37:19,175 - INFO - RETURN http_draw_rectangle elapsed=6.647033
+2025-10-03 22:37:19,175 - INFO - 127.0.0.1 - - [03/Oct/2025 22:37:19] "[35m[1mPOST /tool/draw_rectangle HTTP/1.1[0m" 500 -
+2025-10-03 22:37:19,180 - INFO - Saved session to llm_session.json
+2025-10-03 22:37:19,192 - INFO - RETURN run_agent elapsed=22.167139
+2025-10-03 22:38:34,721 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 22:38:34,763 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 22:38:34,765 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 22:38:48,705 - INFO - CALL run_agent args=('draw rectangle & write hello', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 22:38:51,786 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 22:38:53,069 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 22:38:53,069 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 22:38:54,420 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 22:38:54,426 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "hello", "font_size": 24}
+
+2025-10-03 22:38:54,448 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 22:38:54,450 - INFO - RETURN http_get_monitor_info elapsed=0.002009
+2025-10-03 22:38:54,461 - INFO - 127.0.0.1 - - [03/Oct/2025 22:38:54] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 22:38:54,483 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 22:38:54,484 - INFO - Starting MS Paint...
+2025-10-03 22:39:00,021 - INFO - Started new Paint process
+2025-10-03 22:39:02,022 - INFO - Attempt 1: Finding Paint window...
+2025-10-03 22:39:02,022 - INFO - ✅ Found Paint window via app_obj
+2025-10-03 22:39:02,300 - INFO - ✅ Paint window focused
+2025-10-03 22:39:02,314 - INFO - RETURN http_open_paint elapsed=7.831768
+2025-10-03 22:39:02,314 - INFO - 127.0.0.1 - - [03/Oct/2025 22:39:02] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 22:39:02,317 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 22:39:02,317 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 22:39:02,317 - INFO - 🔧 FORCING rectangle tool selection...
+2025-10-03 22:39:02,750 - INFO - Method 1: Looking for Rectangle button...
+2025-10-03 22:39:03,976 - INFO - ✅ Found and clicked Rectangle button!
+2025-10-03 22:39:05,165 - INFO - Paint window rectangle: (L-11, T-11, R1931, B1019)
+2025-10-03 22:39:05,165 - INFO - Safe drawing area: (89, 239) to (1831, 919)
+2025-10-03 22:39:05,165 - INFO - ✅ Rectangle coordinates: start=(760, 429) end=(1160, 729)
+2025-10-03 22:39:06,171 - INFO - 🖱️  ACTIVATING CANVAS: Clicking canvas to ensure it's ready
+2025-10-03 22:39:06,792 - INFO - ✅ Canvas activated
+2025-10-03 22:39:06,792 - INFO - 🎯 STARTING RECTANGLE DRAW
+2025-10-03 22:39:06,792 - INFO - 🖱️  METHOD 1: Standard press-drag-release
+2025-10-03 22:39:09,297 - INFO - ✅ Method 1 complete
+2025-10-03 22:39:09,297 - INFO - 🖱️  METHOD 2: Click-and-drag
+2025-10-03 22:39:11,195 - INFO - ✅ Method 2 complete
+2025-10-03 22:39:11,195 - INFO - 🖱️  METHOD 3: Multiple small rectangles
+2025-10-03 22:39:15,043 - INFO - 🎉 AGGRESSIVE DRAWING COMPLETE!
+2025-10-03 22:39:15,044 - INFO - Rectangle drawn successfully
+2025-10-03 22:39:15,045 - INFO - RETURN http_draw_rectangle elapsed=12.728255
+2025-10-03 22:39:15,046 - INFO - 127.0.0.1 - - [03/Oct/2025 22:39:15] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 22:39:15,054 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 22:39:15,055 - INFO - Selecting text tool in MS Paint
+2025-10-03 22:39:15,791 - INFO - Clicked Text tool via _find_text_tool
+2025-10-03 22:39:16,445 - INFO - Paint window rectangle for text: (L-11, T-11, R1931, B1019)
+2025-10-03 22:39:16,445 - INFO - Text position: (960, 579)
+2025-10-03 22:39:16,445 - INFO - Placing text "hello" at (960, 579)
+2025-10-03 22:39:18,224 - INFO - Text "hello" added successfully
+2025-10-03 22:39:18,224 - INFO - RETURN http_add_text_in_paint elapsed=3.169965
+2025-10-03 22:39:18,224 - INFO - 127.0.0.1 - - [03/Oct/2025 22:39:18] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 22:39:18,238 - INFO - Saved session to llm_session.json
+2025-10-03 22:39:18,242 - INFO - RETURN run_agent elapsed=29.537568
+2025-10-03 22:41:29,935 - INFO - CALL run_agent args=('draw rectangle & write hellp', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 22:41:33,550 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 22:41:35,048 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 22:41:35,050 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 22:41:37,335 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 22:41:37,341 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "hellp", "font_size": 24}
+
+2025-10-03 22:41:39,388 - ERROR - EXCEPTION in run_agent after 9.453044 sec: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002543ABA0B60>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 198, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\connection.py", line 85, in create_connection
+    raise err
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 787, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 493, in _make_request
+    conn.request(
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 445, in request
+    self.endheaders()
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1331, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1091, in _send_output
+    self.send(msg)
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\http\client.py", line 1035, in send
+    self.connect()
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 276, in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connection.py", line 213, in _new_conn
+    raise NewConnectionError(
+urllib3.exceptions.NewConnectionError: <urllib3.connection.HTTPConnection object at 0x000002543ABA0B60>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\adapters.py", line 486, in send
+    resp = conn.urlopen(
+           ^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\connectionpool.py", line 841, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\urllib3\util\retry.py", line 519, in increment
+    raise MaxRetryError(_pool, url, reason) from reason  # type: ignore[arg-type]
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002543ABA0B60>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Codebase\personal\eagv2\mspaint_mcp_production_v2\utils.py", line 24, in wrapper
+    res = func(*args, **kwargs)
+          ^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Codebase\personal\eagv2\mspaint_mcp_production_v2\agent.py", line 108, in run_agent
+    resp = requests.post(f'{server_url}/tool/get_monitor_info', json=payload, timeout=timeout); res_json = resp.json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\api.py", line 115, in post
+    return request("post", url, data=data, json=json, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\api.py", line 59, in request
+    return session.request(method=method, url=url, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\sessions.py", line 589, in request
+    resp = self.send(prep, **send_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\sessions.py", line 703, in send
+    r = adapter.send(request, **kwargs)
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\soham.niyogi\AppData\Local\Programs\Python\Python312\Lib\site-packages\requests\adapters.py", line 519, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='127.0.0.1', port=5000): Max retries exceeded with url: /tool/get_monitor_info (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x000002543ABA0B60>: Failed to establish a new connection: [WinError 10061] No connection could be made because the target machine actively refused it'))
+2025-10-03 22:56:37,608 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 22:56:37,643 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 22:56:37,643 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 22:56:50,253 - INFO - CALL run_agent args=('draw rectangle & write helo', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 22:56:53,178 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 22:56:54,338 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 22:56:54,338 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 22:56:56,263 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 22:56:56,269 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+TOOL_CALL: add_text_in_paint {"x": 150, "y": 180, "text": "helo", "font_size": 24}
+
+2025-10-03 22:56:56,289 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 22:56:56,298 - INFO - RETURN http_get_monitor_info elapsed=0.009389
+2025-10-03 22:56:56,300 - INFO - 127.0.0.1 - - [03/Oct/2025 22:56:56] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 22:56:56,315 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 22:56:56,316 - INFO - Starting MS Paint...
+2025-10-03 22:57:02,977 - INFO - Started new Paint process
+2025-10-03 22:57:04,983 - INFO - Attempt 1: Finding Paint window...
+2025-10-03 22:57:04,983 - INFO - ✅ Found Paint window via app_obj
+2025-10-03 22:57:05,243 - INFO - ✅ Paint window focused
+2025-10-03 22:57:05,243 - INFO - RETURN http_open_paint elapsed=8.928539
+2025-10-03 22:57:05,243 - INFO - 127.0.0.1 - - [03/Oct/2025 22:57:05] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 22:57:05,243 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 22:57:05,243 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 22:57:05,243 - INFO - 🔧 FORCING rectangle tool selection...
+2025-10-03 22:57:05,463 - INFO - Method 1: Looking for Rectangle button...
+2025-10-03 22:57:06,236 - INFO - ✅ Found and clicked Rectangle button!
+2025-10-03 22:57:07,441 - INFO - Paint window rectangle: (L-11, T-11, R1931, B1019)
+2025-10-03 22:57:07,441 - INFO - Safe drawing area: (89, 239) to (1831, 919)
+2025-10-03 22:57:07,441 - INFO - ✅ Rectangle coordinates: start=(760, 429) end=(1160, 729)
+2025-10-03 22:57:08,455 - INFO - 🖱️  ACTIVATING CANVAS: Clicking canvas to ensure it's ready
+2025-10-03 22:57:09,073 - INFO - ✅ Canvas activated
+2025-10-03 22:57:09,075 - INFO - 🎯 STARTING RECTANGLE DRAW
+2025-10-03 22:57:09,079 - INFO - 🖱️  METHOD 1: Standard press-drag-release
+2025-10-03 22:57:11,590 - INFO - ✅ Method 1 complete
+2025-10-03 22:57:11,590 - INFO - 🖱️  METHOD 2: Click-and-drag
+2025-10-03 22:57:13,490 - INFO - ✅ Method 2 complete
+2025-10-03 22:57:13,490 - INFO - 🖱️  METHOD 3: Multiple small rectangles
+2025-10-03 22:57:17,353 - INFO - 🎉 AGGRESSIVE DRAWING COMPLETE!
+2025-10-03 22:57:17,353 - INFO - Rectangle drawn successfully
+2025-10-03 22:57:17,353 - INFO - RETURN http_draw_rectangle elapsed=12.109741
+2025-10-03 22:57:17,353 - INFO - 127.0.0.1 - - [03/Oct/2025 22:57:17] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 22:57:17,362 - INFO - CALL http_add_text_in_paint args=() kwargs={}
+2025-10-03 22:57:17,365 - INFO - Selecting text tool in MS Paint
+2025-10-03 22:57:18,381 - INFO - Clicked Text tool via _find_text_tool
+2025-10-03 22:57:18,896 - INFO - Paint window rectangle for text: (L-11, T-11, R1931, B1019)
+2025-10-03 22:57:18,896 - INFO - Text position: (960, 579)
+2025-10-03 22:57:18,896 - INFO - Placing text "helo" at (960, 579)
+2025-10-03 22:57:20,616 - INFO - Text "helo" added successfully
+2025-10-03 22:57:20,616 - INFO - RETURN http_add_text_in_paint elapsed=3.253825
+2025-10-03 22:57:20,616 - INFO - 127.0.0.1 - - [03/Oct/2025 22:57:20] "POST /tool/add_text_in_paint HTTP/1.1" 200 -
+2025-10-03 22:57:20,621 - INFO - Saved session to llm_session.json
+2025-10-03 22:57:20,627 - INFO - RETURN run_agent elapsed=30.373979
+2025-10-03 23:03:18,916 - INFO - Starting MCP server on 127.0.0.1:5000
+2025-10-03 23:03:18,996 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2025-10-03 23:03:18,996 - INFO - [33mPress CTRL+C to quit[0m
+2025-10-03 23:03:28,730 - INFO - CALL run_agent args=('draw rectangle', 'http://127.0.0.1:5000', 'llm_session.json') kwargs={}
+2025-10-03 23:03:31,765 - WARNING - Both GOOGLE_API_KEY and GEMINI_API_KEY are set. Using GOOGLE_API_KEY.
+2025-10-03 23:03:32,728 - INFO - Calling Google GenAI with model gemini-2.0-flash
+2025-10-03 23:03:32,728 - INFO - AFC is enabled with max remote calls: 10.
+2025-10-03 23:03:34,352 - INFO - HTTP Request: POST https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent "HTTP/1.1 200 OK"
+2025-10-03 23:03:34,352 - INFO - LLM raw response:
+TOOL_CALL: get_monitor_info {}
+TOOL_CALL: open_paint {"app": "Paint", "monitor": 0}
+TOOL_CALL: draw_rectangle {"x": 100, "y": 100, "width": 400, "height": 200, "line_width": 3}
+
+2025-10-03 23:03:34,377 - INFO - CALL http_get_monitor_info args=() kwargs={}
+2025-10-03 23:03:34,377 - INFO - RETURN http_get_monitor_info elapsed=0.000000
+2025-10-03 23:03:34,377 - INFO - 127.0.0.1 - - [03/Oct/2025 23:03:34] "POST /tool/get_monitor_info HTTP/1.1" 200 -
+2025-10-03 23:03:34,393 - INFO - CALL http_open_paint args=() kwargs={}
+2025-10-03 23:03:34,396 - INFO - Starting MS Paint...
+2025-10-03 23:03:40,859 - INFO - Started new Paint process
+2025-10-03 23:03:42,864 - INFO - Attempt 1: Finding Paint window...
+2025-10-03 23:03:42,864 - INFO - ✅ Found Paint window via app_obj
+2025-10-03 23:03:43,229 - INFO - ✅ Paint window focused
+2025-10-03 23:03:43,229 - INFO - RETURN http_open_paint elapsed=8.835508
+2025-10-03 23:03:43,229 - INFO - 127.0.0.1 - - [03/Oct/2025 23:03:43] "POST /tool/open_paint HTTP/1.1" 200 -
+2025-10-03 23:03:43,235 - INFO - CALL http_draw_rectangle args=() kwargs={}
+2025-10-03 23:03:43,235 - INFO - Selecting rectangle tool in MS Paint
+2025-10-03 23:03:43,235 - INFO - 🔧 FORCING rectangle tool selection...
+2025-10-03 23:03:43,458 - INFO - Method 1: Looking for Rectangle button...
+2025-10-03 23:03:44,389 - INFO - ✅ Found and clicked Rectangle button!
+2025-10-03 23:03:45,712 - INFO - Paint window rectangle: (L-11, T-11, R1931, B1019)
+2025-10-03 23:03:45,713 - INFO - Safe drawing area: (89, 239) to (1831, 919)
+2025-10-03 23:03:45,715 - INFO - ✅ Rectangle coordinates: start=(760, 429) end=(1160, 729)
+2025-10-03 23:03:46,716 - INFO - 🖱️  ACTIVATING CANVAS: Clicking canvas to ensure it's ready
+2025-10-03 23:03:47,342 - INFO - ✅ Canvas activated
+2025-10-03 23:03:47,342 - INFO - 🎯 STARTING RECTANGLE DRAW
+2025-10-03 23:03:47,342 - INFO - 🖱️  METHOD 1: Standard press-drag-release
+2025-10-03 23:03:49,844 - INFO - ✅ Method 1 complete
+2025-10-03 23:03:49,844 - INFO - 🖱️  METHOD 2: Click-and-drag
+2025-10-03 23:03:51,743 - INFO - ✅ Method 2 complete
+2025-10-03 23:03:51,743 - INFO - 🖱️  METHOD 3: Multiple small rectangles
+2025-10-03 23:03:55,691 - INFO - 🎉 AGGRESSIVE DRAWING COMPLETE!
+2025-10-03 23:03:55,691 - INFO - Rectangle drawn successfully
+2025-10-03 23:03:55,694 - INFO - RETURN http_draw_rectangle elapsed=12.458960
+2025-10-03 23:03:55,694 - INFO - 127.0.0.1 - - [03/Oct/2025 23:03:55] "POST /tool/draw_rectangle HTTP/1.1" 200 -
+2025-10-03 23:03:55,702 - INFO - Saved session to llm_session.json
+2025-10-03 23:03:55,718 - INFO - RETURN run_agent elapsed=26.987503

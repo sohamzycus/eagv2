@@ -1,0 +1,65 @@
+{
+  "system_prompt": "You are an AI agent that controls MS Paint through tool calls. You MUST use these tools to complete drawing tasks:\n\nAVAILABLE TOOLS:\n- get_monitor_info() - Get screen dimensions and DPI\n- open_paint({\"app\": \"Paint\", \"monitor\": 0}) - Open MS Paint application\n- draw_rectangle({\"x\": int, \"y\": int, \"width\": int, \"height\": int, \"line_width\": int}) - Draw rectangle\n- add_text_in_paint({\"x\": int, \"y\": int, \"text\": \"string\", \"font_size\": int}) - Add text\n\nCRITICAL RULES:\n1) You MUST respond ONLY with tool calls in this format: TOOL_CALL: tool_name {\"param\": value}\n2) NEVER provide text explanations or instructions - only tool calls\n3) Always start with: TOOL_CALL: get_monitor_info {}\n4) Then: TOOL_CALL: open_paint {\"app\": \"Paint\", \"monitor\": 0}\n5) Then: TOOL_CALL: draw_rectangle {\"x\": 100, \"y\": 100, \"width\": 400, \"height\": 200, \"line_width\": 3}\n6) Finally: TOOL_CALL: add_text_in_paint {\"x\": 150, \"y\": 180, \"text\": \"your text here\", \"font_size\": 24}\n\nEXAMPLE OUTPUT:\nTOOL_CALL: get_monitor_info {}\nTOOL_CALL: open_paint {\"app\": \"Paint\", \"monitor\": 0}\nTOOL_CALL: draw_rectangle {\"x\": 200, \"y\": 150, \"width\": 500, \"height\": 300, \"line_width\": 4}\nTOOL_CALL: add_text_in_paint {\"x\": 300, \"y\": 280, \"text\": \"Hello World\", \"font_size\": 28}\n",
+  "messages": [
+    {
+      "role": "user",
+      "content": "draw rectangle"
+    }
+  ],
+  "llm_raw_request": {
+    "model": "gemini-2.0-flash",
+    "contents": "You are an AI agent that controls MS Paint through tool calls. You MUST use these tools to complete drawing tasks:\n\nAVAILABLE TOOLS:\n- get_monitor_info() - Get screen dimensions and DPI\n- open_paint({\"app\": \"Paint\", \"monitor\": 0}) - Open MS Paint application\n- draw_rectangle({\"x\": int, \"y\": int, \"width\": int, \"height\": int, \"line_width\": int}) - Draw rectangle\n- add_text_in_paint({\"x\": int, \"y\": int, \"text\": \"string\", \"font_size\": int}) - Add text\n\nCRITICAL RULES:\n1) You MUST respond ONLY with tool calls in this format: TOOL_CALL: tool_name {\"param\": value}\n2) NEVER provide text explanations or instructions - only tool calls\n3) Always start with: TOOL_CALL: get_monitor_info {}\n4) Then: TOOL_CALL: open_paint {\"app\": \"Paint\", \"monitor\": 0}\n5) Then: TOOL_CALL: draw_rectangle {\"x\": 100, \"y\": 100, \"width\": 400, \"height\": 200, \"line_width\": 3}\n6) Finally: TOOL_CALL: add_text_in_paint {\"x\": 150, \"y\": 180, \"text\": \"your text here\", \"font_size\": 24}\n\nEXAMPLE OUTPUT:\nTOOL_CALL: get_monitor_info {}\nTOOL_CALL: open_paint {\"app\": \"Paint\", \"monitor\": 0}\nTOOL_CALL: draw_rectangle {\"x\": 200, \"y\": 150, \"width\": 500, \"height\": 300, \"line_width\": 4}\nTOOL_CALL: add_text_in_paint {\"x\": 300, \"y\": 280, \"text\": \"Hello World\", \"font_size\": 28}\n\n\nUser Request: draw rectangle\n\nRespond with TOOL_CALL lines only:"
+  },
+  "llm_raw_response": "TOOL_CALL: get_monitor_info {}\nTOOL_CALL: open_paint {\"app\": \"Paint\", \"monitor\": 0}\nTOOL_CALL: draw_rectangle {\"x\": 100, \"y\": 100, \"width\": 400, \"height\": 200, \"line_width\": 3}\n",
+  "tool_execution": [
+    {
+      "tool": "get_monitor_info",
+      "payload": {},
+      "response": {
+        "monitors": [
+          {
+            "dpi_scale": 1.5,
+            "height": 1080,
+            "index": 0,
+            "origin_x": 0,
+            "origin_y": 0,
+            "width": 1920
+          }
+        ],
+        "primary": 0,
+        "status": "ok"
+      }
+    },
+    {
+      "tool": "open_paint",
+      "payload": {
+        "app": "Paint",
+        "monitor": 0
+      },
+      "response": {
+        "status": "ok",
+        "title": "Paint window ready"
+      }
+    },
+    {
+      "tool": "draw_rectangle",
+      "payload": {
+        "x": 100,
+        "y": 100,
+        "width": 400,
+        "height": 200,
+        "line_width": 3
+      },
+      "response": {
+        "rect": [
+          150,
+          150,
+          400,
+          200
+        ],
+        "status": "ok"
+      }
+    }
+  ],
+  "timestamp": 1759512808.730692
+}

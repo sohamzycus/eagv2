@@ -1,0 +1,15 @@
+{
+  "system_prompt": "Full system prompt (store from run)",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What are you doing? Learning that prompting really is the key!"
+    }
+  ],
+  "llm_raw_request": {
+    "model": "gemini-2.0-flash",
+    "contents": "What are you doing? Learning that prompting really is the key!"
+  },
+  "llm_raw_response": "TOOL_CALL: get_monitor_info {}\\nTOOL_CALL: open_paint {\"app\":\"Paint\",\"monitor\":0}\\nTOOL_CALL: draw_rectangle {\"x\":460,\"y\":240,\"width\":1000,\"height\":360,\"line_width\":6}\\nTOOL_CALL: add_text_in_paint {\"x\":520,\"y\":320,\"text\":\"What are you doing? Learning that prompting really is the key!\",\"font_size\":28}\\nLOG: Finished drawing rectangle at (460,240,1000,360) with text \\\"What are you doing? Learning that prompting really is the key!\\\"",
+  "tool_execution": []
+}
