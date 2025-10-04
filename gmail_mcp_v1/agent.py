@@ -3,6 +3,13 @@ import os, json, time, logging, argparse, requests
 from utils import setup_logging, log_and_time
 from prompt_manager import system_prompt_text, plan_calls as deterministic_plan
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # dotenv not available, use system environment variables
+
 setup_logging()
 logger = logging.getLogger('gmail_agent')
 
@@ -13,10 +20,10 @@ class GeminiClient:
         self.client = None
         self.api_key = os.environ.get('GOOGLE_API_KEY') or os.environ.get('GEMINI_API_KEY')
         
-        # Fallback to hardcoded API key if environment variables not set
+        # No fallback API key - environment variables required
         if not self.api_key:
-            self.api_key = "GEMINI_API_KEY"
-            logger.info('Using fallback API key')
+            logger.error('No API key found. Please set GOOGLE_API_KEY or GEMINI_API_KEY environment variable.')
+            logger.info('You can run setup_api_key.bat or setup_api_key.ps1 to set it up.')
             
         if self.api_key:
             try:
@@ -91,7 +98,7 @@ class GeminiClient:
         return calls
 
 @log_and_time
-def run_agent(user_question: str, server_url: str, session_output: str='llm_session.json', timeout: int=30):
+def run_agent(user_question: str, server_url: str, session_output: str='llm_session.json', timeout: int=120):  # Increased timeout for Gmail auth
     system_prompt = system_prompt_text()
     session = {
         'system_prompt': system_prompt, 

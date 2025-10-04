@@ -3,6 +3,13 @@ import os, json, time, logging, argparse, requests
 from utils import setup_logging, log_and_time
 from prompt_manager import system_prompt_text, plan_calls as deterministic_plan
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # dotenv not available, use system environment variables
+
 setup_logging()
 logger = logging.getLogger('agent')
 
@@ -13,10 +20,10 @@ class GeminiClient:
         self.client = None
         self.api_key = os.environ.get('GOOGLE_API_KEY') or os.environ.get('GEMINI_API_KEY')
         
-        # Fallback to hardcoded API key if environment variables not set
+        # No hardcoded API key - environment variables or .env file required
         if not self.api_key:
-            self.api_key = "GEMINI_API_KEY"
-            logger.info('Using fallback API key')
+            logger.error('No API key found. Please set GOOGLE_API_KEY or GEMINI_API_KEY in .env file or environment variables.')
+            logger.info('Create a .env file with: GOOGLE_API_KEY=your_api_key_here')
         if self.api_key:
             try:
                 from google import genai

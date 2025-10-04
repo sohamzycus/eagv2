@@ -1,0 +1,7 @@
+mspaint_mcp_production_v2/__pycache__/agent.cpython-312.pyc
+mspaint_mcp_production_v2/__pycache__/mcp_server.cpython-312.pyc
+mspaint_mcp_production_v2/__pycache__/prompt_manager.cpython-312.pyc
+mspaint_mcp_production_v2/__pycache__/utils.cpython-312.pyc
+*/*.bat
+*/*.ps*
+gmail_mcp_v1/*ps*

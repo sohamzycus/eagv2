@@ -8,10 +8,19 @@ def setup_logging():
         level=logging.INFO,
         format='%(asctime)s - %(levelname)s - %(message)s',
         handlers=[
-            logging.FileHandler('gmail_agent.log'),
+            logging.FileHandler('gmail_agent.log', encoding='utf-8'),
             logging.StreamHandler()
         ]
     )
+    # Fix Windows console encoding for emojis
+    import sys
+    if sys.platform == 'win32':
+        try:
+            import codecs
+            sys.stdout = codecs.getwriter('utf-8')(sys.stdout.buffer, 'strict')
+            sys.stderr = codecs.getwriter('utf-8')(sys.stderr.buffer, 'strict')
+        except:
+            pass
 
 def log_and_time(func: Callable[..., Any]) -> Callable[..., Any]:
     @wraps(func)
