@@ -1,0 +1,25 @@
+{
+  "system_prompt": "You are an AI agent that controls Gmail through tool calls. You MUST use these tools to complete email tasks:\n\nAVAILABLE TOOLS:\n- get_gmail_info() - Get Gmail account information and authentication status\n- send_email({\"to\": \"email@example.com\", \"subject\": \"Subject\", \"body\": \"Message body\", \"cc\": \"optional\", \"bcc\": \"optional\"}) - Send an email\n- compose_email({\"to\": \"email@example.com\", \"subject\": \"Subject\", \"body\": \"Message body\"}) - Create an email draft\n- list_recent_emails({\"max_results\": 10}) - List recent emails (max 50)\n\nCRITICAL RULES:\n1) You MUST respond ONLY with tool calls in this format: TOOL_CALL: tool_name {\"param\": value}\n2) NEVER provide text explanations or instructions - only tool calls\n3) Always start with: TOOL_CALL: get_gmail_info {}\n4) For sending emails, always use: TOOL_CALL: send_email {\"to\": \"recipient@email.com\", \"subject\": \"Your Subject\", \"body\": \"Your message content\"}\n5) For drafts, use: TOOL_CALL: compose_email {\"to\": \"recipient@email.com\", \"subject\": \"Your Subject\", \"body\": \"Your message content\"}\n6) For checking emails, use: TOOL_CALL: list_recent_emails {\"max_results\": 5}\n\nEMAIL FORMATTING GUIDELINES:\n- Subject lines should be clear and descriptive\n- Email body should be professional and well-formatted\n- Include appropriate greetings and closings\n- Use proper grammar and punctuation\n\nEXAMPLE OUTPUT:\nTOOL_CALL: get_gmail_info {}\nTOOL_CALL: send_email {\"to\": \"user@example.com\", \"subject\": \"Hello from AI Assistant\", \"body\": \"Dear User,\\n\\nThis is a test email sent by an AI assistant using Gmail API.\\n\\nBest regards,\\nAI Assistant\"}\n\nEXAMPLE FOR DRAFT:\nTOOL_CALL: get_gmail_info {}\nTOOL_CALL: compose_email {\"to\": \"colleague@company.com\", \"subject\": \"Meeting Follow-up\", \"body\": \"Hi,\\n\\nFollowing up on our meeting today. Here are the action items we discussed:\\n\\n1. Review the proposal\\n2. Schedule next meeting\\n3. Send updated timeline\\n\\nLet me know if you have any questions.\\n\\nBest,\\nYour Name\"}\n",
+  "messages": [
+    {
+      "role": "user",
+      "content": "python test_complete_system.py"
+    }
+  ],
+  "llm_raw_request": {
+    "model": "gemini-2.0-flash",
+    "contents": "You are an AI agent that controls Gmail through tool calls. You MUST use these tools to complete email tasks:\n\nAVAILABLE TOOLS:\n- get_gmail_info() - Get Gmail account information and authentication status\n- send_email({\"to\": \"email@example.com\", \"subject\": \"Subject\", \"body\": \"Message body\", \"cc\": \"optional\", \"bcc\": \"optional\"}) - Send an email\n- compose_email({\"to\": \"email@example.com\", \"subject\": \"Subject\", \"body\": \"Message body\"}) - Create an email draft\n- list_recent_emails({\"max_results\": 10}) - List recent emails (max 50)\n\nCRITICAL RULES:\n1) You MUST respond ONLY with tool calls in this format: TOOL_CALL: tool_name {\"param\": value}\n2) NEVER provide text explanations or instructions - only tool calls\n3) Always start with: TOOL_CALL: get_gmail_info {}\n4) For sending emails, always use: TOOL_CALL: send_email {\"to\": \"recipient@email.com\", \"subject\": \"Your Subject\", \"body\": \"Your message content\"}\n5) For drafts, use: TOOL_CALL: compose_email {\"to\": \"recipient@email.com\", \"subject\": \"Your Subject\", \"body\": \"Your message content\"}\n6) For checking emails, use: TOOL_CALL: list_recent_emails {\"max_results\": 5}\n\nEMAIL FORMATTING GUIDELINES:\n- Subject lines should be clear and descriptive\n- Email body should be professional and well-formatted\n- Include appropriate greetings and closings\n- Use proper grammar and punctuation\n\nEXAMPLE OUTPUT:\nTOOL_CALL: get_gmail_info {}\nTOOL_CALL: send_email {\"to\": \"user@example.com\", \"subject\": \"Hello from AI Assistant\", \"body\": \"Dear User,\\n\\nThis is a test email sent by an AI assistant using Gmail API.\\n\\nBest regards,\\nAI Assistant\"}\n\nEXAMPLE FOR DRAFT:\nTOOL_CALL: get_gmail_info {}\nTOOL_CALL: compose_email {\"to\": \"colleague@company.com\", \"subject\": \"Meeting Follow-up\", \"body\": \"Hi,\\n\\nFollowing up on our meeting today. Here are the action items we discussed:\\n\\n1. Review the proposal\\n2. Schedule next meeting\\n3. Send updated timeline\\n\\nLet me know if you have any questions.\\n\\nBest,\\nYour Name\"}\n\n\nUser Request: python test_complete_system.py\n\nRespond with TOOL_CALL lines only:"
+  },
+  "llm_raw_response": "TOOL_CALL: get_gmail_info {}\n",
+  "tool_execution": [
+    {
+      "tool": "get_gmail_info",
+      "payload": {},
+      "response": {
+        "error": "[SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1000)",
+        "status": "error"
+      }
+    }
+  ],
+  "timestamp": 1759518601.690937
+}
