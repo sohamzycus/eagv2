@@ -1,7 +1,14 @@
 # Files to ignore for version control
 .env
 *.log
+
+# Sensitive credential files - NEVER commit these!
 token.json
+credentials.json
+credentials_backup.json
+*_session.json
+gmail_session.json
+llm_gmail_session.json
 __pycache__/
 *.pyc
 *.pyo
