@@ -1,34 +1,30 @@
 {
   "name": "web-memory-frontend",
+  "private": true,
+  "type": "module",
   "version": "1.0.0",
-  "main": "index.js",
+  "engines": { "node": "20.x" },
+  "packageManager": "npm@10.8.1",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
-  "type": "module",
-  "private": "true",
   "dependencies": {
-    "@supabase/supabase-js": "2.45.3",
-    "@tanstack/react-query": "5.51.1",
-    "autoprefixer": "10.4.20",
-    "framer-motion": "11.1.7",
-    "next": "15.0.0",
-    "postcss": "8.4.47",
-    "react": "18.3.1",
-    "react-dom": "18.3.1",
-    "tailwindcss": "3.4.13"
+    "next": "^15.0.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@supabase/supabase-js": "^2.45.3",
+    "@tanstack/react-query": "^5.51.1",
+    "framer-motion": "^11.1.7",
+    "tailwindcss": "^3.4.13",
+    "postcss": "^8.4.47",
+    "autoprefixer": "^10.4.20"
   },
   "devDependencies": {
-    "@types/node": "22.7.5",
-    "@types/react": "18.3.5",
-    "typescript": "5.6.3"
+    "typescript": "^5.6.3",
+    "@types/react": "^18.3.5",
+    "@types/node": "^22.7.5"
   }
 }
