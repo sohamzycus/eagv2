@@ -1,0 +1,6 @@
+# Supabase CLI config for web-memory-timeline
+project_id = "web-memory-timeline"
+[functions]
+# Map functions folder
+[functions.embed-page]
+verify_jwt = false

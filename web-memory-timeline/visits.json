@@ -1,0 +1,16 @@
+[
+  {
+    "id": "sess_local",
+    "start": 1761979853334,
+    "end": 1761979853334,
+    "sessionTitle": "Example",
+    "pages": [
+      {
+        "url": "https://example.com",
+        "title": "Example",
+        "snippet": "Example Domain",
+        "ts": 1761979853334
+      }
+    ]
+  }
+]
