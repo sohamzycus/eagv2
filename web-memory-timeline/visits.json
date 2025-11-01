@@ -1,15 +1,53 @@
 [
   {
-    "id": "sess_local",
-    "start": 1761979853334,
-    "end": 1761979853334,
-    "sessionTitle": "Example",
+    "id": "sess_a",
+    "start": 1730448000000,
+    "end": 1730448600000,
+    "sessionTitle": "AI & Web Tech",
     "pages": [
       {
         "url": "https://example.com",
         "title": "Example",
         "snippet": "Example Domain",
-        "ts": 1761979853334
+        "ts": 1730448000000
+      },
+      {
+        "url": "https://nextjs.org/docs",
+        "title": "Next.js Documentation",
+        "snippet": "Learn Next.js App Router, routing, data fetching, deployment.",
+        "ts": 1730448200000
+      },
+      {
+        "url": "https://supabase.com/docs",
+        "title": "Supabase Docs",
+        "snippet": "Postgres, auth, storage, functions, and SQL examples.",
+        "ts": 1730448300000
+      }
+    ]
+  },
+  {
+    "id": "sess_b",
+    "start": 1730452000000,
+    "end": 1730452600000,
+    "sessionTitle": "Embeddings & Vector Search",
+    "pages": [
+      {
+        "url": "https://ollama.com",
+        "title": "Ollama",
+        "snippet": "Run open-source models locally. Pull nomic-embed-text.",
+        "ts": 1730452000000
+      },
+      {
+        "url": "https://faiss.ai",
+        "title": "FAISS",
+        "snippet": "Facebook AI Similarity Search for vector databases.",
+        "ts": 1730452200000
+      },
+      {
+        "url": "https://pgvector.dev",
+        "title": "pgvector",
+        "snippet": "Open-source vector similarity search for Postgres.",
+        "ts": 1730452400000
       }
     ]
   }

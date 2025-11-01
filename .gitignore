@@ -10,3 +10,6 @@ gmail_mcp_v1/credentials.json
 gmail_mcp_v1/token.json
 web-memory-timeline/frontend/node_modules/*
 web-memory-timeline/frontend/.next/*
+web-memory-timeline/node_modules/*
+web-memory-timeline/.next/*
+web-memory-timeline/frontend/node_modules/*

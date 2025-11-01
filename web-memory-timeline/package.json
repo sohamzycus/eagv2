@@ -2,5 +2,8 @@
   "name": "web-memory-timeline",
   "private": true,
   "type": "module",
-  "version": "0.1.0"
+  "version": "0.1.0",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.3"
+  }
 }
