@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Web Memory Timeline",
+  "version": "0.1.0",
+  "description": "Capture browsing sessions locally and export visits.json for semantic indexing.",
+  "permissions": ["storage", "tabs", "scripting", "activeTab"],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_title": "Web Memory",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content_script.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

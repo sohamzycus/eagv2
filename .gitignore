@@ -6,3 +6,5 @@ mspaint_mcp_production_v2/__pycache__/utils.cpython-312.pyc
 */*.ps*
 gmail_mcp_v1/*ps*
 gmail_credentials_secure/*.json
+gmail_mcp_v1/credentials.json
+gmail_mcp_v1/token.json
