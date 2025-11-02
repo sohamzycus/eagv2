@@ -1,0 +1,962 @@
+[
+  {
+    "id": "sess_1",
+    "start": 1759493646249,
+    "end": 1759494006249,
+    "sessionTitle": "Vector Search & Databases",
+    "pages": [
+      {
+        "url": "https://pgvector.dev",
+        "title": "pgvector",
+        "snippet": "Open-source vector similarity search for Postgres.",
+        "ts": 1759493646249
+      },
+      {
+        "url": "https://faiss.ai",
+        "title": "FAISS",
+        "snippet": "Facebook AI Similarity Search for vector databases.",
+        "ts": 1759493766249
+      },
+      {
+        "url": "https://supabase.com/docs",
+        "title": "Supabase Docs",
+        "snippet": "Postgres, auth, storage, edge functions.",
+        "ts": 1759493886249
+      },
+      {
+        "url": "https://www.postgresql.org/docs/",
+        "title": "PostgreSQL Docs",
+        "snippet": "SQL, indexes, extensions, performance.",
+        "ts": 1759494006249
+      }
+    ]
+  },
+  {
+    "id": "sess_2",
+    "start": 1759494546249,
+    "end": 1759494906249,
+    "sessionTitle": "Embeddings & LLM Infra",
+    "pages": [
+      {
+        "url": "https://ollama.com",
+        "title": "Ollama",
+        "snippet": "Run open-source models locally.",
+        "ts": 1759494546249
+      },
+      {
+        "url": "https://huggingface.co/docs",
+        "title": "Hugging Face Docs",
+        "snippet": "Models, datasets, inference.",
+        "ts": 1759494666249
+      },
+      {
+        "url": "https://python.langchain.com/docs/",
+        "title": "LangChain Docs",
+        "snippet": "Build LLM apps with tools and memory.",
+        "ts": 1759494786249
+      },
+      {
+        "url": "https://platform.openai.com/docs/overview",
+        "title": "OpenAI Platform",
+        "snippet": "API, models, embeddings.",
+        "ts": 1759494906249
+      }
+    ]
+  },
+  {
+    "id": "sess_3",
+    "start": 1759495446249,
+    "end": 1759495806249,
+    "sessionTitle": "Web Dev & Frameworks",
+    "pages": [
+      {
+        "url": "https://nextjs.org/docs",
+        "title": "Next.js Docs",
+        "snippet": "React framework, App Router, data fetching.",
+        "ts": 1759495446249
+      },
+      {
+        "url": "https://developer.mozilla.org/",
+        "title": "MDN Web Docs",
+        "snippet": "HTML, CSS, JS reference.",
+        "ts": 1759495566249
+      },
+      {
+        "url": "https://tailwindcss.com/docs",
+        "title": "Tailwind Docs",
+        "snippet": "Utility-first CSS framework.",
+        "ts": 1759495686249
+      },
+      {
+        "url": "https://react.dev/learn",
+        "title": "React Docs",
+        "snippet": "Modern React patterns, hooks.",
+        "ts": 1759495806249
+      }
+    ]
+  },
+  {
+    "id": "sess_4",
+    "start": 1759496346249,
+    "end": 1759496706249,
+    "sessionTitle": "Cloud & Data",
+    "pages": [
+      {
+        "url": "https://cloud.google.com/docs",
+        "title": "Google Cloud Docs",
+        "snippet": "Cloud products, APIs, services.",
+        "ts": 1759496346249
+      },
+      {
+        "url": "https://docs.aws.amazon.com/",
+        "title": "AWS Docs",
+        "snippet": "Services, SDKs, guides.",
+        "ts": 1759496466249
+      },
+      {
+        "url": "https://learn.microsoft.com/azure/",
+        "title": "Azure Docs",
+        "snippet": "Azure services and reference.",
+        "ts": 1759496586249
+      },
+      {
+        "url": "https://kubernetes.io/docs/",
+        "title": "Kubernetes Docs",
+        "snippet": "Containers, orchestration, workloads.",
+        "ts": 1759496706249
+      }
+    ]
+  },
+  {
+    "id": "sess_5",
+    "start": 1759497246249,
+    "end": 1759497606249,
+    "sessionTitle": "Programming Languages",
+    "pages": [
+      {
+        "url": "https://docs.python.org/3/",
+        "title": "Python Docs",
+        "snippet": "Standard library, language reference.",
+        "ts": 1759497246249
+      },
+      {
+        "url": "https://go.dev/doc/",
+        "title": "Go Docs",
+        "snippet": "Tour, packages, tooling.",
+        "ts": 1759497366249
+      },
+      {
+        "url": "https://docs.rs/",
+        "title": "Rust Docs",
+        "snippet": "Crates and Rust documentation.",
+        "ts": 1759497486249
+      },
+      {
+        "url": "https://nodejs.org/en/docs",
+        "title": "Node.js Docs",
+        "snippet": "API reference and guides.",
+        "ts": 1759497606249
+      }
+    ]
+  },
+  {
+    "id": "sess_6",
+    "start": 1759498146249,
+    "end": 1759498506249,
+    "sessionTitle": "Vector Search & Databases",
+    "pages": [
+      {
+        "url": "https://pgvector.dev",
+        "title": "pgvector",
+        "snippet": "Open-source vector similarity search for Postgres.",
+        "ts": 1759498146249
+      },
+      {
+        "url": "https://faiss.ai",
+        "title": "FAISS",
+        "snippet": "Facebook AI Similarity Search for vector databases.",
+        "ts": 1759498266249
+      },
+      {
+        "url": "https://supabase.com/docs",
+        "title": "Supabase Docs",
+        "snippet": "Postgres, auth, storage, edge functions.",
+        "ts": 1759498386249
+      },
+      {
+        "url": "https://www.postgresql.org/docs/",
+        "title": "PostgreSQL Docs",
+        "snippet": "SQL, indexes, extensions, performance.",
+        "ts": 1759498506249
+      }
+    ]
+  },
+  {
+    "id": "sess_7",
+    "start": 1759499046249,
+    "end": 1759499406249,
+    "sessionTitle": "Embeddings & LLM Infra",
+    "pages": [
+      {
+        "url": "https://ollama.com",
+        "title": "Ollama",
+        "snippet": "Run open-source models locally.",
+        "ts": 1759499046249
+      },
+      {
+        "url": "https://huggingface.co/docs",
+        "title": "Hugging Face Docs",
+        "snippet": "Models, datasets, inference.",
+        "ts": 1759499166249
+      },
+      {
+        "url": "https://python.langchain.com/docs/",
+        "title": "LangChain Docs",
+        "snippet": "Build LLM apps with tools and memory.",
+        "ts": 1759499286249
+      },
+      {
+        "url": "https://platform.openai.com/docs/overview",
+        "title": "OpenAI Platform",
+        "snippet": "API, models, embeddings.",
+        "ts": 1759499406249
+      }
+    ]
+  },
+  {
+    "id": "sess_8",
+    "start": 1759499946249,
+    "end": 1759500306249,
+    "sessionTitle": "Web Dev & Frameworks",
+    "pages": [
+      {
+        "url": "https://nextjs.org/docs",
+        "title": "Next.js Docs",
+        "snippet": "React framework, App Router, data fetching.",
+        "ts": 1759499946249
+      },
+      {
+        "url": "https://developer.mozilla.org/",
+        "title": "MDN Web Docs",
+        "snippet": "HTML, CSS, JS reference.",
+        "ts": 1759500066249
+      },
+      {
+        "url": "https://tailwindcss.com/docs",
+        "title": "Tailwind Docs",
+        "snippet": "Utility-first CSS framework.",
+        "ts": 1759500186249
+      },
+      {
+        "url": "https://react.dev/learn",
+        "title": "React Docs",
+        "snippet": "Modern React patterns, hooks.",
+        "ts": 1759500306249
+      }
+    ]
+  },
+  {
+    "id": "sess_9",
+    "start": 1759500846249,
+    "end": 1759501206249,
+    "sessionTitle": "Cloud & Data",
+    "pages": [
+      {
+        "url": "https://cloud.google.com/docs",
+        "title": "Google Cloud Docs",
+        "snippet": "Cloud products, APIs, services.",
+        "ts": 1759500846249
+      },
+      {
+        "url": "https://docs.aws.amazon.com/",
+        "title": "AWS Docs",
+        "snippet": "Services, SDKs, guides.",
+        "ts": 1759500966249
+      },
+      {
+        "url": "https://learn.microsoft.com/azure/",
+        "title": "Azure Docs",
+        "snippet": "Azure services and reference.",
+        "ts": 1759501086249
+      },
+      {
+        "url": "https://kubernetes.io/docs/",
+        "title": "Kubernetes Docs",
+        "snippet": "Containers, orchestration, workloads.",
+        "ts": 1759501206249
+      }
+    ]
+  },
+  {
+    "id": "sess_10",
+    "start": 1759501746249,
+    "end": 1759502106249,
+    "sessionTitle": "Programming Languages",
+    "pages": [
+      {
+        "url": "https://docs.python.org/3/",
+        "title": "Python Docs",
+        "snippet": "Standard library, language reference.",
+        "ts": 1759501746249
+      },
+      {
+        "url": "https://go.dev/doc/",
+        "title": "Go Docs",
+        "snippet": "Tour, packages, tooling.",
+        "ts": 1759501866249
+      },
+      {
+        "url": "https://docs.rs/",
+        "title": "Rust Docs",
+        "snippet": "Crates and Rust documentation.",
+        "ts": 1759501986249
+      },
+      {
+        "url": "https://nodejs.org/en/docs",
+        "title": "Node.js Docs",
+        "snippet": "API reference and guides.",
+        "ts": 1759502106249
+      }
+    ]
+  },
+  {
+    "id": "sess_11",
+    "start": 1759502646249,
+    "end": 1759503006249,
+    "sessionTitle": "Vector Search & Databases",
+    "pages": [
+      {
+        "url": "https://pgvector.dev",
+        "title": "pgvector",
+        "snippet": "Open-source vector similarity search for Postgres.",
+        "ts": 1759502646249
+      },
+      {
+        "url": "https://faiss.ai",
+        "title": "FAISS",
+        "snippet": "Facebook AI Similarity Search for vector databases.",
+        "ts": 1759502766249
+      },
+      {
+        "url": "https://supabase.com/docs",
+        "title": "Supabase Docs",
+        "snippet": "Postgres, auth, storage, edge functions.",
+        "ts": 1759502886249
+      },
+      {
+        "url": "https://www.postgresql.org/docs/",
+        "title": "PostgreSQL Docs",
+        "snippet": "SQL, indexes, extensions, performance.",
+        "ts": 1759503006249
+      }
+    ]
+  },
+  {
+    "id": "sess_12",
+    "start": 1759503546249,
+    "end": 1759503906249,
+    "sessionTitle": "Embeddings & LLM Infra",
+    "pages": [
+      {
+        "url": "https://ollama.com",
+        "title": "Ollama",
+        "snippet": "Run open-source models locally.",
+        "ts": 1759503546249
+      },
+      {
+        "url": "https://huggingface.co/docs",
+        "title": "Hugging Face Docs",
+        "snippet": "Models, datasets, inference.",
+        "ts": 1759503666249
+      },
+      {
+        "url": "https://python.langchain.com/docs/",
+        "title": "LangChain Docs",
+        "snippet": "Build LLM apps with tools and memory.",
+        "ts": 1759503786249
+      },
+      {
+        "url": "https://platform.openai.com/docs/overview",
+        "title": "OpenAI Platform",
+        "snippet": "API, models, embeddings.",
+        "ts": 1759503906249
+      }
+    ]
+  },
+  {
+    "id": "sess_13",
+    "start": 1759504446249,
+    "end": 1759504806249,
+    "sessionTitle": "Web Dev & Frameworks",
+    "pages": [
+      {
+        "url": "https://nextjs.org/docs",
+        "title": "Next.js Docs",
+        "snippet": "React framework, App Router, data fetching.",
+        "ts": 1759504446249
+      },
+      {
+        "url": "https://developer.mozilla.org/",
+        "title": "MDN Web Docs",
+        "snippet": "HTML, CSS, JS reference.",
+        "ts": 1759504566249
+      },
+      {
+        "url": "https://tailwindcss.com/docs",
+        "title": "Tailwind Docs",
+        "snippet": "Utility-first CSS framework.",
+        "ts": 1759504686249
+      },
+      {
+        "url": "https://react.dev/learn",
+        "title": "React Docs",
+        "snippet": "Modern React patterns, hooks.",
+        "ts": 1759504806249
+      }
+    ]
+  },
+  {
+    "id": "sess_14",
+    "start": 1759505346249,
+    "end": 1759505706249,
+    "sessionTitle": "Cloud & Data",
+    "pages": [
+      {
+        "url": "https://cloud.google.com/docs",
+        "title": "Google Cloud Docs",
+        "snippet": "Cloud products, APIs, services.",
+        "ts": 1759505346249
+      },
+      {
+        "url": "https://docs.aws.amazon.com/",
+        "title": "AWS Docs",
+        "snippet": "Services, SDKs, guides.",
+        "ts": 1759505466249
+      },
+      {
+        "url": "https://learn.microsoft.com/azure/",
+        "title": "Azure Docs",
+        "snippet": "Azure services and reference.",
+        "ts": 1759505586249
+      },
+      {
+        "url": "https://kubernetes.io/docs/",
+        "title": "Kubernetes Docs",
+        "snippet": "Containers, orchestration, workloads.",
+        "ts": 1759505706249
+      }
+    ]
+  },
+  {
+    "id": "sess_15",
+    "start": 1759506246249,
+    "end": 1759506606249,
+    "sessionTitle": "Programming Languages",
+    "pages": [
+      {
+        "url": "https://docs.python.org/3/",
+        "title": "Python Docs",
+        "snippet": "Standard library, language reference.",
+        "ts": 1759506246249
+      },
+      {
+        "url": "https://go.dev/doc/",
+        "title": "Go Docs",
+        "snippet": "Tour, packages, tooling.",
+        "ts": 1759506366249
+      },
+      {
+        "url": "https://docs.rs/",
+        "title": "Rust Docs",
+        "snippet": "Crates and Rust documentation.",
+        "ts": 1759506486249
+      },
+      {
+        "url": "https://nodejs.org/en/docs",
+        "title": "Node.js Docs",
+        "snippet": "API reference and guides.",
+        "ts": 1759506606249
+      }
+    ]
+  },
+  {
+    "id": "sess_16",
+    "start": 1759507146249,
+    "end": 1759507506249,
+    "sessionTitle": "Vector Search & Databases",
+    "pages": [
+      {
+        "url": "https://pgvector.dev",
+        "title": "pgvector",
+        "snippet": "Open-source vector similarity search for Postgres.",
+        "ts": 1759507146249
+      },
+      {
+        "url": "https://faiss.ai",
+        "title": "FAISS",
+        "snippet": "Facebook AI Similarity Search for vector databases.",
+        "ts": 1759507266249
+      },
+      {
+        "url": "https://supabase.com/docs",
+        "title": "Supabase Docs",
+        "snippet": "Postgres, auth, storage, edge functions.",
+        "ts": 1759507386249
+      },
+      {
+        "url": "https://www.postgresql.org/docs/",
+        "title": "PostgreSQL Docs",
+        "snippet": "SQL, indexes, extensions, performance.",
+        "ts": 1759507506249
+      }
+    ]
+  },
+  {
+    "id": "sess_17",
+    "start": 1759508046249,
+    "end": 1759508406249,
+    "sessionTitle": "Embeddings & LLM Infra",
+    "pages": [
+      {
+        "url": "https://ollama.com",
+        "title": "Ollama",
+        "snippet": "Run open-source models locally.",
+        "ts": 1759508046249
+      },
+      {
+        "url": "https://huggingface.co/docs",
+        "title": "Hugging Face Docs",
+        "snippet": "Models, datasets, inference.",
+        "ts": 1759508166249
+      },
+      {
+        "url": "https://python.langchain.com/docs/",
+        "title": "LangChain Docs",
+        "snippet": "Build LLM apps with tools and memory.",
+        "ts": 1759508286249
+      },
+      {
+        "url": "https://platform.openai.com/docs/overview",
+        "title": "OpenAI Platform",
+        "snippet": "API, models, embeddings.",
+        "ts": 1759508406249
+      }
+    ]
+  },
+  {
+    "id": "sess_18",
+    "start": 1759508946249,
+    "end": 1759509306249,
+    "sessionTitle": "Web Dev & Frameworks",
+    "pages": [
+      {
+        "url": "https://nextjs.org/docs",
+        "title": "Next.js Docs",
+        "snippet": "React framework, App Router, data fetching.",
+        "ts": 1759508946249
+      },
+      {
+        "url": "https://developer.mozilla.org/",
+        "title": "MDN Web Docs",
+        "snippet": "HTML, CSS, JS reference.",
+        "ts": 1759509066249
+      },
+      {
+        "url": "https://tailwindcss.com/docs",
+        "title": "Tailwind Docs",
+        "snippet": "Utility-first CSS framework.",
+        "ts": 1759509186249
+      },
+      {
+        "url": "https://react.dev/learn",
+        "title": "React Docs",
+        "snippet": "Modern React patterns, hooks.",
+        "ts": 1759509306249
+      }
+    ]
+  },
+  {
+    "id": "sess_19",
+    "start": 1759509846249,
+    "end": 1759510206249,
+    "sessionTitle": "Cloud & Data",
+    "pages": [
+      {
+        "url": "https://cloud.google.com/docs",
+        "title": "Google Cloud Docs",
+        "snippet": "Cloud products, APIs, services.",
+        "ts": 1759509846249
+      },
+      {
+        "url": "https://docs.aws.amazon.com/",
+        "title": "AWS Docs",
+        "snippet": "Services, SDKs, guides.",
+        "ts": 1759509966249
+      },
+      {
+        "url": "https://learn.microsoft.com/azure/",
+        "title": "Azure Docs",
+        "snippet": "Azure services and reference.",
+        "ts": 1759510086249
+      },
+      {
+        "url": "https://kubernetes.io/docs/",
+        "title": "Kubernetes Docs",
+        "snippet": "Containers, orchestration, workloads.",
+        "ts": 1759510206249
+      }
+    ]
+  },
+  {
+    "id": "sess_20",
+    "start": 1759510746249,
+    "end": 1759511106249,
+    "sessionTitle": "Programming Languages",
+    "pages": [
+      {
+        "url": "https://docs.python.org/3/",
+        "title": "Python Docs",
+        "snippet": "Standard library, language reference.",
+        "ts": 1759510746249
+      },
+      {
+        "url": "https://go.dev/doc/",
+        "title": "Go Docs",
+        "snippet": "Tour, packages, tooling.",
+        "ts": 1759510866249
+      },
+      {
+        "url": "https://docs.rs/",
+        "title": "Rust Docs",
+        "snippet": "Crates and Rust documentation.",
+        "ts": 1759510986249
+      },
+      {
+        "url": "https://nodejs.org/en/docs",
+        "title": "Node.js Docs",
+        "snippet": "API reference and guides.",
+        "ts": 1759511106249
+      }
+    ]
+  },
+  {
+    "id": "sess_21",
+    "start": 1759511646249,
+    "end": 1759512006249,
+    "sessionTitle": "Vector Search & Databases",
+    "pages": [
+      {
+        "url": "https://pgvector.dev",
+        "title": "pgvector",
+        "snippet": "Open-source vector similarity search for Postgres.",
+        "ts": 1759511646249
+      },
+      {
+        "url": "https://faiss.ai",
+        "title": "FAISS",
+        "snippet": "Facebook AI Similarity Search for vector databases.",
+        "ts": 1759511766249
+      },
+      {
+        "url": "https://supabase.com/docs",
+        "title": "Supabase Docs",
+        "snippet": "Postgres, auth, storage, edge functions.",
+        "ts": 1759511886249
+      },
+      {
+        "url": "https://www.postgresql.org/docs/",
+        "title": "PostgreSQL Docs",
+        "snippet": "SQL, indexes, extensions, performance.",
+        "ts": 1759512006249
+      }
+    ]
+  },
+  {
+    "id": "sess_22",
+    "start": 1759512546249,
+    "end": 1759512906249,
+    "sessionTitle": "Embeddings & LLM Infra",
+    "pages": [
+      {
+        "url": "https://ollama.com",
+        "title": "Ollama",
+        "snippet": "Run open-source models locally.",
+        "ts": 1759512546249
+      },
+      {
+        "url": "https://huggingface.co/docs",
+        "title": "Hugging Face Docs",
+        "snippet": "Models, datasets, inference.",
+        "ts": 1759512666249
+      },
+      {
+        "url": "https://python.langchain.com/docs/",
+        "title": "LangChain Docs",
+        "snippet": "Build LLM apps with tools and memory.",
+        "ts": 1759512786249
+      },
+      {
+        "url": "https://platform.openai.com/docs/overview",
+        "title": "OpenAI Platform",
+        "snippet": "API, models, embeddings.",
+        "ts": 1759512906249
+      }
+    ]
+  },
+  {
+    "id": "sess_23",
+    "start": 1759513446249,
+    "end": 1759513806249,
+    "sessionTitle": "Web Dev & Frameworks",
+    "pages": [
+      {
+        "url": "https://nextjs.org/docs",
+        "title": "Next.js Docs",
+        "snippet": "React framework, App Router, data fetching.",
+        "ts": 1759513446249
+      },
+      {
+        "url": "https://developer.mozilla.org/",
+        "title": "MDN Web Docs",
+        "snippet": "HTML, CSS, JS reference.",
+        "ts": 1759513566249
+      },
+      {
+        "url": "https://tailwindcss.com/docs",
+        "title": "Tailwind Docs",
+        "snippet": "Utility-first CSS framework.",
+        "ts": 1759513686249
+      },
+      {
+        "url": "https://react.dev/learn",
+        "title": "React Docs",
+        "snippet": "Modern React patterns, hooks.",
+        "ts": 1759513806249
+      }
+    ]
+  },
+  {
+    "id": "sess_24",
+    "start": 1759514346249,
+    "end": 1759514706249,
+    "sessionTitle": "Cloud & Data",
+    "pages": [
+      {
+        "url": "https://cloud.google.com/docs",
+        "title": "Google Cloud Docs",
+        "snippet": "Cloud products, APIs, services.",
+        "ts": 1759514346249
+      },
+      {
+        "url": "https://docs.aws.amazon.com/",
+        "title": "AWS Docs",
+        "snippet": "Services, SDKs, guides.",
+        "ts": 1759514466249
+      },
+      {
+        "url": "https://learn.microsoft.com/azure/",
+        "title": "Azure Docs",
+        "snippet": "Azure services and reference.",
+        "ts": 1759514586249
+      },
+      {
+        "url": "https://kubernetes.io/docs/",
+        "title": "Kubernetes Docs",
+        "snippet": "Containers, orchestration, workloads.",
+        "ts": 1759514706249
+      }
+    ]
+  },
+  {
+    "id": "sess_25",
+    "start": 1759515246249,
+    "end": 1759515606249,
+    "sessionTitle": "Programming Languages",
+    "pages": [
+      {
+        "url": "https://docs.python.org/3/",
+        "title": "Python Docs",
+        "snippet": "Standard library, language reference.",
+        "ts": 1759515246249
+      },
+      {
+        "url": "https://go.dev/doc/",
+        "title": "Go Docs",
+        "snippet": "Tour, packages, tooling.",
+        "ts": 1759515366249
+      },
+      {
+        "url": "https://docs.rs/",
+        "title": "Rust Docs",
+        "snippet": "Crates and Rust documentation.",
+        "ts": 1759515486249
+      },
+      {
+        "url": "https://nodejs.org/en/docs",
+        "title": "Node.js Docs",
+        "snippet": "API reference and guides.",
+        "ts": 1759515606249
+      }
+    ]
+  },
+  {
+    "id": "sess_26",
+    "start": 1759516146249,
+    "end": 1759516506249,
+    "sessionTitle": "Vector Search & Databases",
+    "pages": [
+      {
+        "url": "https://pgvector.dev",
+        "title": "pgvector",
+        "snippet": "Open-source vector similarity search for Postgres.",
+        "ts": 1759516146249
+      },
+      {
+        "url": "https://faiss.ai",
+        "title": "FAISS",
+        "snippet": "Facebook AI Similarity Search for vector databases.",
+        "ts": 1759516266249
+      },
+      {
+        "url": "https://supabase.com/docs",
+        "title": "Supabase Docs",
+        "snippet": "Postgres, auth, storage, edge functions.",
+        "ts": 1759516386249
+      },
+      {
+        "url": "https://www.postgresql.org/docs/",
+        "title": "PostgreSQL Docs",
+        "snippet": "SQL, indexes, extensions, performance.",
+        "ts": 1759516506249
+      }
+    ]
+  },
+  {
+    "id": "sess_27",
+    "start": 1759517046249,
+    "end": 1759517406249,
+    "sessionTitle": "Embeddings & LLM Infra",
+    "pages": [
+      {
+        "url": "https://ollama.com",
+        "title": "Ollama",
+        "snippet": "Run open-source models locally.",
+        "ts": 1759517046249
+      },
+      {
+        "url": "https://huggingface.co/docs",
+        "title": "Hugging Face Docs",
+        "snippet": "Models, datasets, inference.",
+        "ts": 1759517166249
+      },
+      {
+        "url": "https://python.langchain.com/docs/",
+        "title": "LangChain Docs",
+        "snippet": "Build LLM apps with tools and memory.",
+        "ts": 1759517286249
+      },
+      {
+        "url": "https://platform.openai.com/docs/overview",
+        "title": "OpenAI Platform",
+        "snippet": "API, models, embeddings.",
+        "ts": 1759517406249
+      }
+    ]
+  },
+  {
+    "id": "sess_28",
+    "start": 1759517946249,
+    "end": 1759518306249,
+    "sessionTitle": "Web Dev & Frameworks",
+    "pages": [
+      {
+        "url": "https://nextjs.org/docs",
+        "title": "Next.js Docs",
+        "snippet": "React framework, App Router, data fetching.",
+        "ts": 1759517946249
+      },
+      {
+        "url": "https://developer.mozilla.org/",
+        "title": "MDN Web Docs",
+        "snippet": "HTML, CSS, JS reference.",
+        "ts": 1759518066249
+      },
+      {
+        "url": "https://tailwindcss.com/docs",
+        "title": "Tailwind Docs",
+        "snippet": "Utility-first CSS framework.",
+        "ts": 1759518186249
+      },
+      {
+        "url": "https://react.dev/learn",
+        "title": "React Docs",
+        "snippet": "Modern React patterns, hooks.",
+        "ts": 1759518306249
+      }
+    ]
+  },
+  {
+    "id": "sess_29",
+    "start": 1759518846249,
+    "end": 1759519206249,
+    "sessionTitle": "Cloud & Data",
+    "pages": [
+      {
+        "url": "https://cloud.google.com/docs",
+        "title": "Google Cloud Docs",
+        "snippet": "Cloud products, APIs, services.",
+        "ts": 1759518846249
+      },
+      {
+        "url": "https://docs.aws.amazon.com/",
+        "title": "AWS Docs",
+        "snippet": "Services, SDKs, guides.",
+        "ts": 1759518966249
+      },
+      {
+        "url": "https://learn.microsoft.com/azure/",
+        "title": "Azure Docs",
+        "snippet": "Azure services and reference.",
+        "ts": 1759519086249
+      },
+      {
+        "url": "https://kubernetes.io/docs/",
+        "title": "Kubernetes Docs",
+        "snippet": "Containers, orchestration, workloads.",
+        "ts": 1759519206249
+      }
+    ]
+  },
+  {
+    "id": "sess_30",
+    "start": 1759519746249,
+    "end": 1759520106249,
+    "sessionTitle": "Programming Languages",
+    "pages": [
+      {
+        "url": "https://docs.python.org/3/",
+        "title": "Python Docs",
+        "snippet": "Standard library, language reference.",
+        "ts": 1759519746249
+      },
+      {
+        "url": "https://go.dev/doc/",
+        "title": "Go Docs",
+        "snippet": "Tour, packages, tooling.",
+        "ts": 1759519866249
+      },
+      {
+        "url": "https://docs.rs/",
+        "title": "Rust Docs",
+        "snippet": "Crates and Rust documentation.",
+        "ts": 1759519986249
+      },
+      {
+        "url": "https://nodejs.org/en/docs",
+        "title": "Node.js Docs",
+        "snippet": "API reference and guides.",
+        "ts": 1759520106249
+      }
+    ]
+  }
+]
