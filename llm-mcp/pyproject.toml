@@ -26,3 +26,7 @@ dependencies = [
     "google-auth-httplib2>=0.2.0",
     "google-auth-oauthlib>=1.2.1",
 ]
+
+[tool.setuptools]
+packages = []
+py-modules = []

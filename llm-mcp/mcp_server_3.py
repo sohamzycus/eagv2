@@ -10,6 +10,7 @@ import asyncio
 from datetime import datetime, timedelta
 import time
 import re
+import os
 
 
 @dataclass
@@ -49,6 +50,7 @@ class DuckDuckGoSearcher:
 
     def __init__(self):
         self.rate_limiter = RateLimiter()
+        self._verify_ssl = not (os.getenv("INSECURE_SSL", "0") in ("1", "true", "TRUE"))
 
     def format_results_for_llm(self, results: List[SearchResult]) -> str:
         """Format results in a natural language style that's easier for LLMs to process"""
@@ -82,7 +84,7 @@ class DuckDuckGoSearcher:
 
             await ctx.info(f"Searching DuckDuckGo for: {query}")
 
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(verify=self._verify_ssl) as client:
                 response = await client.post(
                     self.BASE_URL, data=data, headers=self.HEADERS, timeout=30.0
                 )
@@ -148,6 +150,7 @@ class DuckDuckGoSearcher:
 class WebContentFetcher:
     def __init__(self):
         self.rate_limiter = RateLimiter(requests_per_minute=20)
+        self._verify_ssl = not (os.getenv("INSECURE_SSL", "0") in ("1", "true", "TRUE"))
 
     async def fetch_and_parse(self, url: str, ctx: Context) -> str:
         """Fetch and parse content from a webpage"""
@@ -156,7 +159,7 @@ class WebContentFetcher:
 
             await ctx.info(f"Fetching content from: {url}")
 
-            async with httpx.AsyncClient() as client:
+            async with httpx.AsyncClient(verify=self._verify_ssl) as client:
                 response = await client.get(
                     url,
                     headers={

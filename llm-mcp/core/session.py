@@ -2,6 +2,7 @@
 
 import os
 import sys
+import asyncio
 from typing import Optional, Any, List, Dict
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
@@ -79,8 +80,9 @@ class MultiMCP:
                     async with sse_client(url) as (read, write):
                         try:
                             async with ClientSession(read, write) as session:
-                                await session.initialize()
-                                tools = await session.list_tools()
+                                # Protect slow/hung servers with a timeout
+                                await asyncio.wait_for(session.initialize(), timeout=8.0)
+                                tools = await asyncio.wait_for(session.list_tools(), timeout=8.0)
                                 print(f"→ Tools received: {[tool.name for tool in tools.tools]}")
                                 for tool in tools.tools:
                                     self.tool_map[tool.name] = {"config": config, "tool": tool}
@@ -96,8 +98,8 @@ class MultiMCP:
                     async with stdio_client(params) as (read, write):
                         try:
                             async with ClientSession(read, write) as session:
-                                await session.initialize()
-                                tools = await session.list_tools()
+                                await asyncio.wait_for(session.initialize(), timeout=8.0)
+                                tools = await asyncio.wait_for(session.list_tools(), timeout=8.0)
                                 print(f"→ Tools received: {[tool.name for tool in tools.tools]}")
                                 for tool in tools.tools:
                                     self.tool_map[tool.name] = {"config": config, "tool": tool}

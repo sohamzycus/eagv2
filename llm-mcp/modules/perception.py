@@ -13,7 +13,7 @@ tool_context = summarize_tools(model.get_all_tools()) if hasattr(model, "get_all
 
 class PerceptionResult(BaseModel):
     user_input: str
-    intent: Optional[str]
+    intent: Optional[str] = None
     entities: List[str] = []
     tool_hint: Optional[str] = None
 
@@ -46,23 +46,30 @@ Output only the dictionary on a single line. Do NOT wrap it in ```json or other 
         response = await model.generate_text(prompt)
 
         # Clean up raw if wrapped in markdown-style ```json
-        raw = response.strip()
-        if not raw or raw.lower() in ["none", "null", "undefined"]:
-            raise ValueError("Empty or null model output")
-
+        raw = (response or "").strip()
         # Clean and parse
         clean = re.sub(r"^```json|```$", "", raw, flags=re.MULTILINE).strip()
-        import json
-
         try:
-            parsed = json.loads(clean.replace("null", "null"))  # Clean up non-Python nulls
+            parsed = json.loads(clean)
         except Exception as json_error:
             print(f"[perception] JSON parsing failed: {json_error}")
             parsed = {}
 
+        # Heuristic fallback when model didn't return dict
+        if not isinstance(parsed, dict) or not parsed:
+            hint = None
+            lu = user_input.lower()
+            if "http" in lu:
+                hint = "fetch_content"
+            elif "sheet" in lu or "spreadsheet" in lu:
+                hint = "create_spreadsheet"
+            elif "email" in lu or "mail" in lu:
+                hint = "send_email"
+            elif "search" in lu or "find" in lu:
+                hint = "search_documents"
+            return PerceptionResult(user_input=user_input, intent=None, entities=[], tool_hint=hint)
+
         # Ensure Keys
-        if not isinstance(parsed, dict):
-            raise ValueError("Parsed LLM output is not a dict")
         if "user_input" not in parsed:
             parsed["user_input"] = user_input
         if "intent" not in parsed:
@@ -74,7 +81,7 @@ Output only the dictionary on a single line. Do NOT wrap it in ```json or other 
         parsed["user_input"] = user_input  # overwrite or insert safely
         return PerceptionResult(**parsed)
 
-
     except Exception as e:
         print(f"[perception] ⚠️ LLM perception failed: {e}")
-        return PerceptionResult(user_input=user_input)
+        # Heuristic minimal fallback
+        return PerceptionResult(user_input=user_input, intent=None, entities=[], tool_hint=None)

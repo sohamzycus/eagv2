@@ -61,6 +61,19 @@ async def decide_next_action(
     )
 
     # Strategy enforcement
+    # Guard: if the model prematurely returns FINAL_ANSWER before any tool use, force an initial search
+    if isinstance(plan, str) and plan.strip().startswith("FINAL_ANSWER:"):
+        no_tools_used = len(context.memory_trace) == 0
+        if step == 1 and no_tools_used:
+            tool_names = [getattr(t, "name", "") for t in all_tools]
+            user_q = perception.user_input or ""
+            if any(name == "search" for name in tool_names):
+                return f'FUNCTION_CALL: search|query="{user_q}"'
+            if any(name == "search_documents" for name in tool_names):
+                return f'FUNCTION_CALL: search_documents|query="{user_q}"'
+            # Fallback if neither search tool exists
+            return "FINAL_ANSWER: [unknown]"
+
     if strategy == "conservative":
         return plan
 

@@ -85,9 +85,15 @@ Respond in **exactly one line** using one of the following formats:
         raw = (await model.generate_text(prompt)).strip()
         log("plan", f"LLM output: {raw}")
 
+        # Prefer first FUNCTION_CALL anywhere in the line, else FINAL_ANSWER
         for line in raw.splitlines():
-            if line.strip().startswith("FUNCTION_CALL:") or line.strip().startswith("FINAL_ANSWER:"):
-                return line.strip()
+            s = line.strip()
+            if "FUNCTION_CALL:" in s:
+                return s[s.index("FUNCTION_CALL:"):].strip()
+        for line in raw.splitlines():
+            s = line.strip()
+            if "FINAL_ANSWER:" in s:
+                return s[s.index("FINAL_ANSWER:"):].strip()
 
         return "FINAL_ANSWER: [unknown]"
 

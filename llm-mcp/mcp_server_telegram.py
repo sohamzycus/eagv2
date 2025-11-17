@@ -4,6 +4,9 @@ import asyncio
 from typing import Optional, List
 import requests
 from mcp.server.fastmcp import FastMCP, Context
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "")
@@ -85,10 +88,6 @@ async def get_me(ctx: Context) -> str:
 
 
 if __name__ == "__main__":
-    host = os.getenv("MCP_SSE_HOST", "127.0.0.1")
-    port = int(os.getenv("MCP_SSE_PORT", "8765"))
-    path = os.getenv("MCP_SSE_PATH", "/sse")
-    print(f"telegram SSE server starting at http://{host}:{port}{path}")
-    # Run HTTP SSE transport
-    mcp.run(transport="sse", host=host, port=port, path=path)
+    print("telegram SSE server starting at http://127.0.0.1:8000/sse")
+    mcp.run(transport="sse")
 

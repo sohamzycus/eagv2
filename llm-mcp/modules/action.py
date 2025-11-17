@@ -37,8 +37,18 @@ def parse_function_call(response: str) -> tuple[str, Dict[str, Any]]:
 
         args = {}
         for part in param_parts:
+            # Tolerate empty or JSON-like placeholders (e.g., "{}", "{...}")
+            if not part or part in ("{}", "[]"):
+                continue
             if "=" not in part:
-                raise ValueError(f"Invalid parameter: {part}")
+                # Ignore free-form context/comments (e.g., ctx=..., or stray braces)
+                # Only raise if it's clearly not ignorable JSON-ish token
+                try:
+                    _ = ast.literal_eval(part)
+                    continue
+                except Exception:
+                    # As a last resort, skip unknown token instead of failing hard
+                    continue
             key, val = part.split("=", 1)
 
             # Try parsing as literal, fallback to string
