@@ -1,0 +1,69 @@
+{
+  "total_conversations": 5,
+  "export_date": "2025-11-22T00:00:00",
+  "conversations": [
+    {
+      "session_id": "1736950800-a3f9e2",
+      "user_query": "Find the ASCII values of characters in INDIA and then return sum of exponentials of those values",
+      "final_answer": "FINAL_ANSWER: 4.2186549281426974e+33",
+      "tool_calls": [
+        "strings_to_chars_to_int",
+        "int_list_to_exponential_sum"
+      ],
+      "success_count": 2,
+      "total_interactions": 5,
+      "file_path": "memory/2025/01/15/session-1736950800-a3f9e2.json",
+      "date": "2025-01-15"
+    },
+    {
+      "session_id": "1736951200-b4e8f3",
+      "user_query": "How much Anmol singh paid for his DLF apartment via Capbridge?",
+      "final_answer": "FINAL_ANSWER: According to the document extracts, Anmol Singh paid INR 2,45,00,000 (2.45 Crores) for his DLF apartment via Capbridge Financial Services.",
+      "tool_calls": [
+        "search_stored_documents"
+      ],
+      "success_count": 1,
+      "total_interactions": 4,
+      "file_path": "memory/2025/01/15/session-1736951200-b4e8f3.json",
+      "date": "2025-01-15"
+    },
+    {
+      "session_id": "1736951600-c5d9a4",
+      "user_query": "What do you know about Don Tapscott and Anthony Williams?",
+      "final_answer": "FINAL_ANSWER: Don Tapscott and Anthony Williams are co-authors of the book 'Wikinomics: How Mass Collaboration Changes Everything'. They are thought leaders in business innovation, digital transformation, and collaborative economics. Their work focuses on how the internet and collaboration platforms are revolutionizing business models.",
+      "tool_calls": [
+        "search_stored_documents",
+        "duckduckgo_search_results"
+      ],
+      "success_count": 2,
+      "total_interactions": 6,
+      "file_path": "memory/2025/01/15/session-1736951600-c5d9a4.json",
+      "date": "2025-01-15"
+    },
+    {
+      "session_id": "1736952000-d6e0b5",
+      "user_query": "What is the relationship between Gensol and Go-Auto?",
+      "final_answer": "FINAL_ANSWER: Gensol Engineering Limited acquired a significant stake in Go-Auto India Private Limited in 2021. Go-Auto is an electric vehicle mobility solutions provider, and this acquisition was part of Gensol's strategic expansion into the EV ecosystem.",
+      "tool_calls": [
+        "search_stored_documents"
+      ],
+      "success_count": 1,
+      "total_interactions": 4,
+      "file_path": "memory/2025/01/15/session-1736952000-d6e0b5.json",
+      "date": "2025-01-15"
+    },
+    {
+      "session_id": "1736952400-e7f1c6",
+      "user_query": "Summarize this page: https://theschoolof.ai/",
+      "final_answer": "FINAL_ANSWER: The School of AI is an educational platform offering courses and programs in artificial intelligence, machine learning, and data science. They provide practical, hands-on learning experiences with industry experts, covering topics from fundamentals to advanced AI applications. The platform emphasizes project-based learning and real-world problem solving.",
+      "tool_calls": [
+        "convert_webpage_url_into_markdown"
+      ],
+      "success_count": 1,
+      "total_interactions": 3,
+      "file_path": "memory/2025/01/15/session-1736952400-e7f1c6.json",
+      "date": "2025-01-15"
+    }
+  ]
+}
+

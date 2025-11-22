@@ -13,3 +13,5 @@ web-memory-timeline/frontend/.next/*
 web-memory-timeline/node_modules/*
 web-memory-timeline/.next/*
 web-memory-timeline/frontend/node_modules/*
+hybrid-decision-making/modules/__pycache__/*
+hybrid-decision-making/core/__pycache__/*
