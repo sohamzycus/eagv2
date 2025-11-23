@@ -36,7 +36,7 @@ Then enter each query:
 ## ⚙️ **Current Configuration**
 
 - **Model**: Gemini (API Key configured)
-- **API Key**: `AIzaSyBomWfEWE4Usj9FVbWQs5NvNV2dMjuIiDs`
+- **API Key**: """"
 - **Fallback**: Ollama (phi4, gemma3:12b, qwen2.5)
 - **MCP Servers**: math, documents, websearch
 - **Paths**: Updated to current directory
