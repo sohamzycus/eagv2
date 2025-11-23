@@ -234,9 +234,16 @@ def debug_error(error: str) -> list:
 # ------------------- Main -------------------
 
 if __name__ == "__main__":
-    print("mcp_server_1.py starting")
+    try:
+        print("mcp_server_1.py starting")
+    except ValueError:
+        pass  # stdout can be closed when parent process ends
+
     if len(sys.argv) > 1 and sys.argv[1] == "dev":
         mcp.run()  # Run without transport for dev server
     else:
         mcp.run(transport="stdio")  # Run with stdio for direct execution
-        print("\nShutting down...")
+        try:
+            print("\nShutting down...")
+        except ValueError:
+            pass

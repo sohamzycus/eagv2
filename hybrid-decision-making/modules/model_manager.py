@@ -3,7 +3,7 @@ import json
 import yaml
 import requests
 from pathlib import Path
-from google import genai
+import google.generativeai as genai
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -21,10 +21,11 @@ class ModelManager:
         self.model_info = self.config["models"][self.text_model_key]
         self.model_type = self.model_info["type"]
 
-        # ✅ Gemini initialization (your style)
+        # ✅ Gemini initialization (updated API)
         if self.model_type == "gemini":
             api_key = os.getenv("GEMINI_API_KEY")
-            self.client = genai.Client(api_key=api_key)
+            genai.configure(api_key=api_key)
+            self.client = genai.GenerativeModel(self.model_info["model"])
 
     async def generate_text(self, prompt: str) -> str:
         if self.model_type == "gemini":
@@ -36,10 +37,7 @@ class ModelManager:
         raise NotImplementedError(f"Unsupported model type: {self.model_type}")
 
     def _gemini_generate(self, prompt: str) -> str:
-        response = self.client.models.generate_content(
-            model=self.model_info["model"],
-            contents=prompt
-        )
+        response = self.client.generate_content(prompt)
 
         # ✅ Safely extract response text
         try:

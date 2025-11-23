@@ -416,8 +416,11 @@ if __name__ == "__main__":
         # Wait a moment for the server to start
         time.sleep(2)
         
-        # Process documents after server is running
-        process_documents()
+        # Process documents only when explicitly requested
+        if os.getenv("REBUILD_DOC_INDEX") == "1":
+            process_documents()
+        else:
+            mcp_log("INFO", "Using existing FAISS index (set REBUILD_DOC_INDEX=1 to rebuild).")
         
         # Keep the main thread alive
         try:

@@ -15,3 +15,6 @@ web-memory-timeline/.next/*
 web-memory-timeline/frontend/node_modules/*
 hybrid-decision-making/modules/__pycache__/*
 hybrid-decision-making/core/__pycache__/*
+hybrid-decision-making/memory/*
+hybrid-decision-making/__pycache__/agent.cpython-314.pyc
+.gitignore
