@@ -18,3 +18,14 @@ hybrid-decision-making/core/__pycache__/*
 hybrid-decision-making/memory/*
 hybrid-decision-making/__pycache__/agent.cpython-314.pyc
 .gitignore
+devflow-multiagent/mcp_bridge/__pycache__/*
+devflow-multiagent/memory/__pycache__/*
+devflow-multiagent/agents/__pycache__/*
+devflow-multiagent/execution/__pycache__/*
+devflow-multiagent/tools/__pycache__/*
+devflow-multiagent/config/__pycache__/*
+devflow-multiagent/prompts/__pycache__/*
+devflow-multiagent/coordinator/__pycache__/*
+devflow-multiagent/llm/__pycache__/*
+devflow-multiagent/__pycache__/*
+
