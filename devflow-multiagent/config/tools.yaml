@@ -1,0 +1,107 @@
+# DevFlow Tools Configuration
+# Available tools and their settings
+
+tools:
+  # Git Analysis Tools
+  git:
+    git_commits:
+      description: "Fetch git commit history"
+      parameters:
+        - name: since
+          type: string
+          description: "Start date (YYYY-MM-DD or relative)"
+          default: "yesterday"
+        - name: limit
+          type: integer
+          description: "Maximum commits"
+          default: 20
+    
+    git_diff:
+      description: "Get git diff statistics"
+      parameters:
+        - name: ref
+          type: string
+          description: "Reference to diff against"
+          default: "HEAD~5"
+    
+    git_branch:
+      description: "Get current branch info"
+      parameters: []
+  
+  # File Tools
+  files:
+    read_file:
+      description: "Read contents of a file"
+      parameters:
+        - name: path
+          type: string
+          description: "File path"
+          required: true
+    
+    list_files:
+      description: "List files in directory"
+      parameters:
+        - name: path
+          type: string
+          description: "Directory path"
+          default: "."
+        - name: pattern
+          type: string
+          description: "Glob pattern"
+          default: "*"
+  
+  # Analysis Tools
+  analysis:
+    analyze_code:
+      description: "Analyze code quality"
+      parameters:
+        - name: path
+          type: string
+          description: "File to analyze"
+          required: true
+    
+    check_complexity:
+      description: "Check code complexity"
+      parameters:
+        - name: path
+          type: string
+          description: "File to check"
+          required: true
+    
+    find_patterns:
+      description: "Find code patterns"
+      parameters:
+        - name: pattern
+          type: string
+          description: "Pattern to find"
+          required: true
+
+# Tool groups for different intents
+intent_tools:
+  standup_summary:
+    - git_commits
+    - git_diff
+  
+  pr_description:
+    - git_commits
+    - git_diff
+    - git_branch
+  
+  code_review:
+    - read_file
+    - analyze_code
+    - check_complexity
+  
+  tech_debt:
+    - list_files
+    - analyze_code
+    - find_patterns
+  
+  dependency_check:
+    - read_file
+    - list_files
+  
+  documentation:
+    - read_file
+    - analyze_code
+

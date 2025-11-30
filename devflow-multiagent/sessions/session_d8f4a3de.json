@@ -1,0 +1,29 @@
+{
+  "session_id": "d8f4a3de",
+  "start_time": "2025-11-30T20:30:04.532737",
+  "queries": [
+    "What did I work on yesterday?"
+  ],
+  "context_stack": [
+    {
+      "query": "What did I work on yesterday?",
+      "understanding": {
+        "intent": "standup_summary",
+        "confidence": 0.55,
+        "entities": {
+          "time_ref": [
+            "yesterday"
+          ]
+        },
+        "temporal": {
+          "reference": "yesterday",
+          "range": "day"
+        },
+        "actions": [],
+        "needs_clarification": false
+      },
+      "timestamp": "2025-11-30T20:30:04.533536"
+    }
+  ],
+  "last_response": "\ud83d\udcdd **Standup Summary**\n\nI couldn't find any recent git commits. Make sure you're in a git repository with recent activity."
+}

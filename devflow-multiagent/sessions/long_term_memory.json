@@ -1,0 +1,42 @@
+[
+  {
+    "entry_id": "2d5e0bed3526",
+    "query": "What did I work on yesterday?",
+    "intent": "standup_summary",
+    "response": "\ud83d\udcdd **Standup Summary**\n\nI couldn't find any recent git commits. Make sure you're in a git repository with recent activity.",
+    "quality_score": 0.85,
+    "timestamp": "2025-11-30T20:30:04.577104",
+    "tags": [],
+    "metadata": {}
+  },
+  {
+    "entry_id": "91e4e04d41dd",
+    "query": "What did I work on yesterday?",
+    "intent": "standup_summary",
+    "response": "\ud83d\udcdd **Standup Summary**\n\nI couldn't find any recent git commits. Make sure you're in a git repository with recent activity.",
+    "quality_score": 0.85,
+    "timestamp": "2025-11-30T20:32:46.499371",
+    "tags": [],
+    "metadata": {}
+  },
+  {
+    "entry_id": "f2dd382f0584",
+    "query": "Generate PR description for my changes",
+    "intent": "pr_description",
+    "response": "I need a bit more information:\n\n1. Could you provide more details?\n",
+    "quality_score": 0.9,
+    "timestamp": "2025-11-30T20:32:46.556189",
+    "tags": [],
+    "metadata": {}
+  },
+  {
+    "entry_id": "ab85a51c813d",
+    "query": "Find technical debt in the project",
+    "intent": "tech_debt",
+    "response": "## \ud83d\udcca Technical Debt Analysis\n\n| Priority | Issue | Location | Effort |\n|----------|-------|----------|--------|\n| \ud83d\udd34 High | Legacy API usage | api/ | Medium |\n| \ud83d\udfe1 Medium | Missing tests | tests/ | High |\n| \ud83d\udfe2 Low | Deprecated deps | package.json | Low |\n\n**Recommended Actions:**\n1. Address high-priority items first\n2. Schedule medium items for next sprint\n3. Track low items in backlog\n",
+    "quality_score": 0.7,
+    "timestamp": "2025-11-30T20:32:46.570093",
+    "tags": [],
+    "metadata": {}
+  }
+]

@@ -1,0 +1,87 @@
+# DevFlow Configuration
+# Developer Productivity Multi-Agent System
+# Powered by phi4 Ollama Model
+
+system:
+  name: "DevFlow"
+  version: "1.0.0"
+  description: "Multi-Agent Developer Productivity System"
+
+# LLM Configuration (Ollama - Local)
+llm:
+  provider: "ollama"
+  model: "phi4"                    # Microsoft's phi4 (9.1 GB)
+  embedding_model: "nomic-embed-text"  # For vector embeddings (274 MB)
+  base_url: "http://localhost:11434"
+  temperature: 0.3
+  max_tokens: 2048
+  timeout: 120  # seconds
+
+# Agent Configuration
+agents:
+  perception:
+    max_retries: 2
+    confidence_threshold: 0.7
+  
+  retriever:
+    max_context_items: 10
+    search_depth: 3
+    # Real git commands enabled
+    use_real_git: true
+  
+  critic:
+    validation_strictness: "medium"  # low, medium, high
+    max_critique_rounds: 3
+    quality_thresholds:
+      completeness: 0.7
+      accuracy: 0.7
+      relevance: 0.6
+  
+  memory:
+    session_ttl: 3600  # seconds
+    max_history: 50
+  
+  decision:
+    confidence_threshold: 0.8
+    use_llm: true  # Use phi4 for response synthesis
+
+# Execution Settings
+execution:
+  max_plan_steps: 10
+  step_timeout: 30  # seconds
+  allow_plan_rewrite: true
+  max_rewrite_attempts: 2
+
+# Tool Settings
+tools:
+  git:
+    enabled: true
+    max_commits: 50
+    default_branch: "main"
+    real_commands: true  # Run actual git commands
+  
+  code_review:
+    enabled: true
+    complexity_threshold: 10
+    check_security: true
+    use_llm: true  # Use phi4 for code analysis
+  
+  docs:
+    enabled: true
+    format: "markdown"
+
+# Logging
+logging:
+  level: "INFO"
+  colorize: true          # Colorful terminal output
+  save_sessions: true
+  session_dir: "sessions/"
+
+# Real Analysis Mode
+real_analysis:
+  enabled: true
+  repo_path: "/Users/soham.niyogi/Soham/codebase/eagv2"
+  features:
+    standup_summary: true
+    code_review: true
+    tech_debt_analysis: true
