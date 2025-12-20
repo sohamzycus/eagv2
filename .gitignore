@@ -29,3 +29,4 @@ devflow-multiagent/coordinator/__pycache__/*
 devflow-multiagent/llm/__pycache__/*
 devflow-multiagent/__pycache__/*
 
+browser_agent/LINKEDIN_POST.md

@@ -1,0 +1,90 @@
+# BirdSense Configuration
+
+# Audio Processing
+audio:
+  sample_rate: 32000
+  duration: 5.0  # seconds per chunk
+  n_fft: 1024
+  hop_length: 320
+  n_mels: 128
+  fmin: 50
+  fmax: 14000  # Bird calls range
+
+# Preprocessing
+preprocessing:
+  normalize: true
+  noise_reduction: true
+  noise_reduction_strength: 0.3
+  min_amplitude_db: -60
+  
+# Augmentation (for training robustness)
+augmentation:
+  enabled: true
+  add_noise:
+    enabled: true
+    min_snr_db: 3
+    max_snr_db: 30
+  time_stretch:
+    enabled: true
+    min_rate: 0.8
+    max_rate: 1.2
+  pitch_shift:
+    enabled: true
+    min_semitones: -2
+    max_semitones: 2
+
+# Model Configuration
+model:
+  audio_encoder:
+    type: "ast_tiny"  # Audio Spectrogram Transformer - Tiny variant
+    embedding_dim: 384
+    pretrained: true
+  
+  classifier:
+    hidden_dims: [256, 128]
+    dropout: 0.3
+    num_classes: 250  # Initial India species count
+
+  novelty_detector:
+    threshold: 0.85
+    embedding_distance: "mahalanobis"
+
+# LLM Configuration (Ollama)
+# Recommended models by use case:
+# - qwen2.5:3b: Best default - fast, accurate, 2GB (RECOMMENDED)
+# - llama3.2:3b: Alternative - good reasoning, 2GB
+# - phi3:mini: Microsoft model - fast inference, 2.3GB
+# - mistral:7b: Higher accuracy - slower, 4GB (for research)
+# - llama3.1:8b: Best quality - slowest, 4.5GB (offline research)
+llm:
+  provider: "ollama"
+  model: "qwen2.5:3b"  # Changed from phi3:mini for better performance
+  base_url: "http://localhost:11434"
+  temperature: 0.3
+  max_tokens: 512
+  timeout: 30
+  
+  # Fallback models (tried in order if primary fails)
+  fallback_models:
+    - "llama3.2:3b"
+    - "phi3:mini"
+
+# Species Database
+species:
+  focus_region: "india"
+  include_migratory: true
+  conservation_priority: true
+
+# Inference
+inference:
+  device: "auto"  # auto, cpu, cuda, mps
+  batch_size: 1
+  confidence_threshold: 0.5
+  top_k: 5
+
+# Paths
+paths:
+  models_dir: "checkpoints"
+  cache_dir: ".cache"
+  samples_dir: "samples"
+
