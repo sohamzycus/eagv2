@@ -74,10 +74,35 @@ except Exception as e:
     print("   Audio will use LLM fallback (less accurate)")
 
 # ============ CONFIG ============
-OLLAMA_URL = "http://localhost:11434"
+OLLAMA_URL = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
 VISION_MODEL = "llava:7b"
 TEXT_MODEL = "phi4:latest"  # Using phi4 (14B) for better reasoning
 DEBUG = True
+
+# Cloud API fallback (Groq is 100% FREE - no credit card required)
+# Get your free key at: https://console.groq.com
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY", "")
+GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
+
+# Detect runtime mode
+def get_runtime_mode():
+    """Detect if running locally (Ollama) or cloud (Groq)."""
+    # Check Ollama first
+    try:
+        resp = requests.get(f"{OLLAMA_URL}/api/tags", timeout=2)
+        if resp.status_code == 200:
+            return "ollama"
+    except:
+        pass
+    
+    # Check for Groq API key
+    if GROQ_API_KEY:
+        return "groq"
+    
+    return "none"
+
+RUNTIME_MODE = get_runtime_mode()
+print(f"🔧 Runtime mode: {RUNTIME_MODE.upper()}")
 
 # SAM-Audio config - Updated frequency bands for better owl detection
 SAM_FREQ_BANDS = [
@@ -338,25 +363,38 @@ def extract_audio_features(audio: np.ndarray, sr: int) -> dict:
 # ============ OLLAMA ============
 
 def check_ollama():
-    """Check Ollama status."""
-    try:
-        resp = requests.get(f"{OLLAMA_URL}/api/tags", timeout=3)
-        if resp.status_code == 200:
-            models = [m["name"] for m in resp.json().get("models", [])]
-            return {
-                "ok": True,
-                "vision": any("llava" in m.lower() for m in models),
-                "text": any(any(t in m.lower() for t in ["llama", "qwen", "mistral"]) for m in models),
-                "models": models
-            }
-    except:
-        pass
-    return {"ok": False, "vision": False, "text": False, "models": []}
+    """Check Ollama status or Groq availability."""
+    if RUNTIME_MODE == "ollama":
+        try:
+            resp = requests.get(f"{OLLAMA_URL}/api/tags", timeout=3)
+            if resp.status_code == 200:
+                models = [m["name"] for m in resp.json().get("models", [])]
+                return {
+                    "ok": True,
+                    "vision": any("llava" in m.lower() for m in models),
+                    "text": any(any(t in m.lower() for t in ["llama", "phi", "qwen", "mistral"]) for m in models),
+                    "models": models,
+                    "mode": "ollama"
+                }
+        except:
+            pass
+    
+    if RUNTIME_MODE == "groq":
+        return {
+            "ok": True,
+            "vision": True,  # Groq has Llama 3.2 Vision
+            "text": True,
+            "models": ["llama-3.2-90b-vision-preview", "llama-3.3-70b-versatile"],
+            "mode": "groq"
+        }
+    
+    return {"ok": False, "vision": False, "text": False, "models": [], "mode": "none"}
 
 
 def call_llava(image: Image.Image, prompt: str) -> str:
-    """Call LLaVA for image analysis."""
+    """Call vision model (Ollama LLaVA or Groq Llama Vision)."""
     try:
+        # Resize image
         max_size = 800
         if max(image.size) > max_size:
             ratio = max_size / max(image.size)
@@ -366,33 +404,86 @@ def call_llava(image: Image.Image, prompt: str) -> str:
         image.save(buffer, format="JPEG", quality=85)
         img_b64 = base64.b64encode(buffer.getvalue()).decode()
         
-        log(f"Calling LLaVA...")
-        resp = requests.post(
-            f"{OLLAMA_URL}/api/generate",
-            json={"model": VISION_MODEL, "prompt": prompt, "images": [img_b64], "stream": False,
-                  "options": {"temperature": 0.1, "num_predict": 1200}},
-            timeout=120
-        )
-        
-        if resp.status_code == 200:
-            return resp.json().get("response", "")
+        if RUNTIME_MODE == "groq":
+            # Use Groq's Llama 3.2 Vision (FREE)
+            log("Calling Groq Llama Vision...")
+            resp = requests.post(
+                GROQ_URL,
+                headers={
+                    "Authorization": f"Bearer {GROQ_API_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "llama-3.2-90b-vision-preview",
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": prompt},
+                                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_b64}"}}
+                            ]
+                        }
+                    ],
+                    "max_tokens": 1200,
+                    "temperature": 0.1
+                },
+                timeout=60
+            )
+            if resp.status_code == 200:
+                return resp.json()["choices"][0]["message"]["content"]
+            else:
+                log(f"Groq error: {resp.status_code} - {resp.text[:200]}")
+        else:
+            # Use Ollama LLaVA (local)
+            log("Calling Ollama LLaVA...")
+            resp = requests.post(
+                f"{OLLAMA_URL}/api/generate",
+                json={"model": VISION_MODEL, "prompt": prompt, "images": [img_b64], "stream": False,
+                      "options": {"temperature": 0.1, "num_predict": 1200}},
+                timeout=120
+            )
+            if resp.status_code == 200:
+                return resp.json().get("response", "")
     except Exception as e:
-        log(f"LLaVA error: {e}")
+        log(f"Vision model error: {e}")
     return ""
 
 
 def call_text_model(prompt: str) -> str:
-    """Call text model for reasoning."""
+    """Call text model (Ollama or Groq) for reasoning."""
     try:
-        log(f"Calling {TEXT_MODEL}...")
-        resp = requests.post(
-            f"{OLLAMA_URL}/api/generate",
-            json={"model": TEXT_MODEL, "prompt": prompt, "stream": False,
-                  "options": {"temperature": 0.2, "num_predict": 800}},
-            timeout=60
-        )
-        if resp.status_code == 200:
-            return resp.json().get("response", "")
+        if RUNTIME_MODE == "groq":
+            # Use Groq's Llama (FREE)
+            log("Calling Groq Llama...")
+            resp = requests.post(
+                GROQ_URL,
+                headers={
+                    "Authorization": f"Bearer {GROQ_API_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": "llama-3.3-70b-versatile",
+                    "messages": [{"role": "user", "content": prompt}],
+                    "max_tokens": 800,
+                    "temperature": 0.2
+                },
+                timeout=60
+            )
+            if resp.status_code == 200:
+                return resp.json()["choices"][0]["message"]["content"]
+            else:
+                log(f"Groq error: {resp.status_code}")
+        else:
+            # Use Ollama (local)
+            log(f"Calling Ollama {TEXT_MODEL}...")
+            resp = requests.post(
+                f"{OLLAMA_URL}/api/generate",
+                json={"model": TEXT_MODEL, "prompt": prompt, "stream": False,
+                      "options": {"temperature": 0.2, "num_predict": 800}},
+                timeout=60
+            )
+            if resp.status_code == 200:
+                return resp.json().get("response", "")
     except Exception as e:
         log(f"Text model error: {e}")
     return ""
@@ -1187,7 +1278,17 @@ def refresh_analytics():
 
 def create_app():
     status = check_ollama()
-    status_text = f"✅ Vision: {'✅' if status['vision'] else '❌'} | Text: {'✅' if status['text'] else '❌'}" if status['ok'] else "❌ Ollama not running"
+    
+    # Build status text based on runtime mode
+    if status.get('mode') == 'ollama':
+        mode_text = "🏠 Local (Ollama)"
+        status_text = f"Vision: {'✅' if status['vision'] else '❌'} | Text: {'✅' if status['text'] else '❌'}"
+    elif status.get('mode') == 'groq':
+        mode_text = "☁️ Cloud (Groq FREE)"
+        status_text = "Vision: ✅ | Text: ✅"
+    else:
+        mode_text = "❌ No backend"
+        status_text = "Set GROQ_API_KEY or start Ollama"
     
     with gr.Blocks(title="BirdSense - By Soham") as app:
         gr.Markdown(f"""
@@ -1196,7 +1297,7 @@ def create_app():
 
 **META SAM-Audio** | **BirdNET + LLM Hybrid** | **Multi-bird Detection**
 
-Status: {status_text} | BirdNET: {'✅' if BIRDNET_AVAILABLE else '❌'}
+Mode: {mode_text} | {status_text} | BirdNET: {'✅' if BIRDNET_AVAILABLE else '❌'}
 """)
         
         with gr.Tab("🎵 Audio"):

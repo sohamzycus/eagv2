@@ -1,5 +1,6 @@
-# BirdSense - Cloud Version (HuggingFace Spaces / Render)
-# Lightweight dependencies for serverless deployment
+# BirdSense - Cloud/Docker Dependencies
+# Lightweight version for free tier cloud hosting
+# (No TensorFlow/BirdNET - uses Groq API instead)
 
 gradio>=4.0.0
 numpy

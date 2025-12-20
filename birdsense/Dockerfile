@@ -1,11 +1,12 @@
 # 🐦 BirdSense - AI Bird Identification
 # Developed by Soham
 #
-# Build: docker build -t birdsense .
-# Run:   docker run -p 7860:7860 -e TOGETHER_API_KEY=xxx birdsense
+# Single codebase - auto-detects:
+#   - Local: Uses Ollama (if available)
+#   - Cloud: Uses Groq API (FREE, no credit card)
 #
-# For local with Ollama:
-#   docker run -p 7860:7860 -e OLLAMA_HOST=host.docker.internal:11434 birdsense
+# Build: docker build -t birdsense .
+# Run:   docker run -p 7860:7860 -e GROQ_API_KEY=xxx birdsense
 
 FROM python:3.12-slim
 
@@ -30,7 +31,7 @@ COPY requirements_cloud.txt ./requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
-COPY app_cloud.py ./app.py
+COPY app.py .
 COPY prompts.py .
 COPY confusion_rules.py .
 COPY feedback.py .

@@ -2,13 +2,7 @@
 # Developed by Soham
 #
 # Auto-deploys from GitHub on push to main/master
-#
-# Setup:
-# 1. Go to https://render.com
-# 2. New → Web Service → Connect GitHub repo
-# 3. Select "Docker" as runtime
-# 4. Add environment variable: TOGETHER_API_KEY
-# 5. Deploy!
+# Uses Groq API (100% FREE - no credit card required!)
 
 services:
   - type: web
@@ -20,9 +14,7 @@ services:
     plan: free
     branch: master
     envVars:
-      - key: TOGETHER_API_KEY
-        sync: false  # Set manually in Render dashboard
-      - key: REPLICATE_API_TOKEN
-        sync: false  # Alternative to Together AI
+      - key: GROQ_API_KEY
+        sync: false  # Set manually in Render dashboard (get FREE at console.groq.com)
     healthCheckPath: /
     autoDeploy: true
