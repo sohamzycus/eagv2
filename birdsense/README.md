@@ -90,31 +90,38 @@ A novel hybrid AI system for bird identification combining multiple approaches f
 
 ## 🚀 Quick Start
 
-### Option 1: Cloud Hosting (FREE, Permanent, Auto-Deploy)
+### Option 1: Cloud Hosting (FREE, Full BirdNET, Auto-Deploy)
 
-Deploy to **Render.com** with **Groq API** (100% FREE, no credit card):
+Full Docker deployment with **BirdNET + TensorFlow** - same accuracy as local!
 
 ```bash
 ./deploy.sh cloud   # Shows step-by-step instructions
 ```
 
-**5-Minute Setup:**
-1. Get **FREE** API key at https://console.groq.com (no credit card!)
-2. Go to https://render.com → New → Web Service
-3. Connect GitHub repo: `sohamzycus/eagv2`, Root: `birdsense`, Runtime: Docker
-4. Add env var: `GROQ_API_KEY` (your free Groq key)
-5. Deploy! **Auto-refreshes on every git push.**
+**Recommended: Google Cloud Run (FREE tier)**
+- ✅ 2GB RAM (runs full BirdNET + TensorFlow)
+- ✅ 2 million requests/month FREE
+- ✅ Auto-deploy on git push
 
-### Option 2: Local with GPU (Best Accuracy)
-
+**Quick Setup:**
 ```bash
-./deploy.sh local   # Sets up Ollama + models + runs app
+# 1. Install gcloud CLI, then:
+gcloud auth login
+gcloud run deploy birdsense --source=. --region=us-central1 --memory=2Gi --allow-unauthenticated
+
+# 2. Get your URL: https://birdsense-xxx.run.app
 ```
 
-### Option 3: Docker (Portable)
+### Option 2: Local (Best for Development)
 
 ```bash
-./deploy.sh docker  # Runs in Docker containers
+./deploy.sh local   # Sets up Ollama + BirdNET + runs app
+```
+
+### Option 3: Docker
+
+```bash
+./deploy.sh docker  # Builds and runs full container locally
 ```
 
 ### Option 4: Manual Setup
@@ -153,27 +160,30 @@ python app.py
 
 ```
 birdsense/
-├── app.py              # Single codebase (auto-detects Ollama or Groq)
+├── app.py              # Main app (auto-detects Ollama or Groq)
 ├── prompts.py          # External LLM prompts
 ├── confusion_rules.py  # Feature-based validation
 ├── feedback.py         # Feedback & analytics collection
 ├── export_data.py      # Export collected data
-├── deploy.sh           # One-command deployment (local/docker/cloud)
-├── Dockerfile          # Docker container config
-├── docker-compose.yml  # Multi-container setup
-├── render.yaml         # Render.com auto-deploy config
-├── requirements.txt    # Local dependencies (with BirdNET)
-├── requirements_cloud.txt  # Docker dependencies (lightweight)
-├── .github/workflows/  # Auto-deploy on GitHub push
+├── deploy.sh           # One-command deployment
+├── Dockerfile          # Full Docker image (BirdNET + TensorFlow)
+├── docker-compose.yml  # Local multi-container setup
+├── cloudbuild.yaml     # Google Cloud Run auto-deploy
+├── fly.toml            # Fly.io deployment config
+├── requirements.txt    # All dependencies (BirdNET included)
+├── .github/workflows/  # CI/CD pipeline
 └── README.md           # This file
 ```
 
-### Single Codebase - Auto-Detects Runtime:
+### Full Feature Parity: Local = Cloud
 
-| Mode | Detection | Models | Best For |
-|------|-----------|--------|----------|
-| **Local** | Ollama running | LLaVA + phi4 + BirdNET | Best accuracy |
-| **Cloud** | GROQ_API_KEY set | Llama 3.2 Vision | FREE hosting |
+| Feature | Local | Cloud (Docker) |
+|---------|-------|----------------|
+| **BirdNET** | ✅ | ✅ |
+| **TensorFlow** | ✅ | ✅ |
+| **LLM Vision** | Ollama LLaVA | Groq Llama 3.2 |
+| **LLM Text** | Ollama phi4 | Groq Llama 3.3 |
+| **Accuracy** | Full | Full |
 
 ## 🔧 Technology Stack
 

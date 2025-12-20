@@ -3,9 +3,9 @@
 # Developed by Soham
 #
 # Usage:
-#   ./deploy.sh local   - Run locally with Ollama (best accuracy)
+#   ./deploy.sh local   - Run locally with Ollama
 #   ./deploy.sh docker  - Run in Docker containers
-#   ./deploy.sh cloud   - Deploy to Render.com (free, permanent URL)
+#   ./deploy.sh cloud   - Deploy to cloud (FREE options)
 
 set -e
 
@@ -24,13 +24,11 @@ MODE=${1:-help}
 deploy_local() {
     echo -e "${YELLOW}📦 Setting up local deployment...${NC}"
     
-    # Check Python version
     if ! command -v python3.12 &> /dev/null; then
         echo -e "${RED}❌ Python 3.12 required. Install with: brew install python@3.12${NC}"
         exit 1
     fi
     
-    # Check Ollama
     if ! command -v ollama &> /dev/null; then
         echo -e "${YELLOW}⚠️ Ollama not found. Installing...${NC}"
         if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -40,27 +38,22 @@ deploy_local() {
         fi
     fi
     
-    # Start Ollama
     echo -e "${GREEN}🚀 Starting Ollama...${NC}"
     ollama serve &> /dev/null &
     sleep 3
     
-    # Pull models
-    echo -e "${GREEN}📥 Pulling AI models (this may take a while)...${NC}"
+    echo -e "${GREEN}📥 Pulling AI models...${NC}"
     ollama pull llava:7b
     ollama pull phi4
     
-    # Create virtual environment
     echo -e "${GREEN}🐍 Setting up Python environment...${NC}"
     python3.12 -m venv venv
     source venv/bin/activate
     pip install --upgrade pip
     pip install -r requirements.txt
     
-    # Run
     echo ""
     echo -e "${GREEN}✅ Setup complete!${NC}"
-    echo ""
     echo "🚀 Starting BirdSense..."
     python app.py
 }
@@ -68,59 +61,81 @@ deploy_local() {
 deploy_docker() {
     echo -e "${YELLOW}🐳 Setting up Docker deployment...${NC}"
     
-    # Check Docker
     if ! command -v docker &> /dev/null; then
         echo -e "${RED}❌ Docker required. Install from https://docker.com${NC}"
         exit 1
     fi
     
-    # Build and run
-    echo -e "${GREEN}🔨 Building Docker images...${NC}"
-    docker-compose build
+    echo -e "${GREEN}🔨 Building Docker image (includes BirdNET + TensorFlow)...${NC}"
+    docker build -t birdsense .
     
-    echo -e "${GREEN}🚀 Starting services...${NC}"
-    docker-compose up -d
+    echo -e "${GREEN}🚀 Starting container...${NC}"
+    docker run -d -p 7860:7860 --name birdsense-app \
+        -e GROQ_API_KEY="${GROQ_API_KEY:-}" \
+        birdsense
     
     echo ""
-    echo -e "${GREEN}✅ Deployment complete!${NC}"
+    echo -e "${GREEN}✅ Running at: http://localhost:7860${NC}"
     echo ""
-    echo "📍 BirdSense: http://localhost:7860"
-    echo "📍 Ollama API: http://localhost:11434"
-    echo ""
-    echo "To stop: docker-compose down"
+    echo "To stop: docker stop birdsense-app && docker rm birdsense-app"
 }
 
 deploy_cloud() {
-    echo -e "${BLUE}☁️  Cloud Deployment (Render.com + Groq FREE API)${NC}"
+    echo -e "${BLUE}☁️  Cloud Deployment Options${NC}"
     echo ""
-    echo "Render.com offers FREE Docker hosting with auto-deploy from GitHub."
-    echo "Groq offers FREE AI API (no credit card required!)."
+    echo "Your Docker image includes BirdNET + TensorFlow (~1.5GB)."
+    echo "Choose a platform that supports larger containers:"
     echo ""
-    echo -e "${YELLOW}Step 1: Get FREE Groq API Key${NC}"
-    echo "   Go to: https://console.groq.com"
-    echo "   Sign up (no credit card!) and copy your API key"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo -e "${GREEN}OPTION 1: Google Cloud Run (RECOMMENDED - FREE)${NC}"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "✅ FREE: 2 million requests/month"
+    echo "✅ 2GB RAM (enough for BirdNET + TensorFlow)"
+    echo "✅ Auto-deploy from GitHub"
     echo ""
-    echo -e "${YELLOW}Step 2: Deploy to Render.com${NC}"
-    echo "   1. Go to https://render.com"
-    echo "   2. Click 'New' → 'Web Service'"
-    echo "   3. Connect your GitHub repo: sohamzycus/eagv2"
-    echo "   4. Settings:"
-    echo "      - Name: birdsense"
-    echo "      - Root Directory: birdsense"
-    echo "      - Runtime: Docker"
-    echo "   5. Add Environment Variable:"
-    echo "      - Key: GROQ_API_KEY"
-    echo "      - Value: (your FREE Groq key)"
-    echo "   6. Click 'Create Web Service'"
+    echo "Steps:"
+    echo "  1. Install gcloud CLI: https://cloud.google.com/sdk/docs/install"
+    echo "  2. Run these commands:"
     echo ""
-    echo -e "${GREEN}✅ Done! Every push to master auto-deploys.${NC}"
+    echo "     gcloud auth login"
+    echo "     gcloud projects create birdsense-app --name='BirdSense'"
+    echo "     gcloud config set project birdsense-app"
+    echo "     gcloud services enable run.googleapis.com"
     echo ""
-    echo -e "${YELLOW}Your permanent URL:${NC} https://birdsense.onrender.com"
+    echo "     # Build and deploy"
+    echo "     gcloud run deploy birdsense \\"
+    echo "       --source=. \\"
+    echo "       --region=us-central1 \\"
+    echo "       --memory=2Gi \\"
+    echo "       --allow-unauthenticated \\"
+    echo "       --set-env-vars=GROQ_API_KEY=\$GROQ_API_KEY"
     echo ""
-    echo "Alternative free platforms:"
-    echo "  - Railway.app (free tier)"
-    echo "  - Fly.io (free tier)"
-    echo "  - Google Cloud Run (free tier)"
+    echo "  3. Your URL: https://birdsense-xxxxx.run.app"
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo -e "${YELLOW}OPTION 2: Fly.io (FREE tier)${NC}"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "✅ FREE: 3 shared VMs"
+    echo "✅ 1GB RAM (may need to optimize)"
+    echo ""
+    echo "  flyctl launch --dockerfile Dockerfile"
+    echo "  flyctl secrets set GROQ_API_KEY=xxx"
+    echo "  flyctl deploy"
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo -e "${YELLOW}OPTION 3: Railway.app${NC}"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "✅ \$5 free credits (enough for testing)"
+    echo "✅ Easy GitHub integration"
+    echo ""
+    echo "  1. Go to https://railway.app"
+    echo "  2. New Project → Deploy from GitHub"
+    echo "  3. Add GROQ_API_KEY in Variables"
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo -e "${GREEN}Get FREE Groq API key: https://console.groq.com${NC}"
+    echo "(Used as fallback when Ollama not available)"
 }
 
 show_help() {
@@ -128,12 +143,10 @@ show_help() {
     echo ""
     echo "Options:"
     echo -e "  ${GREEN}local${NC}   - Run on your machine with Ollama (best accuracy)"
-    echo -e "  ${GREEN}docker${NC}  - Run in Docker containers (portable)"
-    echo -e "  ${GREEN}cloud${NC}   - Deploy to Render.com (free, permanent URL, auto-deploy)"
+    echo -e "  ${GREEN}docker${NC}  - Build and run Docker container locally"
+    echo -e "  ${GREEN}cloud${NC}   - Deploy to cloud (Google Cloud Run, Fly.io, Railway)"
     echo ""
-    echo "Examples:"
-    echo "  ./deploy.sh local   # For development/testing"
-    echo "  ./deploy.sh cloud   # For sharing with testers"
+    echo "All options include full BirdNET + TensorFlow for best accuracy!"
 }
 
 case $MODE in
