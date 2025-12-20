@@ -1,32 +1,13 @@
-# BirdSense Requirements
-# Zero-Shot LLM Bird Identification
+# BirdSense - Local AI Bird Identification
+# Install: pip install -r requirements.txt
 
-# Web Framework
-fastapi>=0.104.0
-uvicorn>=0.24.0
-python-multipart>=0.0.6
-aiofiles>=23.2.1
-
-# Audio Processing
-librosa>=0.10.1
-soundfile>=0.12.1
-scipy>=1.11.0
-numpy>=1.24.0
-
-# Machine Learning
-torch>=2.0.0
-torchaudio>=2.0.0
-transformers>=4.35.0
-
-# LLM Integration
-ollama>=0.1.0
-
-# Gradio (for HuggingFace Spaces)
+# Core
 gradio>=4.0.0
+numpy<2.0.0
+scipy
+Pillow
+requests
 
-# Utilities
-pyyaml>=6.0
-tqdm>=4.65.0
-
-# Testing
-pytest>=7.4.0
+# Optional: for advanced audio processing
+# librosa
+# soundfile
