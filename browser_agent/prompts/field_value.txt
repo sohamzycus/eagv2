@@ -1,0 +1,18 @@
+Determine the appropriate value for the following form field:
+
+Field Label: {field_label}
+Field Type: {field_type}
+Available Options: {options}
+
+Context:
+{context}
+
+Instructions:
+- If this is a multiple choice field (radio, checkbox, dropdown), respond with EXACTLY one of the available options
+- If this is a text field, provide an appropriate value based on the label
+- For name fields, use the provided name from context
+- For email fields, use the provided email from context
+- For URL fields (github, youtube, links), use appropriate URLs from context
+- Be concise - respond with only the value, no explanations
+
+Your response (value only):

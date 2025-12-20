@@ -1,0 +1,31 @@
+# Browser Agent Configuration
+# This file configures the automated form-filling agent
+
+# LLM Configuration
+llm:
+  provider: ollama
+  model: llama3.2  # Alternatives: phi4, mistral, codellama, qwen2.5
+  base_url: http://localhost:11434
+  temperature: 0.7
+  timeout: 120.0
+
+# Browser Configuration
+browser:
+  headless: false  # Set to true for background execution
+  slow_mo: 100     # Milliseconds between actions (helps visibility)
+  viewport_width: 1280
+  viewport_height: 800
+  screenshots_dir: screenshots
+
+# Agent Configuration
+agent:
+  strategy: hybrid  # Options: llm, rule, hybrid
+  verbose: true
+  log_file: agent_log.json
+  
+  # User information for form filling
+  user_name: "Soham Niyogi"
+  user_email: "sohamniyogi9@gmail.com"
+  github_url: ""   # Will be filled in by user
+  youtube_url: ""  # Will be filled in by user
+

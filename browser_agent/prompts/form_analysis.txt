@@ -1,0 +1,27 @@
+Analyze the following form and identify all fields that need to be filled.
+
+Form HTML:
+{form_html}
+
+Already identified fields:
+{form_fields}
+
+For each field, determine:
+1. Field type (text, radio, checkbox, dropdown, textarea)
+2. What information it's asking for
+3. Whether it's required
+4. Available options (if applicable)
+
+Respond in JSON format:
+{{
+    "fields": [
+        {{
+            "name": "field_name",
+            "type": "text|radio|checkbox|dropdown|textarea",
+            "label": "Human readable question",
+            "required": true|false,
+            "options": ["option1", "option2"] or [],
+            "suggested_value": "what to fill"
+        }}
+    ]
+}}

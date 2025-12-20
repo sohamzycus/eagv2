@@ -1,10 +1,16 @@
 #!/usr/bin/env python3
 """
-Real Analysis - Actual analysis of eagv2 repo using phi4.
+Real Analysis - Analyze ANY local git repository using phi4.
 
-Performs real git analysis and code review.
+Usage:
+    python real_analysis.py                     # Analyze current directory
+    python real_analysis.py /path/to/repo       # Analyze specific repo
+    python real_analysis.py --help              # Show help
+
+Performs real git analysis and code review using phi4 Ollama model.
 """
 
+import argparse
 import asyncio
 import os
 import sys
@@ -12,6 +18,9 @@ from pathlib import Path
 from datetime import datetime
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+# Global repo path - set from command line
+REPO_PATH: Path = None
 
 # ANSI Colors
 class C:
@@ -45,7 +54,7 @@ async def run_git_command(*args) -> str:
     """Run git command and return output."""
     proc = await asyncio.create_subprocess_exec(
         "git", *args,
-        cwd="/Users/soham.niyogi/Soham/codebase/eagv2",
+        cwd=str(REPO_PATH),
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE
     )
@@ -55,7 +64,7 @@ async def run_git_command(*args) -> str:
 
 async def real_standup_analysis():
     """Generate real standup summary from actual git history."""
-    print_header("📝 REAL STANDUP SUMMARY - eagv2 Repository")
+    print_header(f"📝 REAL STANDUP SUMMARY - {REPO_PATH.name}")
     
     from llm import generate
     
@@ -113,13 +122,19 @@ Keep it concise and professional."""
 
 async def real_code_review():
     """Perform real code review on actual files."""
-    print_header("🔍 REAL CODE REVIEW - DevFlow Main Module")
+    print_header(f"🔍 REAL CODE REVIEW - {REPO_PATH.name}")
     
     from llm import generate
     
-    # Read actual code file
-    target_file = Path(__file__).parent / "main.py"
-    print_step(f"Reading {target_file.name}...")
+    # Find a Python file to review in the target repo
+    py_files = list(REPO_PATH.glob("**/*.py"))[:10]
+    if not py_files:
+        print(f"  {C.RED}No Python files found in repository{C.RESET}")
+        return "No Python files found"
+    
+    # Pick a substantial file (prefer files with more content)
+    target_file = max(py_files, key=lambda f: f.stat().st_size if f.exists() else 0)
+    print_step(f"Selected for review: {target_file.relative_to(REPO_PATH)}")
     
     code = target_file.read_text()[:3000]  # First 3000 chars
     
@@ -153,14 +168,12 @@ Keep response under 300 words."""
 
 async def real_tech_debt_analysis():
     """Analyze real tech debt in the repository."""
-    print_header("📊 REAL TECH DEBT ANALYSIS - eagv2 Repository")
+    print_header(f"📊 REAL TECH DEBT ANALYSIS - {REPO_PATH.name}")
     
     from llm import generate
     
     # Find all Python files
     print_step("Scanning repository structure...")
-    
-    repo_path = Path("/Users/soham.niyogi/Soham/codebase/eagv2")
     
     # Get directory structure
     structure = await run_git_command("ls-tree", "-r", "--name-only", "HEAD")
@@ -215,16 +228,16 @@ Keep response under 250 words."""
 
 async def main():
     """Run all real analyses."""
+    repo_name = REPO_PATH.name
     print(f"""
 {C.BRIGHT_CYAN}{C.BOLD}
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║                                                                              ║
 ║           🚀 DevFlow REAL ANALYSIS - Using phi4 Ollama Model 🚀              ║
 ║                                                                              ║
-║                Analyzing: eagv2 GitHub Repository                            ║
-║                                                                              ║
 ╚══════════════════════════════════════════════════════════════════════════════╝
 {C.RESET}
+{C.YELLOW}📁 Repository: {C.WHITE}{REPO_PATH}{C.RESET}
 """)
     
     print(f"{C.YELLOW}⚡ Connecting to Ollama (phi4 model)...{C.RESET}")
@@ -244,7 +257,7 @@ async def main():
 {C.BRIGHT_CYAN}{C.BOLD}{'═' * 80}{C.RESET}
 {C.BRIGHT_GREEN}{C.BOLD}✅ Real Analysis Complete!{C.RESET}
 
-{C.CYAN}DevFlow analyzed the actual eagv2 repository using:{C.RESET}
+{C.CYAN}DevFlow analyzed {REPO_PATH.name} using:{C.RESET}
   • 🤖 phi4 Ollama model for LLM analysis
   • 📊 Real git history from your repo  
   • 🔍 Actual code files and structure
@@ -256,6 +269,55 @@ async def main():
     await ollama.close()
 
 
+def parse_args():
+    """Parse command-line arguments."""
+    parser = argparse.ArgumentParser(
+        description="Analyze any local git repository using phi4 Ollama model",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+    python real_analysis.py                        # Analyze current directory
+    python real_analysis.py /path/to/my/repo       # Analyze specific repo
+    python real_analysis.py ~/projects/myproject   # Use ~ for home directory
+    python real_analysis.py .                      # Explicitly use current dir
+
+Requirements:
+    - Ollama must be running with phi4 model: ollama run phi4
+    - Target directory must be a git repository
+        """
+    )
+    parser.add_argument(
+        "repo_path",
+        nargs="?",
+        default=".",
+        help="Path to git repository (default: current directory)"
+    )
+    return parser.parse_args()
+
+
+def validate_repo(path: Path) -> Path:
+    """Validate that path is a git repository."""
+    path = path.expanduser().resolve()
+    
+    if not path.exists():
+        print(f"{C.RED}❌ Error: Path does not exist: {path}{C.RESET}")
+        sys.exit(1)
+    
+    if not path.is_dir():
+        print(f"{C.RED}❌ Error: Path is not a directory: {path}{C.RESET}")
+        sys.exit(1)
+    
+    git_dir = path / ".git"
+    if not git_dir.exists():
+        print(f"{C.RED}❌ Error: Not a git repository: {path}{C.RESET}")
+        print(f"{C.YELLOW}   (No .git directory found){C.RESET}")
+        sys.exit(1)
+    
+    return path
+
+
 if __name__ == "__main__":
+    args = parse_args()
+    REPO_PATH = validate_repo(Path(args.repo_path))
     asyncio.run(main())
 
