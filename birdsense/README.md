@@ -90,7 +90,25 @@ A novel hybrid AI system for bird identification combining multiple approaches f
 
 ## 🚀 Quick Start
 
-### Option 1: One-Line Deploy (Recommended)
+### Option 1: Cloud Hosting (Permanent, Free, Auto-Deploy)
+
+Deploy to **HuggingFace Spaces** - free, permanent URL, auto-deploys on Git push:
+
+```bash
+# First time setup
+./deploy_cloud.sh setup
+
+# Deploy now
+./deploy_cloud.sh deploy
+
+# Your app will be at: https://huggingface.co/spaces/sohiyiy/birdsense
+```
+
+**Auto-deploy on GitHub push:**
+1. Add `HF_TOKEN` secret to GitHub repo (Settings → Secrets → Actions)
+2. Push to `main` branch → Auto deploys!
+
+### Option 2: Local with GPU (Best Accuracy)
 
 ```bash
 # Clone and run
@@ -100,7 +118,7 @@ chmod +x deploy.sh
 ./deploy.sh local
 ```
 
-### Option 2: Docker Deploy
+### Option 3: Docker Deploy
 
 ```bash
 # With Docker installed
@@ -109,7 +127,7 @@ chmod +x deploy.sh
 docker-compose up -d
 ```
 
-### Option 3: Manual Setup
+### Option 4: Manual Setup
 
 ```bash
 # 1. Prerequisites
@@ -145,12 +163,27 @@ python app.py
 
 ```
 birdsense/
-├── app.py              # Main application (Gradio UI + pipelines)
-├── prompts.py          # External LLM prompts (no hardcoding)
+├── app.py              # Main app (local with Ollama + BirdNET)
+├── app_cloud.py        # Cloud version (Together/Replicate API)
+├── prompts.py          # External LLM prompts
 ├── confusion_rules.py  # Feature-based validation
-├── requirements.txt    # Python dependencies
+├── feedback.py         # Feedback & analytics
+├── host.py             # Local public hosting
+├── deploy_cloud.sh     # Cloud deployment script
+├── export_data.py      # Data export utility
+├── requirements.txt    # Local dependencies
+├── requirements_cloud.txt  # Cloud dependencies (lightweight)
+├── render.yaml         # Render.com config
+├── .github/workflows/  # Auto-deploy on GitHub push
 └── README.md           # This file
 ```
+
+### Two Versions:
+
+| Version | File | Best For |
+|---------|------|----------|
+| **Local** | `app.py` | Best accuracy (BirdNET + phi4) |
+| **Cloud** | `app_cloud.py` | Free hosting, sharing |
 
 ## 🔧 Technology Stack
 
@@ -181,6 +214,88 @@ birdsense/
 | Multi-modal | Audio only | Text/Image | **All 3** |
 | Runs Locally | ✅ | ❌ | ✅ |
 | Species Count | 6000+ | General | **6000+** |
+
+## 🌐 Hosting for Testing
+
+Share BirdSense with others for testing and feedback collection:
+
+### Quick Share (Gradio Public URL)
+
+```bash
+# Creates a temporary public URL (valid for 72 hours)
+python host.py
+
+# Output: "Running on public URL: https://xxx.gradio.live"
+```
+
+This uses Gradio's built-in sharing feature - no extra setup required!
+
+### Persistent Hosting Options
+
+| Method | Cost | Setup Complexity | GPU |
+|--------|------|------------------|-----|
+| **Gradio Share** | Free | ⭐ (1 command) | Your local GPU |
+| **ngrok** | Free tier | ⭐⭐ | Your local GPU |
+| **Railway.app** | ~$5/mo | ⭐⭐⭐ | CPU only (slow) |
+| **VPS + Ollama** | ~$20/mo | ⭐⭐⭐⭐ | Depends on VPS |
+
+### Share Link Workflow
+
+```bash
+# 1. Start public hosting
+python host.py
+
+# 2. Share the gradio.live URL with testers
+# 3. Testers use the Feedback tab to report results
+# 4. Export feedback when done:
+python export_data.py --export all
+```
+
+## 📊 Feedback & Sample Collection
+
+BirdSense includes built-in audit and feedback collection:
+
+### In-App Feedback
+- **Feedback Tab**: Users can report if identification was correct/incorrect
+- **Correct Species**: When wrong, users can provide the correct species
+- **Notes**: Additional feedback for edge cases
+
+### Data Export
+
+```bash
+# Show summary of collected data
+python export_data.py
+
+# Export feedback as JSON
+python export_data.py --export feedback
+
+# Export samples (audio/images with corrections)
+python export_data.py --export samples
+
+# Export everything
+python export_data.py --export all
+```
+
+### Analytics Dashboard
+Access the **📊 Analytics** tab in the app to see:
+- Total predictions
+- Accuracy from user feedback
+- Top identified species
+- Breakdown by input type
+
+## 📁 Project Structure
+
+```
+birdsense/
+├── app.py              # Main application (Gradio UI + pipelines)
+├── prompts.py          # External LLM prompts (no hardcoding)
+├── confusion_rules.py  # Feature-based validation
+├── feedback.py         # Feedback & sample collection
+├── host.py             # Public hosting script
+├── export_data.py      # Data export utility
+├── requirements.txt    # Python dependencies
+└── README.md           # This file
+```
 
 ## 🔮 Future Roadmap
 

@@ -44,6 +44,16 @@ from confusion_rules import (
     CONFUSION_HINTS
 )
 
+# Import feedback system for audit & sample collection
+from feedback import (
+    log_prediction,
+    save_feedback,
+    save_sample,
+    get_analytics,
+    format_analytics_html,
+    generate_session_id
+)
+
 # Suppress warnings
 warnings.filterwarnings('ignore', message='Unverified HTTPS request')
 warnings.filterwarnings('ignore', category=FutureWarning)
@@ -1159,31 +1169,48 @@ Upload the same audio to both systems and compare!
 
 # ============ UI ============
 
+def submit_feedback(is_correct, correct_species, notes):
+    """Handle feedback submission."""
+    save_feedback(
+        prediction_id="latest",
+        is_correct=is_correct,
+        correct_species=correct_species if not is_correct else None,
+        user_notes=notes
+    )
+    return "✅ Thank you for your feedback! This helps improve BirdSense."
+
+
+def refresh_analytics():
+    """Refresh analytics dashboard."""
+    return format_analytics_html()
+
+
 def create_app():
     status = check_ollama()
     status_text = f"✅ Vision: {'✅' if status['vision'] else '❌'} | Text: {'✅' if status['text'] else '❌'}" if status['ok'] else "❌ Ollama not running"
     
-    with gr.Blocks(title="BirdSense") as app:
+    with gr.Blocks(title="BirdSense - By Soham") as app:
         gr.Markdown(f"""
 # 🐦 BirdSense - AI Bird Identification
+**Developed by Soham**
 
-**META SAM-Audio** | **Multi-bird Detection** | **Streaming Results**
+**META SAM-Audio** | **BirdNET + LLM Hybrid** | **Multi-bird Detection**
 
-Status: {status_text}
+Status: {status_text} | BirdNET: {'✅' if BIRDNET_AVAILABLE else '❌'}
 """)
         
         with gr.Tab("🎵 Audio"):
             gr.Markdown("""
-### Audio Identification with META SAM-Audio
-- **Source separation**: Isolates bird calls from noise
-- **Multi-bird detection**: Identifies multiple species in one recording
-- **Streaming results**: Shows birds as they're identified
+### Audio Identification with META SAM-Audio + BirdNET
+- **SAM-Audio**: Isolates bird calls from noise
+- **BirdNET (Cornell)**: 6000+ species recognition
+- **LLM Validation**: Contextual reasoning
 """)
             with gr.Row():
                 with gr.Column():
                     audio_in = gr.Audio(sources=["upload", "microphone"], type="numpy", label="Bird Call")
                     with gr.Row():
-                        loc = gr.Textbox(label="Location", placeholder="e.g., Mumbai")
+                        loc = gr.Textbox(label="Location", placeholder="e.g., Mumbai, India")
                         mon = gr.Dropdown(label="Month", choices=[""] + ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"])
                     audio_btn = gr.Button("🔍 Identify Birds", variant="primary")
                 with gr.Column():
@@ -1192,9 +1219,10 @@ Status: {status_text}
         
         with gr.Tab("📷 Image"):
             gr.Markdown("""
-### Image Identification with LLaVA
-- **Multi-bird detection**: Identifies all birds in the image
-- **Species-level ID**: Specific species names, not just "bird"
+### Image Identification with LLaVA Vision
+- **Feature analysis**: Beak, plumage, patterns
+- **Multi-bird detection**: All birds in image
+- **Species-level ID**: Specific species names
 """)
             with gr.Row():
                 with gr.Column():
@@ -1208,18 +1236,78 @@ Status: {status_text}
             gr.Markdown("### Describe the bird - colors, size, behavior, sounds")
             with gr.Row():
                 with gr.Column():
-                    desc_in = gr.Textbox(label="Description", lines=4, placeholder="Large blue and yellow parrot...")
+                    desc_in = gr.Textbox(label="Description", lines=4, placeholder="Large blue and yellow parrot with red beak...")
                     desc_btn = gr.Button("🔍 Identify", variant="primary")
                 with gr.Column():
                     desc_out = gr.HTML("<p style='color:#64748b;padding:40px;text-align:center'>📝 Enter description to identify</p>")
             desc_btn.click(identify_description, [desc_in], desc_out)
         
-        with gr.Tab("📊 BirdNET Benchmark"):
-            gr.Markdown(run_birdnet_benchmark())
+        with gr.Tab("📝 Feedback"):
+            gr.Markdown("""
+### Help Improve BirdSense!
+Your feedback helps us train better models. Please let us know if the identification was correct.
+""")
+            with gr.Row():
+                with gr.Column():
+                    feedback_correct = gr.Radio(
+                        choices=["✅ Correct", "❌ Incorrect"],
+                        label="Was the identification correct?",
+                        value="✅ Correct"
+                    )
+                    feedback_species = gr.Textbox(
+                        label="Correct Species (if wrong)",
+                        placeholder="Enter the correct species name..."
+                    )
+                    feedback_notes = gr.Textbox(
+                        label="Additional Notes",
+                        placeholder="Any other feedback...",
+                        lines=2
+                    )
+                    feedback_btn = gr.Button("📤 Submit Feedback", variant="primary")
+                with gr.Column():
+                    feedback_result = gr.Markdown("*Submit feedback to help improve the model*")
+            
+            feedback_btn.click(
+                lambda c, s, n: submit_feedback(c == "✅ Correct", s, n),
+                [feedback_correct, feedback_species, feedback_notes],
+                feedback_result
+            )
+        
+        with gr.Tab("📊 Analytics"):
+            gr.Markdown("### Usage Analytics & Model Performance")
+            analytics_display = gr.HTML(format_analytics_html())
+            refresh_btn = gr.Button("🔄 Refresh Analytics")
+            refresh_btn.click(refresh_analytics, outputs=analytics_display)
+        
+        with gr.Tab("ℹ️ About"):
+            gr.Markdown("""
+### About BirdSense
+**Developed by Soham**
+
+A novel hybrid AI system combining:
+- **BirdNET (Cornell Lab)** - Spectrogram pattern matching
+- **LLaVA** - Vision-language analysis  
+- **phi4** - Contextual reasoning
+- **META SAM-Audio** - Noise filtering
+
+#### 🔗 Links
+- Source Code: [GitHub](#)
+- Documentation: See README.md
+
+#### 📊 Model Info
+- Audio: BirdNET + LLM validation
+- Image: LLaVA 7B
+- Text: phi4 (14B parameters)
+
+#### 🙏 Acknowledgments
+- Cornell Lab of Ornithology (BirdNET)
+- Meta AI (LLaVA inspiration)
+- Ollama team
+""")
         
         gr.Markdown("""
 ---
-**Setup:** `ollama pull llava:7b && ollama pull llama3.2` then `python app.py`
+**🐦 BirdSense by Soham** | Help improve: Submit feedback after each identification!
 """)
     
     return app

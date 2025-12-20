@@ -1,0 +1,19 @@
+# Render.com deployment configuration
+# Auto-deploys on GitHub push
+
+services:
+  - type: web
+    name: birdsense
+    runtime: python
+    buildCommand: pip install -r requirements_cloud.txt
+    startCommand: python app_cloud.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12"
+      - key: TOGETHER_API_KEY
+        sync: false  # Set in Render dashboard
+      - key: REPLICATE_API_TOKEN
+        sync: false  # Set in Render dashboard
+    healthCheckPath: /
+    autoDeploy: true
+
