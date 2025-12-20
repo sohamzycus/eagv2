@@ -1,192 +1,161 @@
-# 🐦 BirdSense - Intelligent Bird Recognition System
+# 🐦 BirdSense - AI Bird Identification
 
-> **A Novel Multi-Modal Bird Recognition Model for CSCR Initiative**  
-> Competitive with BirdNET | India-First Focus | Meta SAM-Audio Enhanced | Self-Learning | Mobile-Ready
+**Developed by Soham**
 
-## 🎯 Vision
+A novel hybrid AI system for bird identification combining multiple approaches for superior accuracy.
 
-1. **#1 Bird Recognition Model** - Surpass BirdNET accuracy, especially for Indian species
-2. **Mobile-Ready** - Lightweight models optimized for edge deployment
-3. **Self-Learning** - Continuous improvement from avian signals, research, and citizen science
-4. **Novelty Detection** - Identify new species or out-of-range sightings
+## 🧠 Architecture
 
-## 🚀 Quick Start for Researchers
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│                        BirdSense Hybrid Architecture                     │
+│                           Developed by Soham                             │
+├─────────────────────────────────────────────────────────────────────────┤
+│                                                                          │
+│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐                │
+│  │   AUDIO     │     │   IMAGE     │     │ DESCRIPTION │                │
+│  │   Input     │     │   Input     │     │   Input     │                │
+│  └──────┬──────┘     └──────┬──────┘     └──────┬──────┘                │
+│         │                   │                   │                        │
+│         ▼                   │                   │                        │
+│  ┌─────────────────┐        │                   │                        │
+│  │  META SAM-Audio │        │                   │                        │
+│  │  ─────────────  │        │                   │                        │
+│  │  • Noise filter │        │                   │                        │
+│  │  • Call isolate │        │                   │                        │
+│  │  • Segment det. │        │                   │                        │
+│  └────────┬────────┘        │                   │                        │
+│           │                 │                   │                        │
+│           ▼                 │                   │                        │
+│  ┌─────────────────┐        │                   │                        │
+│  │    BirdNET      │        │                   │                        │
+│  │   (Cornell)     │        │                   │                        │
+│  │  ─────────────  │        │                   │                        │
+│  │  • 6000+ species│        │                   │                        │
+│  │  • Spectrogram  │        │                   │                        │
+│  │  • CNN pattern  │        │                   │                        │
+│  └────────┬────────┘        │                   │                        │
+│           │                 │                   │                        │
+│           ▼                 ▼                   ▼                        │
+│  ┌─────────────────────────────────────────────────────────────┐        │
+│  │                    LLM Reasoning Layer                       │        │
+│  │                    ──────────────────                        │        │
+│  │   phi4 (14B)              LLaVA (7B)           phi4 (14B)    │        │
+│  │   ─────────               ─────────            ─────────     │        │
+│  │   • Context valid.        • Vision analysis    • Text reason │        │
+│  │   • Location filter       • Feature extract    • Description │        │
+│  │   • Season reason.        • Multi-bird det.    • matching    │        │
+│  └─────────────────────────────────────────────────────────────┘        │
+│                               │                                          │
+│                               ▼                                          │
+│                    ┌─────────────────────┐                               │
+│                    │   Deduplication &   │                               │
+│                    │   Confidence Merge  │                               │
+│                    └──────────┬──────────┘                               │
+│                               │                                          │
+│                               ▼                                          │
+│                    ┌─────────────────────┐                               │
+│                    │  STREAMING RESULTS  │                               │
+│                    │  ─────────────────  │                               │
+│                    │  • Real-time trail  │                               │
+│                    │  • Unique species   │                               │
+│                    │  • Wikipedia images │                               │
+│                    └─────────────────────┘                               │
+│                                                                          │
+└─────────────────────────────────────────────────────────────────────────┘
+```
 
-### Start the Web Interface
+## ✨ Key Features
+
+### 1. **Hybrid BirdNET + LLM Pipeline**
+- BirdNET (Cornell Lab): Pattern-based spectrogram analysis for 6000+ species
+- LLM Validation: Contextual reasoning using location, season, and behavior
+- **Novel contribution**: Combines best of both approaches
+
+### 2. **META SAM-Audio Processing**
+- Inspired by Meta's Segment Anything Model
+- Isolates bird calls from background noise
+- Detects multiple birds in same recording
+- Frequency band separation for multi-species detection
+
+### 3. **Feature-Based Identification**
+- Systematic feature analysis (beak, head, body patterns)
+- No hardcoded species rules
+- Flexible for any bird species
+
+### 4. **Streaming Results**
+- Real-time analysis trail shows progress
+- Birds displayed as identified (not waiting for all)
+- Deduplication ensures each species shown once
+
+## 🚀 Quick Start
 
 ```bash
+# Prerequisites
+brew install python@3.12
+ollama pull llava:7b
+ollama pull phi4
+
+# Setup
 cd birdsense
-source venv/bin/activate
-
-# Start API server with web UI
-uvicorn api.server:app --host 0.0.0.0 --port 8000
-```
-
-**Open in browser:** `http://localhost:8000/app`
-
-**Share with team:** `http://<your-ip>:8000/app`
-
-### Features
-- 🎤 **Live Recording** - Record from microphone with real-time waveform
-- 📊 **Live Histogram** - See frequency distribution in real-time
-- 📁 **File Upload** - Upload WAV, MP3, FLAC samples
-- 🤖 **AI Reasoning** - LLM-enhanced species identification
-- 🔔 **Novelty Alerts** - Detect unusual sightings
-
-## 🏗️ Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                      BirdSense Pipeline                          │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                   │
-│  INPUT → SAM-Audio → Preprocessing → Encoder → Classifier        │
-│           ↓              ↓              ↓          ↓              │
-│    Source      →    Spectrogram → Embedding → Predictions       │
-│  Separation           + Noise         384-dim      ↓              │
-│  (Meta AI)          Reduction                  LLM Reasoning      │
-│                                                    ↓              │
-│                                              Final Output         │
-│                                           (85%+ confidence)       │
-│                                                                   │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-## 🧠 Meta SAM-Audio Integration
-
-BirdSense integrates Meta's state-of-the-art [SAM-Audio](https://ai.meta.com/samaudio/) (Segment Anything in Audio) for:
-
-- **Source Separation** - Isolate bird calls from background noise
-- **Multi-Bird Handling** - Separate overlapping bird calls
-- **Feeble Recording Enhancement** - Boost weak signals
-- **Noise Removal** - Handle urban/forest ambient noise
-
-Reference: [SAM-Audio Paper](https://ai.meta.com/research/publications/sam-audio-segment-anything-in-audio/)
-
-## 📱 Web Interface
-
-The beautiful researcher interface includes:
-
-| Feature | Description |
-|---------|-------------|
-| **Live Recording** | Record from device microphone |
-| **Real-time Waveform** | Visualize audio as you record |
-| **Frequency Histogram** | See bird call frequencies live |
-| **File Upload** | Drag & drop audio files |
-| **Streaming Results** | See AI analysis in real-time |
-| **LLM Reasoning** | Natural language explanations |
-| **Novelty Alerts** | Unusual sighting notifications |
-
-## 🔧 Installation
-
-### Prerequisites
-- Python 3.10+
-- ~4GB disk space (with models)
-- Ollama (for LLM reasoning)
-
-### Setup
-
-```bash
-cd birdsense
-python3 -m venv venv
+python3.12 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# Pull Ollama model (recommended: qwen2.5:3b)
-ollama pull qwen2.5:3b
-ollama serve &  # Start in background
+# Run
+python app.py
+# Open http://localhost:7860
 ```
-
-## 📊 Training on Xeno-Canto
-
-```bash
-# Download training data (100+ Indian species)
-python -c "
-import asyncio
-from training.xeno_canto import download_india_birds
-asyncio.run(download_india_birds())
-"
-
-# Train model
-python -m training.trainer \
-  --data-dir data/xeno-canto \
-  --epochs 100 \
-  --batch-size 32
-```
-
-## 🐦 Supported Species
-
-**25+ species in MVP**, expanding to **500+ Indian birds**:
-
-- Common: Asian Koel, Indian Cuckoo, House Sparrow, Common Myna
-- Endemic: Indian Robin, Grey Junglefowl, Indian Peafowl
-- Wetland: Kingfishers, Egrets, Herons
-- Forest: Barbets, Orioles, Drongos
-- Conservation priority: Vultures, Bustards, Floricans
 
 ## 📁 Project Structure
 
 ```
 birdsense/
-├── api/                    # REST API
-│   └── server.py           # FastAPI with streaming
-├── webapp/                 # Web Interface
-│   ├── index.html          # Main page
-│   ├── styles.css          # Beautiful dark theme
-│   └── app.js              # Recording, upload, visualization
-├── audio/                  # Audio Processing
-│   ├── preprocessor.py     # Spectrograms
-│   ├── augmentation.py     # Data augmentation
-│   ├── encoder.py          # Neural network
-│   └── sam_audio.py        # Meta SAM-Audio integration
-├── models/
-│   ├── audio_classifier.py # Species classifier
-│   └── novelty_detector.py # Unusual detection
-├── llm/
-│   ├── ollama_client.py    # LLM interface
-│   └── reasoning.py        # Species reasoning
-├── training/
-│   ├── xeno_canto.py       # Download data
-│   ├── dataset.py          # PyTorch dataset
-│   └── trainer.py          # Training loop
-├── data/
-│   └── species_db.py       # Species database
-└── tests/
-    └── test_audio_conditions.py
+├── app.py              # Main application (Gradio UI + pipelines)
+├── prompts.py          # External LLM prompts (no hardcoding)
+├── confusion_rules.py  # Feature-based validation
+├── requirements.txt    # Python dependencies
+└── README.md           # This file
 ```
 
-## 🎯 Performance Targets
+## 🔧 Technology Stack
 
-| Metric | Target | Status |
-|--------|--------|--------|
-| Top-1 Accuracy | 85%+ | Training needed |
-| Top-5 Accuracy | 95%+ | Training needed |
-| Confidence (correct) | 85%+ | Calibrated |
-| Inference Latency | <100ms | ~50ms |
-| Model Size | <20MB | ~8MB |
+| Component | Technology | Purpose |
+|-----------|------------|---------|
+| Audio ID | BirdNET (Cornell) + TensorFlow | Spectrogram pattern matching |
+| Image ID | LLaVA 7B | Vision-language analysis |
+| Text ID | phi4 (14B) | Reasoning & validation |
+| Audio Processing | META SAM-Audio | Noise filtering, call isolation |
+| UI | Gradio | Web interface |
+| Image Source | Wikipedia/iNaturalist | Reference photos |
 
-## 🔗 API Endpoints
+## 🧪 What Makes BirdSense Novel
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/app` | GET | Web interface |
-| `/api/v1/identify` | POST | Identify bird (JSON) |
-| `/api/v1/identify/stream` | POST | Identify bird (streaming) |
-| `/api/v1/species` | GET | List all species |
-| `/api/v1/health` | GET | Health check |
-| `/docs` | GET | API documentation |
+1. **Hybrid Ensemble**: First to combine BirdNET + LLM for bird ID
+2. **Contextual Validation**: LLM validates ML predictions using location/season
+3. **Multi-Modal Fusion**: Audio + Image + Description analysis
+4. **Streaming UX**: Real-time progress and results
+5. **100% Local**: No cloud APIs required
 
-## 📚 References
+## 📊 Comparison
 
-- [Meta SAM-Audio](https://ai.meta.com/samaudio/) - Audio source separation
-- [HuggingFace Model](https://huggingface.co/facebook/sam-audio-large) - Pre-trained weights
-- [Xeno-Canto](https://xeno-canto.org/) - Bird audio database
-- [eBird India](https://ebird.org/india) - Species checklists
+| Feature | BirdNET Only | GPT-5 | BirdSense |
+|---------|-------------|-------|-----------|
+| Spectrogram Analysis | ✅ | ❌ | ✅ |
+| Contextual Reasoning | ❌ | ✅ | ✅ |
+| Location Awareness | Basic | ✅ | ✅ |
+| Multi-modal | Audio only | Text/Image | **All 3** |
+| Runs Locally | ✅ | ❌ | ✅ |
+| Species Count | 6000+ | General | **6000+** |
 
-## 🤝 Contributing
+## 🔮 Future Roadmap
 
-Part of the **CSCR (Citizen Science for Conservation Research)** initiative.
+- [ ] Geolocation auto-filtering (lat/lon based species filtering)
+- [ ] Spectrogram visualization
+- [ ] Custom model fine-tuning on regional data
+- [ ] Mobile app (TensorFlow Lite)
+- [ ] Offline mode with embedded models
 
-## 📄 License
+---
 
-MIT License - Open for research and conservation use.
+**Developed by Soham** | BirdSense v1.0

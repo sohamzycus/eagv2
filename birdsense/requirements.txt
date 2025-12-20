@@ -1,13 +1,18 @@
-# BirdSense - Local AI Bird Identification
+# BirdSense - Local AI Bird Identification (Hybrid Architecture)
 # Install: pip install -r requirements.txt
+# Requires: Python 3.12 (TensorFlow compatibility)
 
 # Core
 gradio>=4.0.0
-numpy<2.0.0
+numpy
 scipy
 Pillow
 requests
 
-# Optional: for advanced audio processing
-# librosa
-# soundfile
+# BirdNET (Cornell) - Gold standard bird audio identification
+tensorflow>=2.16.0
+birdnetlib>=0.15.0
+librosa
+soundfile
+
+# Ollama models required: llava:7b, phi4
