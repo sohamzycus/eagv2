@@ -1,21 +1,25 @@
 #!/bin/bash
-# BirdSense Deployment Script
+# 🐦 BirdSense Deployment Script
 # Developed by Soham
 #
-# Usage: ./deploy.sh [local|docker]
+# Usage:
+#   ./deploy.sh local   - Run locally with Ollama (best accuracy)
+#   ./deploy.sh docker  - Run in Docker containers
+#   ./deploy.sh cloud   - Deploy to Render.com (free, permanent URL)
 
 set -e
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-NC='\033[0m' # No Color
+BLUE='\033[0;34m'
+NC='\033[0m'
 
 echo "🐦 BirdSense Deployment"
 echo "======================="
 echo ""
 
-MODE=${1:-local}
+MODE=${1:-help}
 
 deploy_local() {
     echo -e "${YELLOW}📦 Setting up local deployment...${NC}"
@@ -83,10 +87,55 @@ deploy_docker() {
     echo "📍 BirdSense: http://localhost:7860"
     echo "📍 Ollama API: http://localhost:11434"
     echo ""
-    echo "⏳ Models are downloading in background..."
-    echo "   Check status: docker logs birdsense-model-init"
-    echo ""
     echo "To stop: docker-compose down"
+}
+
+deploy_cloud() {
+    echo -e "${BLUE}☁️  Cloud Deployment (Render.com)${NC}"
+    echo ""
+    echo "Render.com offers FREE Docker hosting with auto-deploy from GitHub."
+    echo ""
+    echo -e "${YELLOW}Step 1: Get API Key (free)${NC}"
+    echo "   Go to: https://together.ai"
+    echo "   Sign up and copy your API key"
+    echo ""
+    echo -e "${YELLOW}Step 2: Connect to Render.com${NC}"
+    echo "   1. Go to https://render.com"
+    echo "   2. Click 'New' → 'Web Service'"
+    echo "   3. Connect your GitHub repo: sohamzycus/eagv2"
+    echo "   4. Settings:"
+    echo "      - Name: birdsense"
+    echo "      - Root Directory: birdsense"
+    echo "      - Runtime: Docker"
+    echo "   5. Add Environment Variable:"
+    echo "      - Key: TOGETHER_API_KEY"
+    echo "      - Value: (your Together AI key)"
+    echo "   6. Click 'Create Web Service'"
+    echo ""
+    echo -e "${YELLOW}Step 3: Enable Auto-Deploy (Optional)${NC}"
+    echo "   In Render dashboard → Settings → Deploy Hooks"
+    echo "   Copy the webhook URL, then add to GitHub:"
+    echo "   Settings → Secrets → Actions → RENDER_DEPLOY_HOOK_URL"
+    echo ""
+    echo -e "${GREEN}That's it! Every push to master auto-deploys.${NC}"
+    echo ""
+    echo "Alternative free platforms:"
+    echo "  - Railway.app (\$5 free credits)"
+    echo "  - Fly.io (free tier)"
+    echo "  - Google Cloud Run (free tier)"
+}
+
+show_help() {
+    echo "Usage: ./deploy.sh [local|docker|cloud]"
+    echo ""
+    echo "Options:"
+    echo -e "  ${GREEN}local${NC}   - Run on your machine with Ollama (best accuracy)"
+    echo -e "  ${GREEN}docker${NC}  - Run in Docker containers (portable)"
+    echo -e "  ${GREEN}cloud${NC}   - Deploy to Render.com (free, permanent URL, auto-deploy)"
+    echo ""
+    echo "Examples:"
+    echo "  ./deploy.sh local   # For development/testing"
+    echo "  ./deploy.sh cloud   # For sharing with testers"
 }
 
 case $MODE in
@@ -96,13 +145,10 @@ case $MODE in
     docker)
         deploy_docker
         ;;
-    *)
-        echo "Usage: ./deploy.sh [local|docker]"
-        echo ""
-        echo "Options:"
-        echo "  local   - Run directly on your machine (recommended for Mac)"
-        echo "  docker  - Run in Docker containers"
-        exit 1
+    cloud)
+        deploy_cloud
+        ;;
+    help|--help|-h|*)
+        show_help
         ;;
 esac
-

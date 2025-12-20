@@ -1,0 +1,70 @@
+# 🐦 BirdSense - Docker Auto-Deploy
+# Triggers on push to main/master branch
+# Deploys to Render.com using Docker
+#
+# Setup:
+# 1. Connect GitHub repo to Render.com
+# 2. Add RENDER_DEPLOY_HOOK_URL secret to GitHub
+# 3. Push to main/master → Auto deploys!
+
+name: Deploy BirdSense
+
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - 'birdsense/**'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker image (test)
+        run: |
+          cd birdsense
+          docker build -t birdsense:test .
+          echo "✅ Docker build successful"
+
+      - name: Trigger Render Deploy
+        if: github.event_name == 'push'
+        run: |
+          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" ]; then
+            curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
+            echo "✅ Triggered Render deployment"
+          else
+            echo "ℹ️ RENDER_DEPLOY_HOOK_URL not set - skipping auto-deploy"
+            echo "   Set up at: https://render.com"
+          fi
+
+      - name: Trigger Railway Deploy
+        if: github.event_name == 'push'
+        run: |
+          if [ -n "${{ secrets.RAILWAY_WEBHOOK_URL }}" ]; then
+            curl -X POST "${{ secrets.RAILWAY_WEBHOOK_URL }}"
+            echo "✅ Triggered Railway deployment"
+          fi
+
+      - name: Summary
+        run: |
+          echo "## 🐦 BirdSense Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Docker image built successfully" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Deployment Status" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK_URL }}" ]; then
+            echo "✅ Render.com: Deployment triggered" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ Render.com: Not configured" >> $GITHUB_STEP_SUMMARY
+          fi
+

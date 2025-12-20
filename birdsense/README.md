@@ -90,41 +90,31 @@ A novel hybrid AI system for bird identification combining multiple approaches f
 
 ## 🚀 Quick Start
 
-### Option 1: Cloud Hosting (Permanent, Free, Auto-Deploy)
+### Option 1: Cloud Hosting (Permanent, Free, Auto-Deploy via Docker)
 
-Deploy to **HuggingFace Spaces** - free, permanent URL, auto-deploys on Git push:
+Deploy to **Render.com** - free Docker hosting with auto-deploy on Git push:
 
 ```bash
-# First time setup
-./deploy_cloud.sh setup
-
-# Deploy now
-./deploy_cloud.sh deploy
-
-# Your app will be at: https://huggingface.co/spaces/sohiyiy/birdsense
+./deploy.sh cloud   # Shows step-by-step instructions
 ```
 
-**Auto-deploy on GitHub push:**
-1. Add `HF_TOKEN` secret to GitHub repo (Settings → Secrets → Actions)
-2. Push to `main` branch → Auto deploys!
+**Quick Setup:**
+1. Get free API key at https://together.ai
+2. Go to https://render.com → New → Web Service
+3. Connect GitHub repo, select Docker runtime
+4. Add env var: `TOGETHER_API_KEY`
+5. Deploy! Auto-refreshes on every git push.
 
 ### Option 2: Local with GPU (Best Accuracy)
 
 ```bash
-# Clone and run
-git clone <repo-url>
-cd birdsense
-chmod +x deploy.sh
-./deploy.sh local
+./deploy.sh local   # Sets up Ollama + models + runs app
 ```
 
-### Option 3: Docker Deploy
+### Option 3: Docker (Portable)
 
 ```bash
-# With Docker installed
-./deploy.sh docker
-# Or manually:
-docker-compose up -d
+./deploy.sh docker  # Runs in Docker containers
 ```
 
 ### Option 4: Manual Setup
@@ -163,27 +153,28 @@ python app.py
 
 ```
 birdsense/
-├── app.py              # Main app (local with Ollama + BirdNET)
+├── app.py              # Local version (Ollama + BirdNET) - best accuracy
 ├── app_cloud.py        # Cloud version (Together/Replicate API)
 ├── prompts.py          # External LLM prompts
 ├── confusion_rules.py  # Feature-based validation
-├── feedback.py         # Feedback & analytics
-├── host.py             # Local public hosting
-├── deploy_cloud.sh     # Cloud deployment script
-├── export_data.py      # Data export utility
-├── requirements.txt    # Local dependencies
+├── feedback.py         # Feedback & analytics collection
+├── export_data.py      # Export collected data
+├── deploy.sh           # One-command deployment (local/docker/cloud)
+├── Dockerfile          # Docker container config
+├── docker-compose.yml  # Multi-container setup
+├── render.yaml         # Render.com auto-deploy config
+├── requirements.txt    # Local dependencies (with BirdNET)
 ├── requirements_cloud.txt  # Cloud dependencies (lightweight)
-├── render.yaml         # Render.com config
 ├── .github/workflows/  # Auto-deploy on GitHub push
 └── README.md           # This file
 ```
 
 ### Two Versions:
 
-| Version | File | Best For |
-|---------|------|----------|
-| **Local** | `app.py` | Best accuracy (BirdNET + phi4) |
-| **Cloud** | `app_cloud.py` | Free hosting, sharing |
+| Version | File | Models | Best For |
+|---------|------|--------|----------|
+| **Local** | `app.py` | Ollama + BirdNET | Best accuracy, GPU |
+| **Cloud** | `app_cloud.py` | Together AI API | Free hosting, sharing |
 
 ## 🔧 Technology Stack
 

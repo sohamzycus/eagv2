@@ -1,19 +1,28 @@
-# Render.com deployment configuration
-# Auto-deploys on GitHub push
+# 🐦 BirdSense - Render.com Docker Deployment
+# Developed by Soham
+#
+# Auto-deploys from GitHub on push to main/master
+#
+# Setup:
+# 1. Go to https://render.com
+# 2. New → Web Service → Connect GitHub repo
+# 3. Select "Docker" as runtime
+# 4. Add environment variable: TOGETHER_API_KEY
+# 5. Deploy!
 
 services:
   - type: web
     name: birdsense
-    runtime: python
-    buildCommand: pip install -r requirements_cloud.txt
-    startCommand: python app_cloud.py
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    region: oregon
+    plan: free
+    branch: master
     envVars:
-      - key: PYTHON_VERSION
-        value: "3.12"
       - key: TOGETHER_API_KEY
-        sync: false  # Set in Render dashboard
+        sync: false  # Set manually in Render dashboard
       - key: REPLICATE_API_TOKEN
-        sync: false  # Set in Render dashboard
+        sync: false  # Alternative to Together AI
     healthCheckPath: /
     autoDeploy: true
-
