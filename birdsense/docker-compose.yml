@@ -1,0 +1,63 @@
+# BirdSense Docker Compose
+# Developed by Soham
+#
+# Usage:
+#   docker-compose up -d
+#   Open http://localhost:7860
+
+version: '3.8'
+
+services:
+  # Ollama - Local LLM server
+  ollama:
+    image: ollama/ollama:latest
+    container_name: birdsense-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    # For Mac/Windows without NVIDIA GPU, remove the deploy section above
+
+  # BirdSense Application
+  birdsense:
+    build: .
+    container_name: birdsense-app
+    ports:
+      - "7860:7860"
+    environment:
+      - OLLAMA_HOST=ollama:11434
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+  # Model Initialization (runs once to pull models)
+  model-init:
+    image: ollama/ollama:latest
+    container_name: birdsense-model-init
+    depends_on:
+      - ollama
+    entrypoint: ["/bin/sh", "-c"]
+    command:
+      - |
+        sleep 10
+        echo "Pulling LLaVA model..."
+        curl -X POST http://ollama:11434/api/pull -d '{"name": "llava:7b"}'
+        echo "Pulling phi4 model..."
+        curl -X POST http://ollama:11434/api/pull -d '{"name": "phi4"}'
+        echo "Models ready!"
+    restart: "no"
+
+volumes:
+  ollama_data:
+
+networks:
+  default:
+    name: birdsense-network
+

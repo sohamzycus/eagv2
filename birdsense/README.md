@@ -90,22 +90,56 @@ A novel hybrid AI system for bird identification combining multiple approaches f
 
 ## 🚀 Quick Start
 
+### Option 1: One-Line Deploy (Recommended)
+
 ```bash
-# Prerequisites
-brew install python@3.12
+# Clone and run
+git clone <repo-url>
+cd birdsense
+chmod +x deploy.sh
+./deploy.sh local
+```
+
+### Option 2: Docker Deploy
+
+```bash
+# With Docker installed
+./deploy.sh docker
+# Or manually:
+docker-compose up -d
+```
+
+### Option 3: Manual Setup
+
+```bash
+# 1. Prerequisites
+brew install python@3.12 ollama  # Mac
+# Or: curl -fsSL https://ollama.ai/install.sh | sh  # Linux
+
+# 2. Start Ollama and pull models
+ollama serve &
 ollama pull llava:7b
 ollama pull phi4
 
-# Setup
+# 3. Setup Python environment
 cd birdsense
 python3.12 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
 
-# Run
+# 4. Run
 python app.py
 # Open http://localhost:7860
 ```
+
+### System Requirements
+
+| Component | Minimum | Recommended |
+|-----------|---------|-------------|
+| RAM | 8 GB | 16 GB |
+| Storage | 15 GB | 25 GB |
+| GPU | None (CPU works) | Apple M1+ or NVIDIA |
+| Python | 3.12 | 3.12 |
 
 ## 📁 Project Structure
 

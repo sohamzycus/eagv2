@@ -1,0 +1,10 @@
+venv/
+venv_py314_backup/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.gitignore
+*.md
+!README.md
+.DS_Store
