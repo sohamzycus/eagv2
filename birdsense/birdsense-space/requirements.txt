@@ -1,0 +1,10 @@
+# BirdSense Pro - HuggingFace Space
+# Keep it minimal - HF has most deps pre-installed
+
+# Core dependencies only
+numpy<2.0.0
+scipy<2.0.0
+requests
+Pillow
+pillow-heif>=0.18.0
+imageio>=2.31.0
