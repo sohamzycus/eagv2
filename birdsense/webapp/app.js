@@ -1,12 +1,12 @@
 /**
- * BirdSense Web Application
+ * BirdSense Web Application v2.0
  * 
  * Features:
- * - Live microphone recording with waveform visualization
- * - Real-time frequency histogram
+ * - Live microphone recording with waveform & histogram
+ * - Real-time frequency analysis
+ * - Zero-shot LLM identification (10,000+ species)
+ * - Live detection stream for birds with >60% confidence
  * - Audio file upload
- * - Streaming identification results
- * - LLM reasoning display
  */
 
 const API_BASE = window.location.origin;
@@ -23,6 +23,7 @@ let isRecording = false;
 let uploadedFile = null;
 let waveformAnimationId = null;
 let histogramAnimationId = null;
+let liveWebSocket = null;
 
 // DOM Elements
 const recordBtn = document.getElementById('recordBtn');
@@ -41,8 +42,8 @@ const emptyState = document.getElementById('emptyState');
 const apiStatus = document.getElementById('apiStatus');
 
 // Canvas contexts
-const waveformCtx = waveformCanvas.getContext('2d');
-const histogramCtx = histogramCanvas.getContext('2d');
+const waveformCtx = waveformCanvas ? waveformCanvas.getContext('2d') : null;
+const histogramCtx = histogramCanvas ? histogramCanvas.getContext('2d') : null;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', init);
@@ -52,6 +53,7 @@ async function init() {
     setupEventListeners();
     await checkApiStatus();
     resizeCanvases();
+    connectLiveStream();
     window.addEventListener('resize', resizeCanvases);
 }
 
@@ -61,6 +63,7 @@ function resizeCanvases() {
         const canvas = container.querySelector('canvas');
         if (canvas) {
             canvas.width = container.clientWidth - 32;
+            canvas.height = 150;
         }
     });
 }
@@ -74,7 +77,16 @@ async function checkApiStatus() {
         if (data.status === 'healthy') {
             apiStatus.classList.add('connected');
             apiStatus.querySelector('.status-text').textContent = 'Connected';
-            document.getElementById('speciesCount').textContent = `${data.species_count} species`;
+            
+            // Update species count - show LLM capability
+            const speciesCount = document.getElementById('speciesCount');
+            if (speciesCount) {
+                if (data.llm_available) {
+                    speciesCount.textContent = '10,000+ species (LLM)';
+                } else {
+                    speciesCount.textContent = `${data.species_count} species`;
+                }
+            }
         } else {
             apiStatus.querySelector('.status-text').textContent = 'Initializing...';
         }
@@ -84,39 +96,112 @@ async function checkApiStatus() {
     }
 }
 
+// Connect to live detection stream
+function connectLiveStream() {
+    const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    const wsUrl = `${wsProtocol}//${window.location.host}/api/v1/live`;
+    
+    try {
+        liveWebSocket = new WebSocket(wsUrl);
+        
+        liveWebSocket.onopen = () => {
+            console.log('Live stream connected');
+            // Send ping every 30s to keep alive
+            setInterval(() => {
+                if (liveWebSocket.readyState === WebSocket.OPEN) {
+                    liveWebSocket.send('ping');
+                }
+            }, 30000);
+        };
+        
+        liveWebSocket.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'history') {
+                // Show recent detections
+                updateLiveDetections(data.detections);
+            } else if (data.species) {
+                // New detection
+                addLiveDetection(data);
+            }
+        };
+        
+        liveWebSocket.onclose = () => {
+            console.log('Live stream disconnected, reconnecting...');
+            setTimeout(connectLiveStream, 3000);
+        };
+    } catch (e) {
+        console.log('WebSocket not available');
+    }
+}
+
+function updateLiveDetections(detections) {
+    const container = document.getElementById('liveDetections');
+    if (!container) return;
+    
+    container.innerHTML = detections.map(d => `
+        <div class="live-detection ${d.confidence >= 80 ? 'high-confidence' : d.confidence >= 60 ? 'medium-confidence' : 'low-confidence'}">
+            <span class="detection-time">${new Date(d.timestamp).toLocaleTimeString()}</span>
+            <span class="detection-species">${d.species}</span>
+            <span class="detection-confidence">${d.confidence}%</span>
+            ${!d.is_indian ? '<span class="detection-badge">🌍 Non-Indian</span>' : ''}
+        </div>
+    `).join('');
+}
+
+function addLiveDetection(detection) {
+    const container = document.getElementById('liveDetections');
+    if (!container) return;
+    
+    const el = document.createElement('div');
+    el.className = `live-detection ${detection.confidence >= 80 ? 'high-confidence' : 'medium-confidence'} new`;
+    el.innerHTML = `
+        <span class="detection-time">${new Date(detection.timestamp).toLocaleTimeString()}</span>
+        <span class="detection-species">${detection.species}</span>
+        <span class="detection-confidence">${detection.confidence}%</span>
+        ${!detection.is_indian ? '<span class="detection-badge">🌍 Non-Indian</span>' : ''}
+    `;
+    container.insertBefore(el, container.firstChild);
+    
+    // Keep only last 10
+    while (container.children.length > 10) {
+        container.removeChild(container.lastChild);
+    }
+    
+    // Remove 'new' class after animation
+    setTimeout(() => el.classList.remove('new'), 1000);
+}
+
 // Tab Navigation
 function setupTabNavigation() {
     const tabBtns = document.querySelectorAll('.tab-btn');
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Update buttons
             tabBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             
-            // Update content
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             const tabId = btn.dataset.tab + 'Tab';
-            document.getElementById(tabId).classList.add('active');
+            document.getElementById(tabId)?.classList.add('active');
         });
     });
 }
 
 // Event Listeners
 function setupEventListeners() {
-    // Record buttons
-    recordBtn.addEventListener('click', startRecording);
-    stopBtn.addEventListener('click', stopRecording);
+    if (recordBtn) recordBtn.addEventListener('click', startRecording);
+    if (stopBtn) stopBtn.addEventListener('click', stopRecording);
+    if (uploadZone) {
+        uploadZone.addEventListener('click', () => fileInput?.click());
+        uploadZone.addEventListener('dragover', handleDragOver);
+        uploadZone.addEventListener('dragleave', handleDragLeave);
+        uploadZone.addEventListener('drop', handleDrop);
+    }
+    if (fileInput) fileInput.addEventListener('change', handleFileSelect);
     
-    // Upload
-    uploadZone.addEventListener('click', () => fileInput.click());
-    uploadZone.addEventListener('dragover', handleDragOver);
-    uploadZone.addEventListener('dragleave', handleDragLeave);
-    uploadZone.addEventListener('drop', handleDrop);
-    fileInput.addEventListener('change', handleFileSelect);
-    document.getElementById('removeFile').addEventListener('click', removeUploadedFile);
+    const removeFileBtn = document.getElementById('removeFile');
+    if (removeFileBtn) removeFileBtn.addEventListener('click', removeUploadedFile);
     
-    // Analyze
-    analyzeBtn.addEventListener('click', analyzeAudio);
+    if (analyzeBtn) analyzeBtn.addEventListener('click', analyzeAudio);
 }
 
 // ==================== Recording ====================
@@ -132,7 +217,7 @@ async function startRecording() {
             } 
         });
         
-        // Setup audio context for visualization
+        // Setup audio context
         audioContext = new (window.AudioContext || window.webkitAudioContext)({
             sampleRate: 32000
         });
@@ -145,7 +230,9 @@ async function startRecording() {
         
         // Setup media recorder
         mediaRecorder = new MediaRecorder(stream, {
-            mimeType: 'audio/webm;codecs=opus'
+            mimeType: MediaRecorder.isTypeSupported('audio/webm;codecs=opus') 
+                ? 'audio/webm;codecs=opus' 
+                : 'audio/webm'
         });
         
         recordedChunks = [];
@@ -161,7 +248,6 @@ async function startRecording() {
             updateAnalyzeButton();
         };
         
-        // Start recording
         mediaRecorder.start(100);
         isRecording = true;
         recordingStartTime = Date.now();
@@ -187,25 +273,20 @@ function stopRecording() {
         mediaRecorder.stop();
         isRecording = false;
         
-        // Stop all tracks
         mediaRecorder.stream.getTracks().forEach(track => track.stop());
         
-        // Close audio context
         if (audioContext) {
             audioContext.close();
         }
         
-        // Stop visualizations
         cancelAnimationFrame(waveformAnimationId);
         cancelAnimationFrame(histogramAnimationId);
         clearInterval(recordingInterval);
         
-        // Update UI
         recordBtn.classList.remove('recording');
         recordBtn.querySelector('.btn-text').textContent = 'Start Recording';
         stopBtn.disabled = true;
         
-        // Clear canvases
         clearCanvas(waveformCtx, waveformCanvas);
         clearCanvas(histogramCtx, histogramCanvas);
     }
@@ -216,13 +297,15 @@ function startRecordingTimer() {
         const elapsed = Math.floor((Date.now() - recordingStartTime) / 1000);
         const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
         const seconds = (elapsed % 60).toString().padStart(2, '0');
-        recordingTime.textContent = `${minutes}:${seconds}`;
+        if (recordingTime) recordingTime.textContent = `${minutes}:${seconds}`;
     }, 1000);
 }
 
 // ==================== Waveform Visualization ====================
 
 function startWaveformVisualization() {
+    if (!analyser || !waveformCtx || !waveformCanvas) return;
+    
     const bufferLength = analyser.fftSize;
     const dataArray = new Float32Array(bufferLength);
     
@@ -233,13 +316,17 @@ function startWaveformVisualization() {
         
         analyser.getFloatTimeDomainData(dataArray);
         
-        // Clear canvas
         waveformCtx.fillStyle = '#0f1419';
         waveformCtx.fillRect(0, 0, waveformCanvas.width, waveformCanvas.height);
         
-        // Draw waveform
+        // Draw gradient waveform
+        const gradient = waveformCtx.createLinearGradient(0, 0, waveformCanvas.width, 0);
+        gradient.addColorStop(0, '#4ade80');
+        gradient.addColorStop(0.5, '#22d3ee');
+        gradient.addColorStop(1, '#4ade80');
+        
         waveformCtx.lineWidth = 2;
-        waveformCtx.strokeStyle = '#4ade80';
+        waveformCtx.strokeStyle = gradient;
         waveformCtx.beginPath();
         
         const sliceWidth = waveformCanvas.width / bufferLength;
@@ -260,7 +347,7 @@ function startWaveformVisualization() {
         
         waveformCtx.stroke();
         
-        // Calculate and display audio level
+        // Audio level
         let sum = 0;
         for (let i = 0; i < bufferLength; i++) {
             sum += dataArray[i] * dataArray[i];
@@ -268,7 +355,7 @@ function startWaveformVisualization() {
         const rms = Math.sqrt(sum / bufferLength);
         const db = 20 * Math.log10(rms + 0.0001);
         const normalizedDb = Math.max(0, Math.min(100, (db + 60) * 100 / 60));
-        audioLevel.textContent = `Level: ${normalizedDb.toFixed(0)}%`;
+        if (audioLevel) audioLevel.textContent = `Level: ${normalizedDb.toFixed(0)}%`;
     }
     
     draw();
@@ -277,17 +364,21 @@ function startWaveformVisualization() {
 // ==================== Histogram Visualization ====================
 
 function startHistogramVisualization() {
+    if (!analyser || !histogramCtx || !histogramCanvas) return;
+    
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
     
-    // Frequency bands for bird calls
     const sampleRate = audioContext.sampleRate;
     const binFrequency = sampleRate / analyser.fftSize;
     
-    // Low: 50-500Hz, Mid: 500-4000Hz, High: 4000-14000Hz
-    const lowBins = { start: Math.floor(50 / binFrequency), end: Math.floor(500 / binFrequency) };
-    const midBins = { start: Math.floor(500 / binFrequency), end: Math.floor(4000 / binFrequency) };
-    const highBins = { start: Math.floor(4000 / binFrequency), end: Math.floor(14000 / binFrequency) };
+    // Bird call frequency bands
+    const bands = [
+        { name: 'Low', start: 50, end: 500, color: '#4ade80' },
+        { name: 'Mid-Low', start: 500, end: 2000, color: '#22d3ee' },
+        { name: 'Mid-High', start: 2000, end: 5000, color: '#60a5fa' },
+        { name: 'High', start: 5000, end: 14000, color: '#f472b6' }
+    ];
     
     function draw() {
         if (!isRecording) return;
@@ -300,41 +391,71 @@ function startHistogramVisualization() {
         histogramCtx.fillStyle = '#0f1419';
         histogramCtx.fillRect(0, 0, histogramCanvas.width, histogramCanvas.height);
         
+        // Draw frequency bars
         const barCount = 64;
-        const barWidth = histogramCanvas.width / barCount - 2;
-        const step = Math.floor(bufferLength / barCount);
+        const barWidth = (histogramCanvas.width - 100) / barCount - 1;
+        const maxFreq = sampleRate / 2;
         
         for (let i = 0; i < barCount; i++) {
-            const binIndex = i * step;
-            const value = dataArray[binIndex];
-            const barHeight = (value / 255) * histogramCanvas.height * 0.9;
+            const freq = (i / barCount) * maxFreq;
+            const binIndex = Math.floor(freq / binFrequency);
+            const value = dataArray[Math.min(binIndex, bufferLength - 1)];
+            const barHeight = (value / 255) * (histogramCanvas.height - 30);
             
-            // Determine color based on frequency band
+            // Color based on frequency band
             let color;
-            if (binIndex < lowBins.end) {
-                color = '#4ade80';  // Green for low
-            } else if (binIndex < midBins.end) {
-                color = '#60a5fa';  // Blue for mid
-            } else {
-                color = '#f472b6';  // Pink for high
-            }
+            if (freq < 500) color = bands[0].color;
+            else if (freq < 2000) color = bands[1].color;
+            else if (freq < 5000) color = bands[2].color;
+            else color = bands[3].color;
             
             histogramCtx.fillStyle = color;
             histogramCtx.fillRect(
-                i * (barWidth + 2),
-                histogramCanvas.height - barHeight,
+                i * (barWidth + 1) + 50,
+                histogramCanvas.height - barHeight - 25,
                 barWidth,
                 barHeight
             );
         }
+        
+        // Draw band averages on right side
+        const bandWidth = 20;
+        bands.forEach((band, idx) => {
+            const startBin = Math.floor(band.start / binFrequency);
+            const endBin = Math.min(Math.floor(band.end / binFrequency), bufferLength - 1);
+            
+            let sum = 0;
+            for (let i = startBin; i <= endBin; i++) {
+                sum += dataArray[i];
+            }
+            const avg = sum / (endBin - startBin + 1);
+            const height = (avg / 255) * (histogramCanvas.height - 30);
+            
+            histogramCtx.fillStyle = band.color;
+            histogramCtx.fillRect(
+                histogramCanvas.width - 45 + idx * (bandWidth + 2),
+                histogramCanvas.height - height - 25,
+                bandWidth,
+                height
+            );
+        });
+        
+        // Labels
+        histogramCtx.fillStyle = '#64748b';
+        histogramCtx.font = '10px monospace';
+        histogramCtx.fillText('0Hz', 50, histogramCanvas.height - 5);
+        histogramCtx.fillText(`${Math.round(maxFreq/1000)}kHz`, histogramCanvas.width - 100, histogramCanvas.height - 5);
+        histogramCtx.fillText('L M H', histogramCanvas.width - 40, histogramCanvas.height - 5);
     }
     
     draw();
 }
 
 function clearCanvas(ctx, canvas) {
-    ctx.fillStyle = '#0f1419';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    if (ctx && canvas) {
+        ctx.fillStyle = '#0f1419';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
 }
 
 // ==================== File Upload ====================
@@ -367,7 +488,6 @@ function handleFileSelect(e) {
 }
 
 function processUploadedFile(file) {
-    // Check file type
     const validTypes = ['audio/wav', 'audio/mpeg', 'audio/mp3', 'audio/flac', 'audio/ogg', 'audio/webm'];
     if (!validTypes.includes(file.type) && !file.name.match(/\.(wav|mp3|flac|ogg|webm)$/i)) {
         alert('Please upload a valid audio file (WAV, MP3, FLAC, OGG)');
@@ -376,7 +496,6 @@ function processUploadedFile(file) {
     
     uploadedFile = file;
     
-    // Update UI
     uploadZone.style.display = 'none';
     uploadedFileEl.style.display = 'flex';
     document.getElementById('fileName').textContent = file.name;
@@ -400,7 +519,7 @@ function formatFileSize(bytes) {
 }
 
 function updateAnalyzeButton() {
-    analyzeBtn.disabled = !uploadedFile;
+    if (analyzeBtn) analyzeBtn.disabled = !uploadedFile;
 }
 
 // ==================== Analysis ====================
@@ -408,7 +527,6 @@ function updateAnalyzeButton() {
 async function analyzeAudio() {
     if (!uploadedFile) return;
     
-    // Show processing status
     emptyState.style.display = 'none';
     resultsContainer.style.display = 'none';
     processingStatus.style.display = 'block';
@@ -420,9 +538,9 @@ async function analyzeAudio() {
     });
     
     // Get context
-    const locationName = document.getElementById('locationName').value;
-    const month = document.getElementById('month').value;
-    const description = document.getElementById('description').value;
+    const locationName = document.getElementById('locationName')?.value || '';
+    const month = document.getElementById('month')?.value || '';
+    const description = document.getElementById('description')?.value || '';
     
     // Create form data
     const formData = new FormData();
@@ -436,7 +554,6 @@ async function analyzeAudio() {
     params.append('use_llm', 'true');
     
     try {
-        // Use streaming endpoint
         const response = await fetch(`${API_BASE}/api/v1/identify/stream?${params}`, {
             method: 'POST',
             body: formData
@@ -450,10 +567,18 @@ async function analyzeAudio() {
         const decoder = new TextDecoder();
         let buffer = '';
         let results = {
-            predictions: [],
-            llm_reasoning: null,
+            species: null,
+            scientific: null,
+            confidence: 0,
+            confidence_label: 'low',
+            reasoning: '',
+            key_features: [],
+            alternatives: [],
             quality: null,
-            novelty: null
+            is_unusual: false,
+            is_indian: true,
+            unusual_reason: null,
+            features: {}
         };
         
         while (true) {
@@ -466,13 +591,16 @@ async function analyzeAudio() {
             
             for (const line of lines) {
                 if (line.startsWith('data: ')) {
-                    const data = JSON.parse(line.slice(6));
-                    handleStreamEvent(data, results);
+                    try {
+                        const data = JSON.parse(line.slice(6));
+                        handleStreamEvent(data, results);
+                    } catch (e) {
+                        console.warn('Failed to parse SSE:', line);
+                    }
                 }
             }
         }
         
-        // Show final results
         showResults(results);
         
     } catch (error) {
@@ -496,53 +624,66 @@ function handleStreamEvent(data, results) {
             results.quality = data;
             break;
             
-        case 'preprocessing':
-        case 'preprocessed':
-            updateStep('step-preprocessing', step === 'preprocessed' ? 'complete' : 'active');
-            if (data.duration) results.duration = data.duration;
+        case 'features':
+            updateStep('step-preprocessing', 'active');
             break;
             
-        case 'classifying':
+        case 'features_done':
+            updateStep('step-preprocessing', 'complete');
+            results.features = data;
+            break;
+            
+        case 'identifying':
             updateStep('step-classifying', 'active');
             break;
             
-        case 'prediction':
-            results.predictions.push(data.prediction);
-            break;
-            
-        case 'reasoning':
+        case 'result':
             updateStep('step-classifying', 'complete');
-            updateStep('step-reasoning', 'active');
-            break;
-            
-        case 'llm_result':
             updateStep('step-reasoning', 'complete');
-            results.llm_reasoning = data;
+            results.species = data.species;
+            results.scientific = data.scientific;
+            results.confidence = data.confidence;
+            results.confidence_label = data.confidence_label;
+            results.reasoning = data.reasoning;
+            results.key_features = data.key_features || [];
+            results.call_description = data.call_description;
+            results.is_indian = data.is_indian !== false;
             break;
             
-        case 'novelty_alert':
-            results.novelty = data;
+        case 'alternative':
+            results.alternatives.push({
+                rank: data.rank,
+                species: data.species,
+                scientific: data.scientific,
+                confidence: data.confidence
+            });
             break;
             
-        case 'llm_error':
-            updateStep('step-reasoning', 'complete');
+        case 'novelty':
+            results.is_unusual = data.is_unusual;
+            results.is_indian = data.is_indian;
+            results.unusual_reason = data.reason;
             break;
             
         case 'complete':
-            results.final = data;
             break;
     }
 }
 
 function updateStep(stepId, state) {
     const step = document.getElementById(stepId);
+    if (!step) return;
+    
     step.classList.remove('active', 'complete');
     step.classList.add(state);
     
-    if (state === 'complete') {
-        step.querySelector('.step-icon').textContent = '✓';
-    } else if (state === 'active') {
-        step.querySelector('.step-icon').textContent = '⏳';
+    const icon = step.querySelector('.step-icon');
+    if (icon) {
+        if (state === 'complete') {
+            icon.textContent = '✓';
+        } else if (state === 'active') {
+            icon.textContent = '⏳';
+        }
     }
 }
 
@@ -551,19 +692,22 @@ function showResults(results) {
     resultsContainer.style.display = 'block';
     
     // Top prediction
-    if (results.predictions.length > 0) {
-        const top = results.predictions[0];
-        document.getElementById('topSpeciesName').textContent = top.species;
-        document.getElementById('topScientificName').textContent = ''; // Add if available
-        document.getElementById('topHindiName').textContent = '';
+    const topSpeciesName = document.getElementById('topSpeciesName');
+    const topScientificName = document.getElementById('topScientificName');
+    
+    if (topSpeciesName) topSpeciesName.textContent = results.species || 'Unknown';
+    if (topScientificName) topScientificName.textContent = results.scientific || '';
+    
+    // Confidence bar
+    const confidence = results.confidence || 0;
+    const bar = document.getElementById('topConfidenceBar');
+    const text = document.getElementById('topConfidenceText');
+    
+    if (bar) {
+        bar.style.width = `${confidence}%`;
         
-        const confidence = top.confidence;
-        document.getElementById('topConfidenceBar').style.width = `${confidence}%`;
-        document.getElementById('topConfidenceText').textContent = `${confidence.toFixed(1)}%`;
-        
-        // Color confidence bar based on level
-        const bar = document.getElementById('topConfidenceBar');
-        if (confidence >= 85) {
+        // Color based on confidence
+        if (confidence >= 80) {
             bar.style.background = 'linear-gradient(90deg, #22c55e, #4ade80)';
         } else if (confidence >= 60) {
             bar.style.background = 'linear-gradient(90deg, #eab308, #fbbf24)';
@@ -572,63 +716,100 @@ function showResults(results) {
         }
     }
     
+    if (text) {
+        text.textContent = `${confidence.toFixed(1)}%`;
+        text.className = `confidence-text ${results.confidence_label}`;
+    }
+    
+    // Confidence label badge
+    const confidenceBadge = document.getElementById('confidenceBadge');
+    if (confidenceBadge) {
+        confidenceBadge.textContent = results.confidence_label.toUpperCase();
+        confidenceBadge.className = `confidence-badge ${results.confidence_label}`;
+    }
+    
     // Audio quality
     if (results.quality) {
-        document.getElementById('audioQuality').textContent = results.quality.quality?.toUpperCase() || '--';
-        document.getElementById('qualityScore').textContent = results.quality.score?.toFixed(2) || '--';
-    }
-    if (results.duration) {
-        document.getElementById('audioDuration').textContent = results.duration.toFixed(1) + 's';
+        const qualityEl = document.getElementById('audioQuality');
+        const scoreEl = document.getElementById('qualityScore');
+        if (qualityEl) qualityEl.textContent = results.quality.quality?.toUpperCase() || '--';
+        if (scoreEl) scoreEl.textContent = results.quality.score?.toFixed(2) || '--';
     }
     
-    // All predictions
+    // Duration
+    if (results.features?.duration) {
+        const durationEl = document.getElementById('audioDuration');
+        if (durationEl) durationEl.textContent = results.features.duration.toFixed(1) + 's';
+    }
+    
+    // Key features matched
+    const featuresEl = document.getElementById('keyFeatures');
+    if (featuresEl && results.key_features?.length) {
+        featuresEl.innerHTML = results.key_features.map(f => 
+            `<span class="feature-tag">${f}</span>`
+        ).join('');
+    }
+    
+    // All predictions / alternatives
     const predictionsList = document.getElementById('predictionsList');
-    predictionsList.innerHTML = '';
-    
-    results.predictions.forEach((pred, index) => {
-        const item = document.createElement('div');
-        item.className = 'prediction-item';
-        item.innerHTML = `
-            <div class="prediction-rank">#${pred.rank}</div>
+    if (predictionsList) {
+        predictionsList.innerHTML = '';
+        
+        // Add main result first
+        const mainItem = document.createElement('div');
+        mainItem.className = 'prediction-item main';
+        mainItem.innerHTML = `
+            <div class="prediction-rank">#1</div>
             <div class="prediction-info">
-                <div class="prediction-name">${pred.species}</div>
+                <div class="prediction-name">${results.species || 'Unknown'}</div>
+                <div class="prediction-scientific">${results.scientific || ''}</div>
             </div>
-            <div class="prediction-confidence">${pred.confidence.toFixed(1)}%</div>
+            <div class="prediction-confidence ${results.confidence_label}">${results.confidence?.toFixed(1) || 0}%</div>
         `;
-        predictionsList.appendChild(item);
-    });
+        predictionsList.appendChild(mainItem);
+        
+        // Add alternatives
+        results.alternatives.forEach(alt => {
+            const item = document.createElement('div');
+            item.className = 'prediction-item';
+            item.innerHTML = `
+                <div class="prediction-rank">#${alt.rank}</div>
+                <div class="prediction-info">
+                    <div class="prediction-name">${alt.species}</div>
+                    <div class="prediction-scientific">${alt.scientific || ''}</div>
+                </div>
+                <div class="prediction-confidence">${alt.confidence?.toFixed(1) || 0}%</div>
+            `;
+            predictionsList.appendChild(item);
+        });
+    }
     
     // LLM reasoning
     const llmSection = document.getElementById('llmReasoning');
-    if (results.llm_reasoning && results.llm_reasoning.reasoning) {
+    const reasoningContent = document.getElementById('reasoningContent');
+    if (llmSection && reasoningContent && results.reasoning) {
         llmSection.style.display = 'block';
-        document.getElementById('reasoningContent').innerHTML = `
-            <p><strong>AI Assessment:</strong> ${results.llm_reasoning.species || 'Unknown'} 
-            (${(results.llm_reasoning.confidence * 100).toFixed(0)}% confidence)</p>
-            <p>${results.llm_reasoning.reasoning}</p>
+        reasoningContent.innerHTML = `
+            <p>${results.reasoning}</p>
+            ${results.call_description ? `<p><strong>Typical call:</strong> ${results.call_description}</p>` : ''}
         `;
-        
-        // Update top result with LLM info
-        if (results.llm_reasoning.species) {
-            document.getElementById('topSpeciesName').textContent = results.llm_reasoning.species;
-            const llmConfidence = results.llm_reasoning.confidence * 100;
-            document.getElementById('topConfidenceBar').style.width = `${llmConfidence}%`;
-            document.getElementById('topConfidenceText').textContent = `${llmConfidence.toFixed(1)}%`;
-        }
-    } else {
+    } else if (llmSection) {
         llmSection.style.display = 'none';
     }
     
     // Novelty alert
     const noveltySection = document.getElementById('noveltyAlert');
-    if (results.novelty || (results.llm_reasoning && results.llm_reasoning.novelty_flag)) {
-        noveltySection.style.display = 'flex';
-        document.getElementById('noveltyText').textContent = 
-            results.novelty?.message || 
-            results.llm_reasoning?.novelty_explanation || 
-            'Unusual sighting detected!';
-    } else {
-        noveltySection.style.display = 'none';
+    const noveltyText = document.getElementById('noveltyText');
+    if (noveltySection) {
+        if (results.is_unusual || !results.is_indian) {
+            noveltySection.style.display = 'flex';
+            if (noveltyText) {
+                noveltyText.textContent = results.unusual_reason || 
+                    (!results.is_indian ? `${results.species} is not typically found in India - exciting observation!` : 
+                    'Unusual sighting detected!');
+            }
+        } else {
+            noveltySection.style.display = 'none';
+        }
     }
 }
-

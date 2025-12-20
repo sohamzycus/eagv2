@@ -207,14 +207,29 @@ class ZeroShotBirdIdentifier:
         # Build expert prompt
         prompt = self._build_identification_prompt(features, location, month, user_description)
         
-        # Call LLM
+        # Call LLM (synchronously using asyncio)
         try:
-            response = self.ollama.generate(
-                prompt,
-                system_prompt=self._get_expert_system_prompt(),
-                temperature=0.3,  # Lower for more deterministic
-                max_tokens=1000
-            )
+            import asyncio
+            
+            async def _generate():
+                return await self.ollama.generate(
+                    prompt,
+                    system_prompt=self._get_expert_system_prompt(),
+                    temperature=0.3,  # Lower for more deterministic
+                    max_tokens=1000
+                )
+            
+            # Run async in sync context
+            try:
+                loop = asyncio.get_event_loop()
+                if loop.is_running():
+                    # Use nest_asyncio for nested event loops
+                    import nest_asyncio
+                    nest_asyncio.apply()
+                response = loop.run_until_complete(_generate())
+            except RuntimeError:
+                # No event loop running
+                response = asyncio.run(_generate())
             
             # Parse response
             return self._parse_identification_response(response, features)

@@ -787,6 +787,204 @@ body {
     text-decoration: underline;
 }
 
+/* Confidence Badges */
+.result-badges {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.confidence-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border-radius: 20px;
+    text-transform: uppercase;
+}
+
+.confidence-badge.high {
+    background: var(--accent-primary);
+    color: var(--bg-primary);
+}
+
+.confidence-badge.medium {
+    background: var(--accent-warning);
+    color: var(--bg-primary);
+}
+
+.confidence-badge.low {
+    background: var(--accent-danger);
+    color: var(--text-primary);
+}
+
+/* Confidence Text Colors */
+.confidence-text.high { color: var(--accent-primary); }
+.confidence-text.medium { color: var(--accent-warning); }
+.confidence-text.low { color: var(--accent-danger); }
+
+/* Prediction Item Colors */
+.prediction-item.main {
+    background: linear-gradient(135deg, rgba(74, 222, 128, 0.15), rgba(34, 211, 238, 0.1));
+    border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+.prediction-confidence.high { color: var(--accent-primary); }
+.prediction-confidence.medium { color: var(--accent-warning); }
+.prediction-confidence.low { color: var(--accent-danger); }
+
+/* Confidence Meter Track */
+.confidence-track {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+/* Key Features */
+.key-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-top: 16px;
+}
+
+.feature-tag {
+    padding: 4px 10px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+}
+
+/* Novelty Alert Enhanced */
+.novelty-content {
+    flex: 1;
+}
+
+.novelty-title {
+    display: block;
+    font-weight: 600;
+    color: var(--accent-warning);
+    margin-bottom: 4px;
+}
+
+/* Live Detection Stream */
+.live-stream-panel {
+    background: var(--bg-tertiary);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    margin-top: 20px;
+}
+
+.live-stream-panel h4 {
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.live-hint {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+}
+
+.live-detections {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.live-detection {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--bg-card);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    animation: slideIn 0.3s ease;
+}
+
+.live-detection.new {
+    animation: highlightNew 1s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-10px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes highlightNew {
+    0% { background: rgba(74, 222, 128, 0.3); }
+    100% { background: var(--bg-card); }
+}
+
+.live-detection.high-confidence {
+    border-left: 3px solid var(--accent-primary);
+}
+
+.live-detection.medium-confidence {
+    border-left: 3px solid var(--accent-warning);
+}
+
+.detection-time {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    min-width: 70px;
+}
+
+.detection-species {
+    flex: 1;
+    font-weight: 500;
+}
+
+.detection-confidence {
+    font-weight: 600;
+    color: var(--accent-primary);
+}
+
+.detection-badge {
+    padding: 2px 8px;
+    font-size: 0.65rem;
+    background: rgba(244, 114, 182, 0.2);
+    color: var(--accent-tertiary);
+    border-radius: 10px;
+}
+
+.empty-live {
+    text-align: center;
+    padding: 20px;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+/* Empty State Hint */
+.empty-hint {
+    font-size: 0.8rem;
+    color: var(--accent-secondary);
+    margin-top: 8px;
+}
+
+/* Histogram Legend */
+.legend-color {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+    margin-right: 4px;
+}
+
+.legend-color.low { background: #4ade80; }
+.legend-color.mid-low { background: #22d3ee; }
+.legend-color.mid-high { background: #60a5fa; }
+.legend-color.high { background: #f472b6; }
+
 /* Responsive */
 @media (max-width: 768px) {
     .header {
@@ -806,6 +1004,10 @@ body {
         flex-direction: column;
         gap: 16px;
         text-align: center;
+    }
+    
+    .live-detection {
+        flex-wrap: wrap;
     }
 }
 
