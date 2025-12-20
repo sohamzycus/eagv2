@@ -5,7 +5,7 @@
 # Usage:
 #   ./deploy.sh local   - Run locally with Ollama
 #   ./deploy.sh docker  - Run in Docker containers
-#   ./deploy.sh cloud   - Deploy to cloud (FREE options)
+#   ./deploy.sh cloud   - Deploy to Google Cloud Run
 
 set -e
 
@@ -70,9 +70,7 @@ deploy_docker() {
     docker build -t birdsense .
     
     echo -e "${GREEN}🚀 Starting container...${NC}"
-    docker run -d -p 7860:7860 --name birdsense-app \
-        -e GROQ_API_KEY="${GROQ_API_KEY:-}" \
-        birdsense
+    docker run -d -p 7860:7860 --name birdsense-app birdsense
     
     echo ""
     echo -e "${GREEN}✅ Running at: http://localhost:7860${NC}"
@@ -81,72 +79,47 @@ deploy_docker() {
 }
 
 deploy_cloud() {
-    echo -e "${BLUE}☁️  Cloud Deployment Options${NC}"
+    echo -e "${BLUE}☁️  Deploy to Google Cloud Run${NC}"
     echo ""
-    echo "Your Docker image includes BirdNET + TensorFlow (~1.5GB)."
-    echo "Choose a platform that supports larger containers:"
+    echo "Google Cloud Run: FREE tier with 2GB RAM (enough for BirdNET)"
     echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo -e "${GREEN}OPTION 1: Google Cloud Run (RECOMMENDED - FREE)${NC}"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "✅ FREE: 2 million requests/month"
-    echo "✅ 2GB RAM (enough for BirdNET + TensorFlow)"
-    echo "✅ Auto-deploy from GitHub"
+    
+    if ! command -v gcloud &> /dev/null; then
+        echo -e "${YELLOW}Installing gcloud CLI...${NC}"
+        echo "Visit: https://cloud.google.com/sdk/docs/install"
+        echo ""
+        echo "After install, run:"
+        echo "  gcloud auth login"
+        echo "  ./deploy.sh cloud"
+        exit 1
+    fi
+    
+    echo -e "${GREEN}Deploying to Google Cloud Run...${NC}"
     echo ""
-    echo "Steps:"
-    echo "  1. Install gcloud CLI: https://cloud.google.com/sdk/docs/install"
-    echo "  2. Run these commands:"
+    
+    # Deploy
+    gcloud run deploy birdsense \
+        --source=. \
+        --region=us-central1 \
+        --memory=2Gi \
+        --cpu=1 \
+        --timeout=300 \
+        --allow-unauthenticated \
+        --port=7860
+    
     echo ""
-    echo "     gcloud auth login"
-    echo "     gcloud projects create birdsense-app --name='BirdSense'"
-    echo "     gcloud config set project birdsense-app"
-    echo "     gcloud services enable run.googleapis.com"
-    echo ""
-    echo "     # Build and deploy"
-    echo "     gcloud run deploy birdsense \\"
-    echo "       --source=. \\"
-    echo "       --region=us-central1 \\"
-    echo "       --memory=2Gi \\"
-    echo "       --allow-unauthenticated \\"
-    echo "       --set-env-vars=GROQ_API_KEY=\$GROQ_API_KEY"
-    echo ""
-    echo "  3. Your URL: https://birdsense-xxxxx.run.app"
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo -e "${YELLOW}OPTION 2: Fly.io (FREE tier)${NC}"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "✅ FREE: 3 shared VMs"
-    echo "✅ 1GB RAM (may need to optimize)"
-    echo ""
-    echo "  flyctl launch --dockerfile Dockerfile"
-    echo "  flyctl secrets set GROQ_API_KEY=xxx"
-    echo "  flyctl deploy"
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo -e "${YELLOW}OPTION 3: Railway.app${NC}"
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo "✅ \$5 free credits (enough for testing)"
-    echo "✅ Easy GitHub integration"
-    echo ""
-    echo "  1. Go to https://railway.app"
-    echo "  2. New Project → Deploy from GitHub"
-    echo "  3. Add GROQ_API_KEY in Variables"
-    echo ""
-    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    echo ""
-    echo -e "${GREEN}Get FREE Groq API key: https://console.groq.com${NC}"
-    echo "(Used as fallback when Ollama not available)"
+    echo -e "${GREEN}✅ Deployed! Your URL is shown above.${NC}"
 }
 
 show_help() {
     echo "Usage: ./deploy.sh [local|docker|cloud]"
     echo ""
     echo "Options:"
-    echo -e "  ${GREEN}local${NC}   - Run on your machine with Ollama (best accuracy)"
+    echo -e "  ${GREEN}local${NC}   - Run on your machine with Ollama"
     echo -e "  ${GREEN}docker${NC}  - Build and run Docker container locally"
-    echo -e "  ${GREEN}cloud${NC}   - Deploy to cloud (Google Cloud Run, Fly.io, Railway)"
+    echo -e "  ${GREEN}cloud${NC}   - Deploy to Google Cloud Run (FREE tier)"
     echo ""
-    echo "All options include full BirdNET + TensorFlow for best accuracy!"
+    echo "All options include full BirdNET + TensorFlow!"
 }
 
 case $MODE in

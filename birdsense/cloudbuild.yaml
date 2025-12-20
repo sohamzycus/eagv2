@@ -1,13 +1,8 @@
-# 🐦 BirdSense - Google Cloud Build & Run Configuration
+# 🐦 BirdSense - Google Cloud Build Configuration
 # Developed by Soham
 #
 # Auto-deploys to Cloud Run on GitHub push
 # FREE tier: 2 million requests/month, 2GB RAM
-#
-# Setup:
-# 1. Connect GitHub repo to Cloud Build
-# 2. Set GROQ_API_KEY in Secret Manager
-# 3. Push to main/master → Auto deploys!
 
 steps:
   # Build the Docker image
@@ -32,14 +27,10 @@ steps:
       - '--cpu=1'
       - '--timeout=300'
       - '--allow-unauthenticated'
-      - '--set-env-vars=GROQ_API_KEY=${_GROQ_API_KEY}'
+      - '--port=7860'
 
 images:
   - 'gcr.io/$PROJECT_ID/birdsense:$COMMIT_SHA'
 
-substitutions:
-  _GROQ_API_KEY: ''  # Set in Cloud Build trigger
-
 options:
   logging: CLOUD_LOGGING_ONLY
-

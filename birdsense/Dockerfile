@@ -1,12 +1,10 @@
 # 🐦 BirdSense - Full AI Bird Identification
 # Developed by Soham
 #
-# Includes: BirdNET + TensorFlow + LLM (complete local experience)
+# Includes: BirdNET + TensorFlow + Ollama LLM
 #
 # Build: docker build -t birdsense .
-# Run:   docker run -p 7860:7860 -e GROQ_API_KEY=xxx birdsense
-#
-# Deploy to: Google Cloud Run (free tier, 2GB RAM)
+# Run:   docker run -p 7860:7860 birdsense
 
 FROM python:3.12-slim
 
