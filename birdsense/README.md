@@ -1,310 +1,406 @@
-# 🐦 BirdSense - AI Bird Identification
+# 🐦 BirdSense - AI Bird Identification System
 
 **Developed by Soham**
 
-A novel hybrid AI system for bird identification combining multiple approaches for superior accuracy.
-
-## 🧠 Architecture
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                        BirdSense Hybrid Architecture                     │
-│                           Developed by Soham                             │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ┌─────────────┐     ┌─────────────┐     ┌─────────────┐                │
-│  │   AUDIO     │     │   IMAGE     │     │ DESCRIPTION │                │
-│  │   Input     │     │   Input     │     │   Input     │                │
-│  └──────┬──────┘     └──────┬──────┘     └──────┬──────┘                │
-│         │                   │                   │                        │
-│         ▼                   │                   │                        │
-│  ┌─────────────────┐        │                   │                        │
-│  │  META SAM-Audio │        │                   │                        │
-│  │  ─────────────  │        │                   │                        │
-│  │  • Noise filter │        │                   │                        │
-│  │  • Call isolate │        │                   │                        │
-│  │  • Segment det. │        │                   │                        │
-│  └────────┬────────┘        │                   │                        │
-│           │                 │                   │                        │
-│           ▼                 │                   │                        │
-│  ┌─────────────────┐        │                   │                        │
-│  │    BirdNET      │        │                   │                        │
-│  │   (Cornell)     │        │                   │                        │
-│  │  ─────────────  │        │                   │                        │
-│  │  • 6000+ species│        │                   │                        │
-│  │  • Spectrogram  │        │                   │                        │
-│  │  • CNN pattern  │        │                   │                        │
-│  └────────┬────────┘        │                   │                        │
-│           │                 │                   │                        │
-│           ▼                 ▼                   ▼                        │
-│  ┌─────────────────────────────────────────────────────────────┐        │
-│  │                    LLM Reasoning Layer                       │        │
-│  │                    ──────────────────                        │        │
-│  │   phi4 (14B)              LLaVA (7B)           phi4 (14B)    │        │
-│  │   ─────────               ─────────            ─────────     │        │
-│  │   • Context valid.        • Vision analysis    • Text reason │        │
-│  │   • Location filter       • Feature extract    • Description │        │
-│  │   • Season reason.        • Multi-bird det.    • matching    │        │
-│  └─────────────────────────────────────────────────────────────┘        │
-│                               │                                          │
-│                               ▼                                          │
-│                    ┌─────────────────────┐                               │
-│                    │   Deduplication &   │                               │
-│                    │   Confidence Merge  │                               │
-│                    └──────────┬──────────┘                               │
-│                               │                                          │
-│                               ▼                                          │
-│                    ┌─────────────────────┐                               │
-│                    │  STREAMING RESULTS  │                               │
-│                    │  ─────────────────  │                               │
-│                    │  • Real-time trail  │                               │
-│                    │  • Unique species   │                               │
-│                    │  • Wikipedia images │                               │
-│                    └─────────────────────┘                               │
-│                                                                          │
-└─────────────────────────────────────────────────────────────────────────┘
-```
-
-## ✨ Key Features
-
-### 1. **Hybrid BirdNET + LLM Pipeline**
-- BirdNET (Cornell Lab): Pattern-based spectrogram analysis for 6000+ species
-- LLM Validation: Contextual reasoning using location, season, and behavior
-- **Novel contribution**: Combines best of both approaches
-
-### 2. **META SAM-Audio Processing**
-- Inspired by Meta's Segment Anything Model
-- Isolates bird calls from background noise
-- Detects multiple birds in same recording
-- Frequency band separation for multi-species detection
-
-### 3. **Feature-Based Identification**
-- Systematic feature analysis (beak, head, body patterns)
-- No hardcoded species rules
-- Flexible for any bird species
-
-### 4. **Streaming Results**
-- Real-time analysis trail shows progress
-- Birds displayed as identified (not waiting for all)
-- Deduplication ensures each species shown once
-
-## 🚀 Quick Start
-
-### Option 1: Cloud Hosting (FREE, Full BirdNET, Auto-Deploy)
-
-Full Docker deployment with **BirdNET + TensorFlow** - same accuracy as local!
-
-```bash
-./deploy.sh cloud   # Shows step-by-step instructions
-```
-
-**Recommended: Google Cloud Run (FREE tier)**
-- ✅ 2GB RAM (runs full BirdNET + TensorFlow)
-- ✅ 2 million requests/month FREE
-- ✅ Auto-deploy on git push
-
-**Quick Setup:**
-```bash
-# 1. Install gcloud CLI, then:
-gcloud auth login
-gcloud run deploy birdsense --source=. --region=us-central1 --memory=2Gi --allow-unauthenticated
-
-# 2. Get your URL: https://birdsense-xxx.run.app
-```
-
-### Option 2: Local (Best for Development)
-
-```bash
-./deploy.sh local   # Sets up Ollama + BirdNET + runs app
-```
-
-### Option 3: Docker
-
-```bash
-./deploy.sh docker  # Builds and runs full container locally
-```
-
-### Option 4: Manual Setup
-
-```bash
-# 1. Prerequisites
-brew install python@3.12 ollama  # Mac
-# Or: curl -fsSL https://ollama.ai/install.sh | sh  # Linux
-
-# 2. Start Ollama and pull models
-ollama serve &
-ollama pull llava:7b
-ollama pull phi4
-
-# 3. Setup Python environment
-cd birdsense
-python3.12 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-
-# 4. Run
-python app.py
-# Open http://localhost:7860
-```
-
-### System Requirements
-
-| Component | Minimum | Recommended |
-|-----------|---------|-------------|
-| RAM | 8 GB | 16 GB |
-| Storage | 15 GB | 25 GB |
-| GPU | None (CPU works) | Apple M1+ or NVIDIA |
-| Python | 3.12 | 3.12 |
-
-## 📁 Project Structure
-
-```
-birdsense/
-├── app.py              # Main app (auto-detects Ollama or Groq)
-├── prompts.py          # External LLM prompts
-├── confusion_rules.py  # Feature-based validation
-├── feedback.py         # Feedback & analytics collection
-├── export_data.py      # Export collected data
-├── deploy.sh           # One-command deployment
-├── Dockerfile          # Full Docker image (BirdNET + TensorFlow)
-├── docker-compose.yml  # Local multi-container setup
-├── cloudbuild.yaml     # Google Cloud Run auto-deploy
-├── fly.toml            # Fly.io deployment config
-├── requirements.txt    # All dependencies (BirdNET included)
-├── .github/workflows/  # CI/CD pipeline
-└── README.md           # This file
-```
-
-### Full Feature Parity: Local = Cloud
-
-| Feature | Local | Cloud (Docker) |
-|---------|-------|----------------|
-| **BirdNET** | ✅ | ✅ |
-| **TensorFlow** | ✅ | ✅ |
-| **LLM Vision** | Ollama LLaVA | Groq Llama 3.2 |
-| **LLM Text** | Ollama phi4 | Groq Llama 3.3 |
-| **Accuracy** | Full | Full |
-
-## 🔧 Technology Stack
-
-| Component | Technology | Purpose |
-|-----------|------------|---------|
-| Audio ID | BirdNET (Cornell) + TensorFlow | Spectrogram pattern matching |
-| Image ID | LLaVA 7B | Vision-language analysis |
-| Text ID | phi4 (14B) | Reasoning & validation |
-| Audio Processing | META SAM-Audio | Noise filtering, call isolation |
-| UI | Gradio | Web interface |
-| Image Source | Wikipedia/iNaturalist | Reference photos |
-
-## 🧪 What Makes BirdSense Novel
-
-1. **Hybrid Ensemble**: First to combine BirdNET + LLM for bird ID
-2. **Contextual Validation**: LLM validates ML predictions using location/season
-3. **Multi-Modal Fusion**: Audio + Image + Description analysis
-4. **Streaming UX**: Real-time progress and results
-5. **100% Local**: No cloud APIs required
-
-## 📊 Comparison
-
-| Feature | BirdNET Only | GPT-5 | BirdSense |
-|---------|-------------|-------|-----------|
-| Spectrogram Analysis | ✅ | ❌ | ✅ |
-| Contextual Reasoning | ❌ | ✅ | ✅ |
-| Location Awareness | Basic | ✅ | ✅ |
-| Multi-modal | Audio only | Text/Image | **All 3** |
-| Runs Locally | ✅ | ❌ | ✅ |
-| Species Count | 6000+ | General | **6000+** |
-
-## 🌐 Hosting for Testing
-
-Share BirdSense with others for testing and feedback collection:
-
-### Quick Share (Gradio Public URL)
-
-```bash
-# Creates a temporary public URL (valid for 72 hours)
-python host.py
-
-# Output: "Running on public URL: https://xxx.gradio.live"
-```
-
-This uses Gradio's built-in sharing feature - no extra setup required!
-
-### Persistent Hosting Options
-
-| Method | Cost | Setup Complexity | GPU |
-|--------|------|------------------|-----|
-| **Gradio Share** | Free | ⭐ (1 command) | Your local GPU |
-| **ngrok** | Free tier | ⭐⭐ | Your local GPU |
-| **Railway.app** | ~$5/mo | ⭐⭐⭐ | CPU only (slow) |
-| **VPS + Ollama** | ~$20/mo | ⭐⭐⭐⭐ | Depends on VPS |
-
-### Share Link Workflow
-
-```bash
-# 1. Start public hosting
-python host.py
-
-# 2. Share the gradio.live URL with testers
-# 3. Testers use the Feedback tab to report results
-# 4. Export feedback when done:
-python export_data.py --export all
-```
-
-## 📊 Feedback & Sample Collection
-
-BirdSense includes built-in audit and feedback collection:
-
-### In-App Feedback
-- **Feedback Tab**: Users can report if identification was correct/incorrect
-- **Correct Species**: When wrong, users can provide the correct species
-- **Notes**: Additional feedback for edge cases
-
-### Data Export
-
-```bash
-# Show summary of collected data
-python export_data.py
-
-# Export feedback as JSON
-python export_data.py --export feedback
-
-# Export samples (audio/images with corrections)
-python export_data.py --export samples
-
-# Export everything
-python export_data.py --export all
-```
-
-### Analytics Dashboard
-Access the **📊 Analytics** tab in the app to see:
-- Total predictions
-- Accuracy from user feedback
-- Top identified species
-- Breakdown by input type
-
-## 📁 Project Structure
-
-```
-birdsense/
-├── app.py              # Main application (Gradio UI + pipelines)
-├── prompts.py          # External LLM prompts (no hardcoding)
-├── confusion_rules.py  # Feature-based validation
-├── feedback.py         # Feedback & sample collection
-├── host.py             # Public hosting script
-├── export_data.py      # Data export utility
-├── requirements.txt    # Python dependencies
-└── README.md           # This file
-```
-
-## 🔮 Future Roadmap
-
-- [ ] Geolocation auto-filtering (lat/lon based species filtering)
-- [ ] Spectrogram visualization
-- [ ] Custom model fine-tuning on regional data
-- [ ] Mobile app (TensorFlow Lite)
-- [ ] Offline mode with embedded models
+A novel hybrid AI system for intelligent bird identification using audio, images, and descriptions. BirdSense combines cutting-edge deep learning with traditional ornithological knowledge to deliver accurate species identification.
 
 ---
 
-**Developed by Soham** | BirdSense v1.0
+## 🌟 Key Features
+
+| Feature | Description |
+|---------|-------------|
+| **🎵 Audio Identification** | META SAM-Audio + BirdNET hybrid with multi-bird detection |
+| **📷 Image Identification** | Vision AI with feature-based analysis |
+| **📝 Description Matching** | Natural language bird identification |
+| **🇮🇳 India-Specific Info** | Local names, habitats, birding spots |
+| **🔄 Multi-Backend Support** | Ollama (local) or Azure OpenAI (cloud) |
+| **📊 Streaming Results** | Real-time analysis trail with accordion view |
+
+---
+
+## 🏗️ Novel Hybrid Architecture
+
+BirdSense introduces a **novel multi-stage hybrid architecture** that combines specialized ML models with large language models for superior accuracy.
+
+### Audio Identification Pipeline
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    BIRDSENSE AUDIO PIPELINE                         │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  AUDIO INPUT                                                        │
+│       │                                                             │
+│       ▼                                                             │
+│  ┌─────────────────────────────────────┐                           │
+│  │  STAGE 1: META SAM-Audio            │                           │
+│  │  ├── Noise filtering                │                           │
+│  │  ├── Bird call segmentation         │                           │
+│  │  └── Frequency band separation:     │                           │
+│  │      • Very Low (100-500 Hz) - Owls │                           │
+│  │      • Low (500-1500 Hz) - Crows    │                           │
+│  │      • Medium (1500-3000 Hz) - Mynas│                           │
+│  │      • High (3000-6000 Hz) - Finches│                           │
+│  │      • Very High (6000+ Hz)         │                           │
+│  └─────────────────────────────────────┘                           │
+│       │                                                             │
+│       ▼                                                             │
+│  ┌─────────────────────────────────────┐                           │
+│  │  STAGE 2: BirdNET (Cornell Lab)     │                           │
+│  │  ├── Spectrogram analysis           │                           │
+│  │  ├── 6000+ species recognition      │                           │
+│  │  └── Multi-pass analysis:           │                           │
+│  │      • Full audio analysis          │                           │
+│  │      • Per-frequency-band analysis  │                           │
+│  └─────────────────────────────────────┘                           │
+│       │                                                             │
+│       ▼                                                             │
+│  ┌─────────────────────────────────────┐                           │
+│  │  STAGE 3: Feature Extraction        │                           │
+│  │  ├── Frequency range analysis       │                           │
+│  │  ├── Pattern detection              │                           │
+│  │  ├── Syllable counting              │                           │
+│  │  └── Rhythm classification          │                           │
+│  └─────────────────────────────────────┘                           │
+│       │                                                             │
+│       ▼                                                             │
+│  ┌─────────────────────────────────────┐                           │
+│  │  STAGE 4: LLM Validation Layer      │                           │
+│  │  ├── Contextual reasoning           │                           │
+│  │  ├── Location/season validation     │                           │
+│  │  └── Confidence adjustment          │                           │
+│  └─────────────────────────────────────┘                           │
+│       │                                                             │
+│       ▼                                                             │
+│  IDENTIFIED BIRDS (with enriched info)                             │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Image Identification Pipeline
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                    BIRDSENSE IMAGE PIPELINE                         │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                     │
+│  IMAGE INPUT                                                        │
+│       │                                                             │
+│       ▼                                                             │
+│  ┌─────────────────────────────────────┐                           │
+│  │  Vision Model (LLaVA/GPT-4o)        │                           │
+│  │  ├── Systematic feature analysis:   │                           │
+│  │  │   • BEAK: Color, shape           │                           │
+│  │  │   • HEAD: Crown, eye pattern     │                           │
+│  │  │   • BODY: Plumage, breast        │                           │
+│  │  │   • SIZE: Relative sizing        │                           │
+│  │  └── Multi-bird detection           │                           │
+│  └─────────────────────────────────────┘                           │
+│       │                                                             │
+│       ▼                                                             │
+│  ┌─────────────────────────────────────┐                           │
+│  │  Enrichment Layer                   │                           │
+│  │  ├── Wikipedia image fetch          │                           │
+│  │  ├── Species information            │                           │
+│  │  ├── Habitat & diet data            │                           │
+│  │  └── India-specific info            │                           │
+│  └─────────────────────────────────────┘                           │
+│       │                                                             │
+│       ▼                                                             │
+│  IDENTIFIED BIRDS (with images & facts)                            │
+│                                                                     │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 📁 Project Structure
+
+```
+birdsense/
+├── app.py              # Gradio UI (clean, minimal)
+├── providers.py        # LLM Provider Factory Pattern
+│                       # ├── OllamaProvider (local)
+│                       # ├── OpenAIProvider (public API)
+│                       # └── AzureOpenAIProvider (enterprise)
+├── analysis.py         # Bird Identification Logic
+│                       # ├── SAMAudio (source separation)
+│                       # ├── BirdNET integration
+│                       # ├── Feature extraction
+│                       # └── Result formatting
+├── prompts.py          # Model-specific prompts
+├── confusion_rules.py  # Feature validation hints
+├── feedback.py         # User feedback collection
+├── requirements.txt    # Python dependencies
+├── Dockerfile          # Cloud deployment
+└── .env               # Local configuration (gitignored)
+```
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Python 3.12
+- Ollama (for local models)
+- Docker (for cloud deployment)
+
+### Local Development
+
+#### 1. Clone and Setup
+
+```bash
+cd birdsense
+
+# Create virtual environment
+python3.12 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
+#### 2. Install Ollama Models (Local Backend)
+
+```bash
+# Install Ollama from https://ollama.ai
+ollama pull llava:7b      # Vision model
+ollama pull phi4:latest   # Text model
+```
+
+#### 3. Configure Environment
+
+```bash
+# Copy template
+cp env-template.txt .env
+
+# Edit .env with your settings:
+# Option A: Use Ollama (local) - no API key needed
+# Option B: Use Azure OpenAI - add your credentials
+```
+
+**Example `.env` for Azure OpenAI:**
+```env
+IS_AZURE=true
+LITELLM_API_KEY=your-azure-api-key
+LITELLM_API_BASE=https://your-resource.azure-api.net/your-endpoint
+AZURE_DEPLOYMENT=your-deployment-name
+AZURE_API_VERSION=2024-02-15-preview
+LITELLM_VISION_MODEL=gpt-4o
+LITELLM_TEXT_MODEL=gpt-4o
+```
+
+#### 4. Run Locally
+
+```bash
+python app.py
+```
+
+Open **http://localhost:7860** in your browser.
+
+---
+
+## ☁️ Cloud Deployment
+
+### Deploy to Google Cloud Run
+
+#### 1. Build Docker Image
+
+```bash
+# Build for linux/amd64 (Cloud Run requirement)
+docker buildx build --platform linux/amd64 -t your-dockerhub/birdsense:latest --push .
+```
+
+#### 2. Deploy to Cloud Run
+
+```bash
+gcloud run deploy birdsense \
+  --image docker.io/your-dockerhub/birdsense:latest \
+  --platform managed \
+  --region us-central1 \
+  --allow-unauthenticated \
+  --memory 2Gi \
+  --cpu 2 \
+  --timeout 300 \
+  --set-env-vars "IS_AZURE=true" \
+  --set-env-vars "LITELLM_API_KEY=your-api-key" \
+  --set-env-vars "LITELLM_API_BASE=https://your-endpoint" \
+  --set-env-vars "AZURE_DEPLOYMENT=your-deployment" \
+  --set-env-vars "AZURE_API_VERSION=2024-02-15-preview" \
+  --set-env-vars "LITELLM_VISION_MODEL=gpt-4o" \
+  --set-env-vars "LITELLM_TEXT_MODEL=gpt-4o" \
+  --port 7860
+```
+
+#### 3. Verify Deployment
+
+```bash
+# Get service URL
+gcloud run services describe birdsense --region us-central1 --format 'value(status.url)'
+
+# Test
+curl https://your-service-url.run.app
+```
+
+### Deploy with Docker Compose (Self-hosted)
+
+```yaml
+# docker-compose.yml
+version: '3.8'
+services:
+  birdsense:
+    image: your-dockerhub/birdsense:latest
+    ports:
+      - "7860:7860"
+    environment:
+      - IS_AZURE=true
+      - LITELLM_API_KEY=${LITELLM_API_KEY}
+      - LITELLM_API_BASE=${LITELLM_API_BASE}
+      - AZURE_DEPLOYMENT=${AZURE_DEPLOYMENT}
+    restart: unless-stopped
+```
+
+```bash
+docker-compose up -d
+```
+
+---
+
+## 🔧 Backend Configuration
+
+### Option 1: Ollama (Local - Free)
+
+Best for development and privacy-conscious deployments.
+
+| Model | Purpose | Size |
+|-------|---------|------|
+| LLaVA 7B | Vision | ~4GB |
+| phi4 14B | Text/Reasoning | ~8GB |
+
+**Quality**: ⭐⭐⭐⭐ (Good)
+
+### Option 2: Azure OpenAI (Enterprise)
+
+Best for production with enterprise security.
+
+| Model | Purpose |
+|-------|---------|
+| GPT-4o | Vision + Text |
+
+**Quality**: ⭐⭐⭐⭐⭐ (Excellent)
+
+### Option 3: OpenAI Public API
+
+Best for quick cloud deployment.
+
+```env
+IS_AZURE=false
+LITELLM_API_KEY=sk-your-openai-key
+LITELLM_API_BASE=https://api.openai.com
+LITELLM_VISION_MODEL=gpt-4o
+LITELLM_TEXT_MODEL=gpt-4o
+```
+
+---
+
+## 🎯 API Endpoints
+
+BirdSense uses Gradio's built-in API. Access programmatically:
+
+```python
+from gradio_client import Client
+
+client = Client("https://your-birdsense-url")
+
+# Image identification
+result = client.predict(
+    image="path/to/bird.jpg",
+    location="Mumbai, India",
+    api_name="/identify_image"
+)
+
+# Audio identification  
+result = client.predict(
+    audio="path/to/bird_call.wav",
+    location="Kerala, India",
+    month="March",
+    api_name="/identify_audio"
+)
+```
+
+---
+
+## 📊 Technical Stack
+
+| Component | Technology |
+|-----------|------------|
+| **UI Framework** | Gradio 4.x |
+| **Audio Analysis** | BirdNET (TensorFlow), scipy, librosa |
+| **Vision Models** | LLaVA 7B, GPT-4o |
+| **Text Models** | phi4 14B, GPT-4o |
+| **Image Sources** | Wikipedia, Wikimedia Commons, iNaturalist |
+| **Containerization** | Docker |
+| **Cloud Platform** | Google Cloud Run |
+
+---
+
+## 🧪 Testing
+
+### Test Audio Multi-Bird Detection
+
+```python
+# Verify SAM-Audio + BirdNET pipeline
+from analysis import identify_audio_streaming
+import numpy as np
+
+# Generate test audio or load from file
+# The pipeline will:
+# 1. Separate frequency bands
+# 2. Run BirdNET on each band
+# 3. Deduplicate and merge results
+```
+
+### Test Image Identification
+
+```python
+from analysis import fetch_bird_image
+
+# Verify image fetching uses scientific name
+url = fetch_bird_image("Great Tit", "Parus major")
+print(f"Image URL: {url}")  # Should return Wikipedia image
+```
+
+---
+
+## 🔄 Recent Updates
+
+### v5.0 (Latest)
+- ✅ **Multi-bird audio detection** via SAM-Audio frequency separation
+- ✅ **Fixed bird image fetching** using scientific names
+- ✅ **India-specific information** always included
+- ✅ **Accordion UI** for multiple results
+- ✅ **Refactored architecture** with Factory Pattern
+- ✅ **Azure OpenAI support** for enterprise deployment
+
+### Architecture Improvements
+- `providers.py` - Clean LLM backend abstraction
+- `analysis.py` - Separated identification logic
+- `prompts.py` - Externalized all LLM prompts
+
+---
+
+## 🙏 Acknowledgments
+
+- **Cornell Lab of Ornithology** - BirdNET model
+- **Meta AI** - LLaVA vision-language model
+- **OpenAI / Microsoft** - GPT-4o models
+- **Ollama** - Local model serving
+- **Wikipedia / iNaturalist** - Bird images and data
+
+---
+
+**🐦 BirdSense** - *Bringing AI to Bird Identification*
+
+*Developed by Soham*
