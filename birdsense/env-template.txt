@@ -1,0 +1,18 @@
+# BirdSense Environment Configuration
+# =================================
+# Copy this file to .env and fill in your values:
+#   cp env-template.txt .env
+#
+# IMPORTANT: .env file is ignored by git (contains secrets)
+
+# ============ LiteLLM Enterprise API ============
+# Zycus Internal - REQUIRES VPN ACCESS
+LITELLM_API_KEY=your-api-key-here
+LITELLM_API_BASE=https://litellm-rm.zycus.net
+LITELLM_VISION_MODEL=gpt-4o-201124-payg-eastus
+LITELLM_TEXT_MODEL=gpt-5.2-payg-global
+
+# ============ Ollama (Local) ============
+# Default: http://localhost:11434
+OLLAMA_HOST=http://localhost:11434
+
