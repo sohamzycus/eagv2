@@ -34,7 +34,11 @@ import os
 from prompts import (
     AUDIO_IDENTIFICATION_PROMPT,
     IMAGE_IDENTIFICATION_PROMPT,
-    DESCRIPTION_IDENTIFICATION_PROMPT
+    DESCRIPTION_IDENTIFICATION_PROMPT,
+    get_audio_prompt,
+    get_image_prompt,
+    get_description_prompt,
+    MODEL_INFO
 )
 
 # Import confusion correction rules (post-ML validation)
@@ -81,11 +85,115 @@ DEBUG = True
 OLLAMA_VISION_MODEL = "llava:7b"
 OLLAMA_TEXT_MODEL = "phi4:latest"
 
-# LiteLLM Enterprise API (Zycus)
-LITELLM_API_KEY = os.environ.get("LITELLM_API_KEY", "sk-ZQtlfBqmcgxuHdTJ30dYHg")
+# LiteLLM Enterprise API (Zycus - requires VPN)
+# Set these via environment variables or .env file
+# DO NOT hardcode API keys in source code!
+LITELLM_API_KEY = os.environ.get("LITELLM_API_KEY", "")
 LITELLM_API_BASE = os.environ.get("LITELLM_API_BASE", "https://litellm-rm.zycus.net")
 LITELLM_VISION_MODEL = os.environ.get("LITELLM_VISION_MODEL", "gpt-4o-201124-payg-eastus")
 LITELLM_TEXT_MODEL = os.environ.get("LITELLM_TEXT_MODEL", "gpt-5.2-payg-global")
+
+# Try to load from .env file if python-dotenv is available
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    # Reload after dotenv
+    LITELLM_API_KEY = os.environ.get("LITELLM_API_KEY", LITELLM_API_KEY)
+    LITELLM_API_BASE = os.environ.get("LITELLM_API_BASE", LITELLM_API_BASE)
+    LITELLM_VISION_MODEL = os.environ.get("LITELLM_VISION_MODEL", LITELLM_VISION_MODEL)
+    LITELLM_TEXT_MODEL = os.environ.get("LITELLM_TEXT_MODEL", LITELLM_TEXT_MODEL)
+except ImportError:
+    pass  # dotenv not installed, use environment variables directly
+
+# Active backend selection (can be toggled via UI)
+# Options: "ollama", "litellm", "auto"
+ACTIVE_BACKEND = "auto"  # Auto selects based on availability
+
+def set_backend(backend: str) -> str:
+    """Set the active LLM backend."""
+    global ACTIVE_BACKEND
+    ACTIVE_BACKEND = backend
+    return get_backend_status_html()
+
+def get_effective_backend() -> str:
+    """Get the effectively active backend (resolves 'auto')."""
+    global ACTIVE_BACKEND, OLLAMA_AVAILABLE, LITELLM_AVAILABLE
+    if ACTIVE_BACKEND == "auto":
+        if OLLAMA_AVAILABLE:
+            return "ollama"
+        elif LITELLM_AVAILABLE:
+            return "litellm"
+        return "none"
+    return ACTIVE_BACKEND
+
+def get_model_info(task: str) -> dict:
+    """Get info about the model being used for a task (vision/text/audio)."""
+    backend = get_effective_backend()
+    if backend in MODEL_INFO:
+        return MODEL_INFO[backend].get(task, {"name": "Unknown", "provider": backend, "type": task})
+    return {"name": "Not Available", "provider": "None", "type": task}
+
+def get_backend_status_html() -> str:
+    """Generate HTML status display for current backend."""
+    backend = get_effective_backend()
+    ollama_status = "🟢" if OLLAMA_AVAILABLE else "🔴"
+    litellm_status = "🟢" if LITELLM_AVAILABLE else "🔴"
+    litellm_key_status = "🔑" if LITELLM_API_KEY else "⚠️"
+    
+    error_html = ""
+    
+    if backend == "ollama":
+        vision_model = "LLaVA 7B"
+        text_model = "phi4 14B"
+        bg_gradient = "linear-gradient(135deg, #065f46, #047857)"  # Green gradient
+        status_text = "🟢 Ollama (Local)"
+        border_color = "#10b981"
+    elif backend == "litellm":
+        if LITELLM_AVAILABLE:
+            vision_model = "GPT-4o"
+            text_model = "GPT-5.2"
+            bg_gradient = "linear-gradient(135deg, #7c3aed, #8b5cf6)"  # Purple gradient
+            status_text = "🟣 LiteLLM (Enterprise)"
+            border_color = "#8b5cf6"
+        else:
+            vision_model = "⚠️"
+            text_model = "⚠️"
+            bg_gradient = "linear-gradient(135deg, #d97706, #f59e0b)"  # Orange/warning
+            status_text = "⚠️ LiteLLM (Connecting...)"
+            border_color = "#f59e0b"
+            if LITELLM_ERROR:
+                error_html = f'<div style="width:100%;margin-top:8px;padding:8px;background:rgba(0,0,0,0.2);border-radius:6px;font-size:0.85em;">❌ {LITELLM_ERROR}</div>'
+    else:
+        vision_model = "None"
+        text_model = "None"
+        bg_gradient = "linear-gradient(135deg, #dc2626, #ef4444)"  # Red gradient
+        status_text = "🔴 No Backend"
+        border_color = "#ef4444"
+    
+    birdnet_status = "🟢" if BIRDNET_AVAILABLE else "🔴"
+    
+    return f"""<div style="
+        font-family: 'SF Pro Display', -apple-system, system-ui, sans-serif;
+        padding: 12px 20px;
+        background: {bg_gradient};
+        border-radius: 12px;
+        border: 2px solid {border_color};
+        color: white;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    ">
+        <span style="font-weight: 600; font-size: 1.1em;">{status_text}</span>
+        <span style="opacity: 0.9;">Vision: <b>{vision_model}</b></span>
+        <span style="opacity: 0.9;">Text: <b>{text_model}</b></span>
+        <span style="opacity: 0.9;">BirdNET: {birdnet_status}</span>
+        <span style="opacity: 0.7; font-size: 0.85em; margin-left: auto;">
+            Ollama: {ollama_status} | LiteLLM: {litellm_status} {litellm_key_status}
+        </span>
+        {error_html}
+    </div>"""
 
 def check_ollama_available():
     """Check if Ollama is running."""
@@ -95,22 +203,68 @@ def check_ollama_available():
     except:
         return False
 
+LITELLM_ERROR = ""  # Store last error for display
+
 def check_litellm_available():
-    """Check if LiteLLM API is accessible."""
+    """Check if LiteLLM API is configured and accessible."""
+    global LITELLM_ERROR
+    
     if not LITELLM_API_KEY:
+        LITELLM_ERROR = "API key not set. Create .env file with LITELLM_API_KEY"
+        print(f"⚠️ LiteLLM: {LITELLM_ERROR}")
         return False
+    
+    if not LITELLM_API_BASE:
+        LITELLM_ERROR = "API base URL not set"
+        return False
+    
+    # Test actual connectivity
     try:
-        resp = requests.get(
-            f"{LITELLM_API_BASE}/v1/models",
-            headers={"Authorization": f"Bearer {LITELLM_API_KEY}"},
-            timeout=5
+        print(f"🔍 Testing LiteLLM at {LITELLM_API_BASE}...")
+        resp = requests.post(
+            f"{LITELLM_API_BASE}/v1/chat/completions",
+            headers={
+                "Authorization": f"Bearer {LITELLM_API_KEY}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "model": LITELLM_TEXT_MODEL,
+                "messages": [{"role": "user", "content": "hi"}],
+                "max_tokens": 5
+            },
+            timeout=15,
+            verify=False  # Skip SSL verification for internal endpoints
         )
-        return resp.status_code == 200
-    except:
+        if resp.status_code == 200:
+            print(f"✅ LiteLLM connected! Model: {LITELLM_TEXT_MODEL}")
+            LITELLM_ERROR = ""
+            return True
+        else:
+            LITELLM_ERROR = f"API returned {resp.status_code}: {resp.text[:100]}"
+            print(f"⚠️ LiteLLM: {LITELLM_ERROR}")
+            return False
+    except requests.exceptions.SSLError as e:
+        LITELLM_ERROR = "SSL Error - Are you connected to VPN?"
+        print(f"⚠️ LiteLLM SSL Error: {e}")
+        print("   → This endpoint likely requires VPN access")
         return False
+    except requests.exceptions.ConnectionError as e:
+        LITELLM_ERROR = "Connection failed - Check VPN/network"
+        print(f"⚠️ LiteLLM Connection Error: {e}")
+        return False
+    except Exception as e:
+        LITELLM_ERROR = f"Error: {str(e)[:50]}"
+        print(f"⚠️ LiteLLM Error: {e}")
+        return False
+
+# Suppress SSL warnings for internal LiteLLM endpoint
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 OLLAMA_AVAILABLE = check_ollama_available()
 LITELLM_AVAILABLE = check_litellm_available()
+
+print(f"🔧 Config: LITELLM_API_KEY={'set' if LITELLM_API_KEY else 'not set'}, LITELLM_API_BASE={LITELLM_API_BASE}")
 
 if OLLAMA_AVAILABLE:
     print("✅ Using Ollama (local) - LLaVA + phi4")
@@ -409,7 +563,9 @@ def check_ollama():
 
 
 def call_llava(image: Image.Image, prompt: str) -> str:
-    """Call vision model (Ollama LLaVA or LiteLLM GPT-4o)."""
+    """Call vision model based on selected backend."""
+    backend = get_effective_backend()
+    
     try:
         max_size = 800
         if max(image.size) > max_size:
@@ -420,9 +576,10 @@ def call_llava(image: Image.Image, prompt: str) -> str:
         image.save(buffer, format="JPEG", quality=85)
         img_b64 = base64.b64encode(buffer.getvalue()).decode()
         
-        if OLLAMA_AVAILABLE:
+        if backend == "ollama" and OLLAMA_AVAILABLE:
             # Use local Ollama LLaVA
-            log("Calling Ollama LLaVA...")
+            model_info = get_model_info("vision")
+            log(f"Calling {model_info['name']} via {model_info['provider']}...")
             resp = requests.post(
                 f"{OLLAMA_URL}/api/generate",
                 json={"model": OLLAMA_VISION_MODEL, "prompt": prompt, "images": [img_b64], "stream": False,
@@ -432,9 +589,10 @@ def call_llava(image: Image.Image, prompt: str) -> str:
             if resp.status_code == 200:
                 return resp.json().get("response", "")
         
-        elif LITELLM_AVAILABLE:
-            # Use LiteLLM API with GPT-4o (excellent for vision)
-            log(f"Calling LiteLLM {LITELLM_VISION_MODEL}...")
+        elif backend == "litellm" and LITELLM_AVAILABLE:
+            # Use LiteLLM API with GPT-4o
+            model_info = get_model_info("vision")
+            log(f"Calling {model_info['name']} via {model_info['provider']}...")
             resp = requests.post(
                 f"{LITELLM_API_BASE}/v1/chat/completions",
                 headers={
@@ -455,12 +613,15 @@ def call_llava(image: Image.Image, prompt: str) -> str:
                     "max_tokens": 1200,
                     "temperature": 0.1
                 },
-                timeout=120
+                timeout=120,
+                verify=False  # Skip SSL for internal endpoint
             )
             if resp.status_code == 200:
                 return resp.json()["choices"][0]["message"]["content"]
             else:
-                log(f"LiteLLM error: {resp.status_code} - {resp.text[:500]}")
+                log(f"LiteLLM Vision error: {resp.status_code} - {resp.text[:500]}")
+        else:
+            log(f"No vision backend available (backend={backend})")
                 
     except Exception as e:
         log(f"Vision model error: {e}")
@@ -468,11 +629,14 @@ def call_llava(image: Image.Image, prompt: str) -> str:
 
 
 def call_text_model(prompt: str) -> str:
-    """Call text model (Ollama phi4 or LiteLLM GPT-5.2)."""
+    """Call text model based on selected backend."""
+    backend = get_effective_backend()
+    
     try:
-        if OLLAMA_AVAILABLE:
+        if backend == "ollama" and OLLAMA_AVAILABLE:
             # Use local Ollama phi4
-            log(f"Calling Ollama {OLLAMA_TEXT_MODEL}...")
+            model_info = get_model_info("text")
+            log(f"Calling {model_info['name']} via {model_info['provider']}...")
             resp = requests.post(
                 f"{OLLAMA_URL}/api/generate",
                 json={"model": OLLAMA_TEXT_MODEL, "prompt": prompt, "stream": False,
@@ -482,9 +646,10 @@ def call_text_model(prompt: str) -> str:
             if resp.status_code == 200:
                 return resp.json().get("response", "")
         
-        elif LITELLM_AVAILABLE:
+        elif backend == "litellm" and LITELLM_AVAILABLE:
             # Use LiteLLM API with GPT-5.2 (best reasoning)
-            log(f"Calling LiteLLM {LITELLM_TEXT_MODEL}...")
+            model_info = get_model_info("text")
+            log(f"Calling {model_info['name']} via {model_info['provider']}...")
             resp = requests.post(
                 f"{LITELLM_API_BASE}/v1/chat/completions",
                 headers={
@@ -497,12 +662,15 @@ def call_text_model(prompt: str) -> str:
                     "max_tokens": 800,
                     "temperature": 0.2
                 },
-                timeout=60
+                timeout=60,
+                verify=False  # Skip SSL for internal endpoint
             )
             if resp.status_code == 200:
                 return resp.json()["choices"][0]["message"]["content"]
             else:
-                log(f"LiteLLM error: {resp.status_code} - {resp.text[:200]}")
+                log(f"LiteLLM Text error: {resp.status_code} - {resp.text[:200]}")
+        else:
+            log(f"No text backend available (backend={backend})")
                 
     except Exception as e:
         log(f"Text model error: {e}")
@@ -841,11 +1009,18 @@ def identify_audio_streaming(audio_input, location="", month=""):
     
     # ========== ANALYSIS TRAIL ==========
     trail = []
+    backend = get_effective_backend()
+    audio_model = get_model_info("audio")
+    text_model = get_model_info("text")
     
     def update_trail(step, status="⏳"):
         trail_html = "".join([f"<div style='padding:4px 0;color:#64748b'>{t}</div>" for t in trail])
+        model_badge = f"""<div style='font-size:0.8em;color:#3b82f6;margin-bottom:8px'>
+            🤖 Model: <b>{audio_model['name']}</b> ({audio_model['provider']})
+        </div>"""
         return f"""<div style='padding:16px;background:#dbeafe;border-radius:8px'>
             <h3>🧠 BirdSense Analysis Trail</h3>
+            {model_badge}
             {trail_html}
             <div style='padding:4px 0;font-weight:bold'>{status} {step}</div>
         </div>"""
@@ -912,9 +1087,11 @@ def identify_audio_streaming(audio_input, location="", month=""):
     
     # If no BirdNET results or need more, use LLM-only
     if not all_birds:
-        trail.append("🔍 LLM: Analyzing acoustic features...")
+        trail.append(f"🔍 {text_model['name']}: Analyzing acoustic features...")
         
-        prompt = AUDIO_IDENTIFICATION_PROMPT.format(
+        # Use model-specific prompt
+        prompt_template = get_audio_prompt(backend)
+        prompt = prompt_template.format(
             min_freq=features['min_freq'],
             max_freq=features['max_freq'],
             peak_freq=features['peak_freq'],
@@ -1092,7 +1269,7 @@ def identify_image_streaming(image):
     
     Pipeline:
     1. Image preprocessing
-    2. LLaVA vision analysis
+    2. Vision model analysis (LLaVA or GPT-4o)
     3. Feature-based identification
     4. Deduplication & streaming results
     """
@@ -1104,28 +1281,41 @@ def identify_image_streaming(image):
         image = Image.fromarray(np.array(image))
     image = image.convert("RGB")
     
+    # Get current backend and model info
+    backend = get_effective_backend()
+    vision_model = get_model_info("vision")
+    
     # Analysis trail
     trail = ["✅ Image loaded"]
     
     def update_trail(step):
         trail_html = "".join([f"<div style='padding:2px 0;color:#64748b;font-size:0.9em'>{t}</div>" for t in trail])
+        model_badge = f"""<div style='font-size:0.8em;color:#3b82f6;margin-bottom:8px'>
+            🤖 Model: <b>{vision_model['name']}</b> ({vision_model['provider']})
+        </div>"""
         return f"""<div style='padding:16px;background:#dbeafe;border-radius:8px'>
             <h3>🔍 BirdSense Image Analysis</h3>
+            {model_badge}
             {trail_html}
             <div style='padding:4px 0;font-weight:bold'>⏳ {step}</div>
         </div>"""
     
-    yield update_trail("Analyzing with LLaVA vision model...")
+    yield update_trail(f"Analyzing with {vision_model['name']}...")
     
-    # LLaVA analysis
-    prompt = IMAGE_IDENTIFICATION_PROMPT
+    # Use model-specific prompt
+    prompt = get_image_prompt(backend)
     response = call_llava(image, prompt)
     
     if not response:
-        yield "<p style='color:#dc2626'>❌ LLaVA not responding. Run: <code>ollama pull llava:7b</code></p>"
+        error_msg = "Vision model not responding."
+        if backend == "ollama":
+            error_msg += " Run: <code>ollama pull llava:7b</code>"
+        elif backend == "litellm":
+            error_msg += " Check LiteLLM connection."
+        yield f"<p style='color:#dc2626'>❌ {error_msg}</p>"
         return
     
-    trail.append("✅ LLaVA analysis complete")
+    trail.append(f"✅ {vision_model['name']} analysis complete")
     yield update_trail("Parsing identification results...")
     
     birds = parse_birds(response)
@@ -1170,22 +1360,32 @@ def identify_description(description):
         yield "<p style='color:#dc2626'>⚠️ Please enter a description</p>"
         return
     
+    # Get current backend and model info
+    backend = get_effective_backend()
+    text_model = get_model_info("text")
+    
     trail = ["✅ Description received"]
     
     def update_trail(step):
         trail_html = "".join([f"<div style='padding:2px 0;color:#64748b;font-size:0.9em'>{t}</div>" for t in trail])
+        model_badge = f"""<div style='font-size:0.8em;color:#3b82f6;margin-bottom:8px'>
+            🤖 Model: <b>{text_model['name']}</b> ({text_model['provider']})
+        </div>"""
         return f"""<div style='padding:16px;background:#dbeafe;border-radius:8px'>
             <h3>📝 BirdSense Description Analysis</h3>
+            {model_badge}
             {trail_html}
             <div style='padding:4px 0;font-weight:bold'>⏳ {step}</div>
         </div>"""
     
-    yield update_trail("Analyzing with LLM...")
+    yield update_trail(f"Analyzing with {text_model['name']}...")
     
-    prompt = DESCRIPTION_IDENTIFICATION_PROMPT.format(description=description)
+    # Use model-specific prompt
+    prompt_template = get_description_prompt(backend)
+    prompt = prompt_template.format(description=description)
     
     response = call_text_model(prompt)
-    trail.append("✅ LLM analysis complete")
+    trail.append(f"✅ {text_model['name']} analysis complete")
     
     birds = parse_birds(response)
     
@@ -1298,18 +1498,36 @@ def refresh_analytics():
 
 def create_app():
     status = check_ollama()
-    backend = status.get('backend', 'None')
-    status_text = f"LLM: {backend} {'✅' if status['ok'] else '❌'} | Vision: {'✅' if status['vision'] else '❌'} | Text: {'✅' if status['text'] else '❌'}"
     
     with gr.Blocks(title="BirdSense - By Soham") as app:
-        gr.Markdown(f"""
+        gr.Markdown("""
 # 🐦 BirdSense - AI Bird Identification
 **Developed by Soham**
 
 **META SAM-Audio** | **BirdNET + LLM Hybrid** | **Multi-bird Detection**
-
-{status_text} | BirdNET: {'✅' if BIRDNET_AVAILABLE else '❌'}
 """)
+        
+        # Backend selector and status display
+        with gr.Row():
+            backend_selector = gr.Radio(
+                choices=["Auto", "Ollama (Local)", "LiteLLM (Enterprise)"],
+                value="Auto",
+                label="🔧 LLM Backend",
+                scale=2
+            )
+            status_display = gr.HTML(get_backend_status_html(), scale=3)
+        
+        def on_backend_change(selection):
+            global ACTIVE_BACKEND
+            if selection == "Ollama (Local)":
+                ACTIVE_BACKEND = "ollama"
+            elif selection == "LiteLLM (Enterprise)":
+                ACTIVE_BACKEND = "litellm"
+            else:
+                ACTIVE_BACKEND = "auto"
+            return get_backend_status_html()
+        
+        backend_selector.change(on_backend_change, [backend_selector], [status_display])
         
         with gr.Tab("🎵 Audio"):
             gr.Markdown("""
@@ -1397,23 +1615,28 @@ Your feedback helps us train better models. Please let us know if the identifica
 **Developed by Soham**
 
 A novel hybrid AI system combining:
-- **BirdNET (Cornell Lab)** - Spectrogram pattern matching
-- **LLaVA** - Vision-language analysis  
-- **phi4** - Contextual reasoning
-- **META SAM-Audio** - Noise filtering
+- **BirdNET (Cornell Lab)** - Spectrogram pattern matching (6000+ species)
+- **Vision Models** - LLaVA 7B (local) or GPT-4o (enterprise)
+- **Text Models** - phi4 14B (local) or GPT-5.2 (enterprise)
+- **META SAM-Audio** - Noise filtering & bird call isolation
 
-#### 🔗 Links
-- Source Code: [GitHub](#)
-- Documentation: See README.md
+#### 🔧 Backend Options
+| Backend | Vision | Text | Quality |
+|---------|--------|------|---------|
+| Ollama (Local) | LLaVA 7B | phi4 14B | ⭐⭐⭐⭐ |
+| LiteLLM (Enterprise) | GPT-4o | GPT-5.2 | ⭐⭐⭐⭐⭐ |
 
-#### 📊 Model Info
-- Audio: BirdNET + LLM validation
-- Image: LLaVA 7B
-- Text: phi4 (14B parameters)
+#### 📊 Architecture
+```
+AUDIO → SAM-Audio → BirdNET → LLM Validation → Results
+IMAGE → Vision Model → Feature Analysis → Results
+TEXT  → Text Model → Reasoning → Results
+```
 
 #### 🙏 Acknowledgments
 - Cornell Lab of Ornithology (BirdNET)
-- Meta AI (LLaVA inspiration)
+- Meta AI (LLaVA)
+- OpenAI (GPT models)
 - Ollama team
 """)
         
