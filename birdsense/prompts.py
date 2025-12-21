@@ -257,3 +257,67 @@ Frequency bands correlate with bird size (physics of sound production):
 - 3000-6000 Hz: Small-medium (finches, sparrows, most songbirds)
 - 6000-10000 Hz: Very small (warblers, goldcrests, high-pitched calls)
 """
+
+
+# ============ BIRD ENRICHMENT PROMPT ============
+
+BIRD_ENRICHMENT_PROMPT = """Provide factual, research-quality information about the {bird_name} ({scientific_name}).
+
+Return ONLY valid JSON with these fields:
+{{
+    "summary": "2-3 sentence scientific overview of the species",
+    "habitat": "Primary habitat description (forests, grasslands, urban areas, etc.)",
+    "diet": "What this bird eats (seeds, insects, nectar, etc.)",
+    "fun_facts": [
+        "Interesting scientific or behavioral fact 1",
+        "Interesting scientific or behavioral fact 2"
+    ],
+    "conservation": "IUCN status: LC (Least Concern), NT (Near Threatened), VU (Vulnerable), EN (Endangered), or CR (Critically Endangered)",
+    "range": "Geographic distribution",
+    "breeding": "Brief breeding behavior note"
+}}
+
+Be scientifically accurate. No markdown, only JSON."""
+
+
+BIRD_ENRICHMENT_PROMPT_INDIA = """Provide factual, research-quality information about the {bird_name} ({scientific_name}), with special focus on its presence in India.
+
+Return ONLY valid JSON with these fields:
+{{
+    "summary": "2-3 sentence scientific overview",
+    "habitat": "Habitat in India specifically (if found there) or general habitat",
+    "diet": "What this bird eats",
+    "fun_facts": [
+        "Interesting fact about this bird",
+        "India-specific fact if applicable (migration patterns to India, cultural significance, etc.)"
+    ],
+    "conservation": "IUCN status (LC/NT/VU/EN/CR)",
+    "range": "Geographic range, emphasizing presence in India if applicable",
+    "india_info": {{
+        "found_in_india": true/false,
+        "regions": "States/regions in India where found (if applicable)",
+        "local_names": {{
+            "hindi": "Hindi name if known",
+            "tamil": "Tamil name if known", 
+            "bengali": "Bengali name if known",
+            "marathi": "Marathi name if known",
+            "kannada": "Kannada name if known"
+        }},
+        "best_season": "Best time to spot in India",
+        "notable_locations": "Famous birding spots in India for this species"
+    }}
+}}
+
+For birds NOT found in India, set india_info.found_in_india to false and leave other india fields empty.
+Be scientifically accurate. No markdown, only JSON."""
+
+
+def get_enrichment_prompt(bird_name: str, scientific_name: str, location: str = "") -> str:
+    """Get enrichment prompt, with India-specific version if location is India."""
+    location_lower = location.lower() if location else ""
+    is_india = any(term in location_lower for term in ["india", "mumbai", "delhi", "bangalore", "chennai", "kolkata", "hyderabad", "pune", "kerala", "goa", "rajasthan", "gujarat", "maharashtra", "tamil", "karnataka", "bengal"])
+    
+    if is_india:
+        return BIRD_ENRICHMENT_PROMPT_INDIA.format(bird_name=bird_name, scientific_name=scientific_name)
+    else:
+        return BIRD_ENRICHMENT_PROMPT.format(bird_name=bird_name, scientific_name=scientific_name)

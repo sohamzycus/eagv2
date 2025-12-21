@@ -1,18 +1,26 @@
 # BirdSense Environment Configuration
-# =================================
-# Copy this file to .env and fill in your values:
-#   cp env-template.txt .env
-#
-# IMPORTANT: .env file is ignored by git (contains secrets)
+# Copy this to .env and fill in your values
+# ==========================================
 
-# ============ LiteLLM Enterprise API ============
-# Zycus Internal - REQUIRES VPN ACCESS
-LITELLM_API_KEY=your-api-key-here
-LITELLM_API_BASE=https://litellm-rm.zycus.net
-LITELLM_VISION_MODEL=gpt-4o-201124-payg-eastus
-LITELLM_TEXT_MODEL=gpt-5.2-payg-global
+# ========== OPTION 1: Azure OpenAI (Enterprise) ==========
+# IS_AZURE=true
+# LITELLM_API_KEY=your-azure-api-key
+# LITELLM_API_BASE=https://your-resource.azure-api.net/your-endpoint
+# AZURE_DEPLOYMENT=your-deployment-name
+# AZURE_API_VERSION=2024-02-15-preview
+# LITELLM_VISION_MODEL=gpt-4o
+# LITELLM_TEXT_MODEL=gpt-4o
 
-# ============ Ollama (Local) ============
-# Default: http://localhost:11434
-OLLAMA_HOST=http://localhost:11434
+# ========== OPTION 2: OpenAI (Public API) ==========
+# IS_AZURE=false
+# LITELLM_API_KEY=sk-your-openai-api-key
+# LITELLM_API_BASE=https://api.openai.com
+# LITELLM_VISION_MODEL=gpt-4o
+# LITELLM_TEXT_MODEL=gpt-4o
 
+# ========== OPTION 3: LiteLLM Proxy (Custom) ==========
+# IS_AZURE=false
+# LITELLM_API_KEY=your-litellm-key
+# LITELLM_API_BASE=https://your-litellm-proxy.com
+# LITELLM_VISION_MODEL=your-vision-model
+# LITELLM_TEXT_MODEL=your-text-model

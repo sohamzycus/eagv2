@@ -26,8 +26,9 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
-COPY app.py prompts.py confusion_rules.py feedback.py ./
+# Copy application code (refactored architecture)
+COPY app.py providers.py analysis.py ./
+COPY prompts.py confusion_rules.py feedback.py ./
 COPY env-template.txt ./
 
 # Create directories for feedback data
@@ -42,11 +43,14 @@ ENV GRADIO_SERVER_PORT="7860"
 ENV PYTHONUNBUFFERED=1
 ENV TF_CPP_MIN_LOG_LEVEL=2
 
-# LiteLLM config - MUST be set at runtime via -e or Cloud Run env vars
+# Azure OpenAI config - set API key at runtime via -e or Cloud Run env vars
 # DO NOT hardcode API keys here!
-ENV LITELLM_API_BASE="https://litellm-rm.zycus.net"
-ENV LITELLM_VISION_MODEL="gpt-4o-201124-payg-eastus"
-ENV LITELLM_TEXT_MODEL="gpt-5.2-payg-global"
+ENV IS_AZURE="true"
+ENV LITELLM_API_BASE="https://zycus-ptu.azure-api.net/ptu-intakemanagement"
+ENV AZURE_DEPLOYMENT="gpt4o-130524"
+ENV AZURE_API_VERSION="2024-02-15-preview"
+ENV LITELLM_VISION_MODEL="gpt-4o"
+ENV LITELLM_TEXT_MODEL="gpt-4o"
 # LITELLM_API_KEY must be provided at runtime
 
 # Health check
