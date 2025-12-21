@@ -134,61 +134,68 @@ def get_model_info(task: str) -> dict:
     return {"name": "Not Available", "provider": "None", "type": task}
 
 def get_backend_status_html() -> str:
-    """Generate HTML status display for current backend."""
+    """Generate HTML status display for current backend - light/pastel theme."""
     backend = get_effective_backend()
-    ollama_status = "🟢" if OLLAMA_AVAILABLE else "🔴"
-    litellm_status = "🟢" if LITELLM_AVAILABLE else "🔴"
-    litellm_key_status = "🔑" if LITELLM_API_KEY else "⚠️"
+    ollama_status = "🟢" if OLLAMA_AVAILABLE else "⚪"
+    litellm_status = "🟢" if LITELLM_AVAILABLE else "⚪"
+    litellm_key_status = "🔑" if LITELLM_API_KEY else ""
     
     error_html = ""
     
     if backend == "ollama":
         vision_model = "LLaVA 7B"
         text_model = "phi4 14B"
-        bg_gradient = "linear-gradient(135deg, #065f46, #047857)"  # Green gradient
+        bg_color = "#ecfdf5"  # Light green
+        text_color = "#065f46"
+        border_color = "#a7f3d0"
         status_text = "🟢 Ollama (Local)"
-        border_color = "#10b981"
+        badge_bg = "#d1fae5"
     elif backend == "litellm":
         if LITELLM_AVAILABLE:
             vision_model = "GPT-4o"
             text_model = "GPT-5.2"
-            bg_gradient = "linear-gradient(135deg, #7c3aed, #8b5cf6)"  # Purple gradient
+            bg_color = "#f3e8ff"  # Light purple
+            text_color = "#6b21a8"
+            border_color = "#d8b4fe"
             status_text = "🟣 LiteLLM (Enterprise)"
-            border_color = "#8b5cf6"
+            badge_bg = "#e9d5ff"
         else:
             vision_model = "⚠️"
             text_model = "⚠️"
-            bg_gradient = "linear-gradient(135deg, #d97706, #f59e0b)"  # Orange/warning
+            bg_color = "#fef3c7"  # Light orange/warning
+            text_color = "#92400e"
+            border_color = "#fcd34d"
             status_text = "⚠️ LiteLLM (Connecting...)"
-            border_color = "#f59e0b"
+            badge_bg = "#fde68a"
             if LITELLM_ERROR:
-                error_html = f'<div style="width:100%;margin-top:8px;padding:8px;background:rgba(0,0,0,0.2);border-radius:6px;font-size:0.85em;">❌ {LITELLM_ERROR}</div>'
+                error_html = f'<div style="width:100%;margin-top:8px;padding:8px;background:#fef2f2;border-radius:6px;font-size:0.85em;color:#991b1b;">❌ {LITELLM_ERROR}</div>'
     else:
         vision_model = "None"
         text_model = "None"
-        bg_gradient = "linear-gradient(135deg, #dc2626, #ef4444)"  # Red gradient
-        status_text = "🔴 No Backend"
-        border_color = "#ef4444"
+        bg_color = "#fef2f2"  # Light red
+        text_color = "#991b1b"
+        border_color = "#fecaca"
+        status_text = "⚪ No Backend"
+        badge_bg = "#fee2e2"
     
-    birdnet_status = "🟢" if BIRDNET_AVAILABLE else "🔴"
+    birdnet_status = "🟢" if BIRDNET_AVAILABLE else "⚪"
     
     return f"""<div style="
-        font-family: 'SF Pro Display', -apple-system, system-ui, sans-serif;
-        padding: 12px 20px;
-        background: {bg_gradient};
-        border-radius: 12px;
-        border: 2px solid {border_color};
-        color: white;
-        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+        font-family: -apple-system, system-ui, sans-serif;
+        padding: 10px 16px;
+        background: {bg_color};
+        border-radius: 10px;
+        border: 1px solid {border_color};
+        color: {text_color};
         display: flex;
         align-items: center;
-        gap: 16px;
+        gap: 12px;
         flex-wrap: wrap;
     ">
-        <span style="font-weight: 600; font-size: 1.1em;">{status_text}</span>
-        <span style="opacity: 0.9;">Vision: <b>{vision_model}</b></span>
-        <span style="opacity: 0.9;">Text: <b>{text_model}</b></span>
-        <span style="opacity: 0.9;">BirdNET: {birdnet_status}</span>
+        <span style="font-weight: 600; background: {badge_bg}; padding: 4px 10px; border-radius: 6px;">{status_text}</span>
+        <span>Vision: <b>{vision_model}</b></span>
+        <span>Text: <b>{text_model}</b></span>
+        <span>BirdNET: {birdnet_status}</span>
         <span style="opacity: 0.7; font-size: 0.85em; margin-left: auto;">
             Ollama: {ollama_status} | LiteLLM: {litellm_status} {litellm_key_status}
         </span>
@@ -918,48 +925,91 @@ def identify_with_birdnet(audio_data, sr, location="", month=""):
 
 def hybrid_llm_validation(birdnet_candidates, audio_features, location="", month=""):
     """
-    Novel LLM validation layer - reasons about BirdNET candidates using context.
-    This is what makes BirdSense BETTER than BirdNET alone.
+    Novel LLM validation layer - enhances BirdNET results with reasoning.
+    
+    IMPORTANT: BirdNET is the gold standard for audio. LLM ENHANCES, not overrides.
+    - BirdNET confidence >= 70%: Trust it, LLM adds context
+    - BirdNET confidence 40-70%: LLM validates/adjusts
+    - BirdNET confidence < 40%: LLM may suggest alternatives
     """
     if not birdnet_candidates:
         return []
     
-    # Build context-aware validation prompt
-    candidates_text = "\n".join([
-        f"- {c['name']} ({c['scientific']}): {c['confidence']}% confidence"
-        for c in birdnet_candidates[:5]
-    ])
+    # ALWAYS include high-confidence BirdNET results
+    validated = []
+    needs_llm_validation = []
     
-    prompt = f"""You are an expert ornithologist validating bird identification results.
+    for candidate in birdnet_candidates[:5]:
+        conf = candidate.get('confidence', 0)
+        bird_entry = {
+            "name": candidate['name'],
+            "scientific_name": candidate.get('scientific', ''),
+            "confidence": conf,
+            "reason": f"BirdNET spectrogram match ({conf}% confidence)",
+            "source": "BirdNET"
+        }
+        
+        if conf >= 70:
+            # High confidence - trust BirdNET, just add context
+            validated.append(bird_entry)
+        else:
+            # Lower confidence - may need LLM validation
+            needs_llm_validation.append(candidate)
+    
+    # If we have high-confidence results, optionally enhance with LLM reasoning
+    if validated and not needs_llm_validation:
+        # Just add context/reasoning to high-confidence results
+        top_bird = validated[0]
+        try:
+            prompt = f"""The bird "{top_bird['name']}" was identified by BirdNET with {top_bird['confidence']}% confidence.
+Audio features: {audio_features['min_freq']}-{audio_features['max_freq']}Hz, {audio_features['pattern']} pattern.
+Location: {location or 'Unknown'}
 
-BIRDNET CANDIDATES (pattern-matched from spectrogram):
+In 1-2 sentences, explain why this identification makes sense (or note any concerns).
+Just the explanation, no JSON."""
+            
+            reason = call_text_model(prompt)
+            if reason and len(reason) < 300:
+                top_bird['reason'] = f"BirdNET ({top_bird['confidence']}%): {reason.strip()}"
+        except:
+            pass  # Keep original reason if LLM fails
+        
+        return validated
+    
+    # For lower-confidence candidates, ask LLM to help validate
+    if needs_llm_validation:
+        candidates_text = "\n".join([
+            f"- {c['name']} ({c.get('scientific', '')}): {c.get('confidence', 0)}%"
+            for c in needs_llm_validation
+        ])
+        
+        prompt = f"""BirdNET detected these candidates (lower confidence):
 {candidates_text}
 
-ACOUSTIC FEATURES:
-- Frequency Range: {audio_features['min_freq']}-{audio_features['max_freq']} Hz
-- Pattern: {audio_features['pattern']}
-- Complexity: {audio_features['complexity']}
-- Duration: {audio_features['duration']}s
+Audio: {audio_features['min_freq']}-{audio_features['max_freq']}Hz, {audio_features['pattern']} pattern, {audio_features['complexity']} complexity
+Location: {location or 'Unknown'}, Season: {month or 'Unknown'}
 
-CONTEXT:
-- Location: {location if location else "Unknown"}
-- Season/Month: {month if month else "Unknown"}
-
-YOUR TASK - Validate and re-rank the candidates:
-1. Check if the frequency range matches typical calls for each species
-2. Consider if the species is found in the given location/season
-3. Evaluate pattern complexity against known vocalizations
-4. Boost or reduce confidence based on your ornithological knowledge
-
-Respond with JSON only - re-ranked list with adjusted confidence:
-{{"birds": [
-  {{"name": "Species Name", "scientific_name": "...", "confidence": 85, "reason": "Why this identification is likely correct or incorrect", "birdnet_conf": original_confidence}}
-]}}
-
-Be critical - reduce confidence if something doesn't match. Increase if context strongly supports."""
-
-    response = call_text_model(prompt)
-    validated = parse_birds(response)
+Which is most likely correct? Consider frequency-to-size correlation and call patterns.
+Respond with JSON: {{"birds": [{{"name": "...", "scientific_name": "...", "confidence": 60, "reason": "..."}}]}}"""
+        
+        response = call_text_model(prompt)
+        llm_validated = parse_birds(response)
+        
+        if llm_validated:
+            # Merge: keep BirdNET names but use LLM confidence adjustments
+            for llm_bird in llm_validated:
+                llm_bird['source'] = 'BirdNET+LLM'
+                validated.append(llm_bird)
+        else:
+            # LLM failed - use BirdNET results as-is
+            for candidate in needs_llm_validation:
+                validated.append({
+                    "name": candidate['name'],
+                    "scientific_name": candidate.get('scientific', ''),
+                    "confidence": candidate.get('confidence', 50),
+                    "reason": f"BirdNET detection ({candidate.get('confidence', 50)}%)",
+                    "source": "BirdNET"
+                })
     
     return validated
 
