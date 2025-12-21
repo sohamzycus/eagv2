@@ -75,9 +75,49 @@ except Exception as e:
 
 # ============ CONFIG ============
 OLLAMA_URL = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
-VISION_MODEL = "llava:7b"
-TEXT_MODEL = "phi4:latest"  # Using phi4 (14B) for better reasoning
 DEBUG = True
+
+# Ollama models (for local)
+OLLAMA_VISION_MODEL = "llava:7b"
+OLLAMA_TEXT_MODEL = "phi4:latest"
+
+# LiteLLM Enterprise API (Zycus)
+LITELLM_API_KEY = os.environ.get("LITELLM_API_KEY", "sk-ZQtlfBqmcgxuHdTJ30dYHg")
+LITELLM_API_BASE = os.environ.get("LITELLM_API_BASE", "https://litellm-rm.zycus.net")
+LITELLM_VISION_MODEL = os.environ.get("LITELLM_VISION_MODEL", "gpt-4o-201124-payg-eastus")
+LITELLM_TEXT_MODEL = os.environ.get("LITELLM_TEXT_MODEL", "gpt-5.2-payg-global")
+
+def check_ollama_available():
+    """Check if Ollama is running."""
+    try:
+        resp = requests.get(f"{OLLAMA_URL}/api/tags", timeout=2)
+        return resp.status_code == 200
+    except:
+        return False
+
+def check_litellm_available():
+    """Check if LiteLLM API is accessible."""
+    if not LITELLM_API_KEY:
+        return False
+    try:
+        resp = requests.get(
+            f"{LITELLM_API_BASE}/v1/models",
+            headers={"Authorization": f"Bearer {LITELLM_API_KEY}"},
+            timeout=5
+        )
+        return resp.status_code == 200
+    except:
+        return False
+
+OLLAMA_AVAILABLE = check_ollama_available()
+LITELLM_AVAILABLE = check_litellm_available()
+
+if OLLAMA_AVAILABLE:
+    print("✅ Using Ollama (local) - LLaVA + phi4")
+elif LITELLM_AVAILABLE:
+    print(f"✅ Using LiteLLM API - {LITELLM_VISION_MODEL} + {LITELLM_TEXT_MODEL}")
+else:
+    print("❌ No LLM backend available")
 
 # SAM-Audio config - Updated frequency bands for better owl detection
 SAM_FREQ_BANDS = [
@@ -338,24 +378,38 @@ def extract_audio_features(audio: np.ndarray, sr: int) -> dict:
 # ============ OLLAMA ============
 
 def check_ollama():
-    """Check Ollama status."""
-    try:
-        resp = requests.get(f"{OLLAMA_URL}/api/tags", timeout=3)
-        if resp.status_code == 200:
-            models = [m["name"] for m in resp.json().get("models", [])]
-            return {
-                "ok": True,
-                "vision": any("llava" in m.lower() for m in models),
-                "text": any(any(t in m.lower() for t in ["llama", "phi", "qwen", "mistral"]) for m in models),
-                "models": models
-            }
-    except:
-        pass
-    return {"ok": False, "vision": False, "text": False, "models": []}
+    """Check Ollama or LiteLLM status."""
+    # Check Ollama first
+    if OLLAMA_AVAILABLE:
+        try:
+            resp = requests.get(f"{OLLAMA_URL}/api/tags", timeout=3)
+            if resp.status_code == 200:
+                models = [m["name"] for m in resp.json().get("models", [])]
+                return {
+                    "ok": True,
+                    "vision": any("llava" in m.lower() for m in models),
+                    "text": any(any(t in m.lower() for t in ["llama", "phi", "qwen", "mistral"]) for m in models),
+                    "models": models,
+                    "backend": "Ollama"
+                }
+        except:
+            pass
+    
+    # Check LiteLLM
+    if LITELLM_AVAILABLE:
+        return {
+            "ok": True,
+            "vision": True,
+            "text": True,
+            "models": ["LiteLLM API"],
+            "backend": "LiteLLM"
+        }
+    
+    return {"ok": False, "vision": False, "text": False, "models": [], "backend": "None"}
 
 
 def call_llava(image: Image.Image, prompt: str) -> str:
-    """Call LLaVA for image analysis."""
+    """Call vision model (Ollama LLaVA or LiteLLM GPT-4o)."""
     try:
         max_size = 800
         if max(image.size) > max_size:
@@ -366,33 +420,90 @@ def call_llava(image: Image.Image, prompt: str) -> str:
         image.save(buffer, format="JPEG", quality=85)
         img_b64 = base64.b64encode(buffer.getvalue()).decode()
         
-        log("Calling LLaVA...")
-        resp = requests.post(
-            f"{OLLAMA_URL}/api/generate",
-            json={"model": VISION_MODEL, "prompt": prompt, "images": [img_b64], "stream": False,
-                  "options": {"temperature": 0.1, "num_predict": 1200}},
-            timeout=120
-        )
+        if OLLAMA_AVAILABLE:
+            # Use local Ollama LLaVA
+            log("Calling Ollama LLaVA...")
+            resp = requests.post(
+                f"{OLLAMA_URL}/api/generate",
+                json={"model": OLLAMA_VISION_MODEL, "prompt": prompt, "images": [img_b64], "stream": False,
+                      "options": {"temperature": 0.1, "num_predict": 1200}},
+                timeout=120
+            )
+            if resp.status_code == 200:
+                return resp.json().get("response", "")
         
-        if resp.status_code == 200:
-            return resp.json().get("response", "")
+        elif LITELLM_AVAILABLE:
+            # Use LiteLLM API with GPT-4o (excellent for vision)
+            log(f"Calling LiteLLM {LITELLM_VISION_MODEL}...")
+            resp = requests.post(
+                f"{LITELLM_API_BASE}/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {LITELLM_API_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": LITELLM_VISION_MODEL,
+                    "messages": [
+                        {
+                            "role": "user",
+                            "content": [
+                                {"type": "text", "text": prompt},
+                                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{img_b64}"}}
+                            ]
+                        }
+                    ],
+                    "max_tokens": 1200,
+                    "temperature": 0.1
+                },
+                timeout=120
+            )
+            if resp.status_code == 200:
+                return resp.json()["choices"][0]["message"]["content"]
+            else:
+                log(f"LiteLLM error: {resp.status_code} - {resp.text[:500]}")
+                
     except Exception as e:
-        log(f"LLaVA error: {e}")
+        log(f"Vision model error: {e}")
     return ""
 
 
 def call_text_model(prompt: str) -> str:
-    """Call text model for reasoning."""
+    """Call text model (Ollama phi4 or LiteLLM GPT-5.2)."""
     try:
-        log(f"Calling {TEXT_MODEL}...")
-        resp = requests.post(
-            f"{OLLAMA_URL}/api/generate",
-            json={"model": TEXT_MODEL, "prompt": prompt, "stream": False,
-                  "options": {"temperature": 0.2, "num_predict": 800}},
-            timeout=60
-        )
-        if resp.status_code == 200:
-            return resp.json().get("response", "")
+        if OLLAMA_AVAILABLE:
+            # Use local Ollama phi4
+            log(f"Calling Ollama {OLLAMA_TEXT_MODEL}...")
+            resp = requests.post(
+                f"{OLLAMA_URL}/api/generate",
+                json={"model": OLLAMA_TEXT_MODEL, "prompt": prompt, "stream": False,
+                      "options": {"temperature": 0.2, "num_predict": 800}},
+                timeout=60
+            )
+            if resp.status_code == 200:
+                return resp.json().get("response", "")
+        
+        elif LITELLM_AVAILABLE:
+            # Use LiteLLM API with GPT-5.2 (best reasoning)
+            log(f"Calling LiteLLM {LITELLM_TEXT_MODEL}...")
+            resp = requests.post(
+                f"{LITELLM_API_BASE}/v1/chat/completions",
+                headers={
+                    "Authorization": f"Bearer {LITELLM_API_KEY}",
+                    "Content-Type": "application/json"
+                },
+                json={
+                    "model": LITELLM_TEXT_MODEL,
+                    "messages": [{"role": "user", "content": prompt}],
+                    "max_tokens": 800,
+                    "temperature": 0.2
+                },
+                timeout=60
+            )
+            if resp.status_code == 200:
+                return resp.json()["choices"][0]["message"]["content"]
+            else:
+                log(f"LiteLLM error: {resp.status_code} - {resp.text[:200]}")
+                
     except Exception as e:
         log(f"Text model error: {e}")
     return ""
@@ -1187,7 +1298,8 @@ def refresh_analytics():
 
 def create_app():
     status = check_ollama()
-    status_text = f"Ollama: {'✅' if status['ok'] else '❌'} | Vision: {'✅' if status['vision'] else '❌'} | Text: {'✅' if status['text'] else '❌'}"
+    backend = status.get('backend', 'None')
+    status_text = f"LLM: {backend} {'✅' if status['ok'] else '❌'} | Vision: {'✅' if status['vision'] else '❌'} | Text: {'✅' if status['text'] else '❌'}"
     
     with gr.Blocks(title="BirdSense - By Soham") as app:
         gr.Markdown(f"""
