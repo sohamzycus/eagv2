@@ -1,0 +1,64 @@
+# 🐦 BirdSense REST API - Production Container
+# Developed by Soham
+#
+# REST API for BirdSense Bird Identification
+# Deploy to Google Cloud Run for mobile app backend
+#
+# Build: docker build -f Dockerfile.api -t birdsense-api .
+# Run:   docker run -p 8000:8000 -e LITELLM_API_KEY=xxx birdsense-api
+
+FROM python:3.12-slim
+
+LABEL maintainer="Soham"
+LABEL description="BirdSense REST API - Bird Identification Backend"
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    ffmpeg \
+    libsndfile1 \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+# Copy requirements and install
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy core modules
+COPY providers.py analysis.py prompts.py ./
+COPY confusion_rules.py feedback.py ./
+
+# Copy API module
+COPY api/ ./api/
+
+# Create feedback directory
+RUN mkdir -p /app/feedback_data/logs /app/feedback_data/samples
+
+# Expose API port
+EXPOSE 8000
+
+# Environment variables
+ENV PYTHONUNBUFFERED=1
+ENV TF_CPP_MIN_LOG_LEVEL=2
+ENV PORT=8000
+
+# Azure OpenAI config
+ENV IS_AZURE="true"
+ENV LITELLM_API_BASE="https://zycus-ptu.azure-api.net/ptu-intakemanagement"
+ENV AZURE_DEPLOYMENT="gpt4o-130524"
+ENV AZURE_API_VERSION="2024-02-15-preview"
+ENV LITELLM_VISION_MODEL="gpt-4o"
+ENV LITELLM_TEXT_MODEL="gpt-4o"
+# LITELLM_API_KEY must be provided at runtime
+
+# JWT secret (change in production!)
+ENV JWT_SECRET_KEY="birdsense-production-secret-change-me"
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Run API server
+CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
+

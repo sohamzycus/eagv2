@@ -16,4 +16,12 @@ birdnetlib>=0.15.0
 librosa
 soundfile
 
+# REST API (FastAPI)
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+python-jose[cryptography]  # JWT tokens
+passlib[bcrypt]           # Password hashing
+bcrypt==4.0.1             # Fixed version for passlib compatibility
+python-multipart          # File uploads
+
 # Ollama models required: llava:7b, phi4

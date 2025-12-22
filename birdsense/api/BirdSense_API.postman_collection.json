@@ -1,0 +1,332 @@
+{
+  "info": {
+    "name": "🐦 BirdSense API",
+    "description": "Bird Identification REST API\n\nDeveloped by Soham\n\n## Authentication\nAll identification endpoints require JWT authentication.\n1. Call POST /auth/login to get token\n2. Add token to Authorization header: `Bearer <token>`\n\n## Default Users\n- mazycus / ZycusMerlinAssist@2024\n- demo / demo123\n- soham / birdsense2024",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "cloudUrl",
+      "value": "https://birdsense-1021486398038.us-central1.run.app",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Status",
+      "item": [
+        {
+          "name": "Root",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/",
+              "host": ["{{baseUrl}}"],
+              "path": [""]
+            }
+          }
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login (mazycus)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.access_token) {",
+                  "    pm.collectionVariables.set('token', jsonData.access_token);",
+                  "    console.log('Token saved!');",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"mazycus\",\n    \"password\": \"ZycusMerlinAssist@2024\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Login (demo)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.access_token) {",
+                  "    pm.collectionVariables.set('token', jsonData.access_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"username\": \"demo\",\n    \"password\": \"demo123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.access_token) {",
+                  "    pm.collectionVariables.set('token', jsonData.access_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "refresh"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Bird Identification",
+      "item": [
+        {
+          "name": "Identify from Audio (File Upload)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "audio_file",
+                  "type": "file",
+                  "src": ""
+                },
+                {
+                  "key": "location",
+                  "value": "Mumbai, India",
+                  "type": "text"
+                },
+                {
+                  "key": "month",
+                  "value": "December",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/identify/audio",
+              "host": ["{{baseUrl}}"],
+              "path": ["identify", "audio"]
+            },
+            "description": "Upload an audio file (WAV, MP3) for bird identification.\n\nBirdSense uses:\n1. META SAM-Audio for source separation\n2. BirdNET for spectrogram analysis\n3. LLM for validation"
+          }
+        },
+        {
+          "name": "Identify from Audio (Base64)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"audio_base64\": \"<BASE64_ENCODED_AUDIO>\",\n    \"sample_rate\": 44100,\n    \"location\": \"Kerala, India\",\n    \"month\": \"March\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/identify/audio/base64",
+              "host": ["{{baseUrl}}"],
+              "path": ["identify", "audio", "base64"]
+            }
+          }
+        },
+        {
+          "name": "Identify from Image (File Upload)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "image_file",
+                  "type": "file",
+                  "src": ""
+                },
+                {
+                  "key": "location",
+                  "value": "Rajasthan, India",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/identify/image",
+              "host": ["{{baseUrl}}"],
+              "path": ["identify", "image"]
+            },
+            "description": "Upload a bird image (JPEG, PNG) for identification.\n\nVision AI analyzes:\n- Beak color and shape\n- Plumage patterns\n- Body size and shape"
+          }
+        },
+        {
+          "name": "Identify from Image (Base64)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"image_base64\": \"<BASE64_ENCODED_IMAGE>\",\n    \"location\": \"Mumbai, India\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/identify/image/base64",
+              "host": ["{{baseUrl}}"],
+              "path": ["identify", "image", "base64"]
+            }
+          }
+        },
+        {
+          "name": "Identify from Description",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"description\": \"Small bird with bright yellow body and black wings. Has a short conical beak. Seen near sunflower fields making chirping sounds.\",\n    \"location\": \"Gujarat, India\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/identify/description",
+              "host": ["{{baseUrl}}"],
+              "path": ["identify", "description"]
+            },
+            "description": "Describe a bird's appearance, behavior, or sounds for identification.\n\nGood descriptions include:\n- Colors and patterns\n- Size (sparrow-sized, crow-sized)\n- Behavior\n- Sounds\n- Location/habitat"
+          }
+        }
+      ]
+    }
+  ]
+}
+

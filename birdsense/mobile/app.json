@@ -1,0 +1,60 @@
+{
+  "expo": {
+    "name": "BirdSense",
+    "slug": "birdsense-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1a472a"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.zycus.birdsense",
+      "infoPlist": {
+        "NSCameraUsageDescription": "BirdSense needs camera access to identify birds from photos",
+        "NSMicrophoneUsageDescription": "BirdSense needs microphone access to record bird calls",
+        "NSPhotoLibraryUsageDescription": "BirdSense needs photo library access to select bird images"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#1a472a"
+      },
+      "package": "com.zycus.birdsense",
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "READ_EXTERNAL_STORAGE"
+      ]
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    },
+    "scheme": "birdsense",
+    "plugins": [
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow BirdSense to access your camera to identify birds"
+        }
+      ],
+      [
+        "expo-av",
+        {
+          "microphonePermission": "Allow BirdSense to access your microphone to record bird calls"
+        }
+      ]
+    ]
+  }
+}
+
