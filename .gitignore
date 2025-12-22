@@ -30,3 +30,4 @@ devflow-multiagent/llm/__pycache__/*
 devflow-multiagent/__pycache__/*
 
 browser_agent/LINKEDIN_POST.md
+birdsense/benchmark_*.json
