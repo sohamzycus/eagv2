@@ -96,21 +96,105 @@ async def identify_audio(
     try:
         # Read audio file
         audio_bytes = await audio_file.read()
+        filename = audio_file.filename or "unknown"
+        content_type = audio_file.content_type or "unknown"
+        print(f"📥 Received audio: {len(audio_bytes)} bytes, filename: {filename}, content_type: {content_type}")
         
-        # Convert to numpy array
-        import soundfile as sf
-        audio_data, sr = sf.read(io.BytesIO(audio_bytes))
+        # Detect format from extension or content type
+        ext = filename.lower().split('.')[-1] if '.' in filename else ''
+        is_m4a = ext in ['m4a', 'aac', 'mp4'] or 'm4a' in content_type or 'mp4' in content_type
+        is_mp3 = ext == 'mp3' or 'mp3' in content_type or 'mpeg' in content_type
+        is_wav = ext == 'wav' or 'wav' in content_type
+        
+        print(f"📋 Format detection: ext={ext}, m4a={is_m4a}, mp3={is_mp3}, wav={is_wav}")
+        
+        audio_data = None
+        sr = 44100  # Default sample rate
+        
+        # For M4A/AAC/MP3 formats, skip soundfile and go straight to pydub
+        if is_m4a or is_mp3:
+            print(f"🔄 Detected {ext.upper()} format, using pydub directly...")
+            try:
+                from pydub import AudioSegment
+                # Use format hint for better compatibility
+                format_hint = 'mp4' if is_m4a else 'mp3'
+                audio_segment = AudioSegment.from_file(io.BytesIO(audio_bytes), format=format_hint)
+                sr = audio_segment.frame_rate
+                # Handle stereo
+                if audio_segment.channels > 1:
+                    audio_segment = audio_segment.set_channels(1)
+                samples = np.array(audio_segment.get_array_of_samples())
+                audio_data = samples.astype(np.float64) / 32768.0
+                print(f"✅ pydub: loaded {len(audio_data)} samples at {sr}Hz from {format_hint}")
+            except Exception as pydub_err:
+                print(f"⚠️ pydub failed for {ext}: {pydub_err}")
+                # Try without format hint
+                try:
+                    audio_segment = AudioSegment.from_file(io.BytesIO(audio_bytes))
+                    sr = audio_segment.frame_rate
+                    if audio_segment.channels > 1:
+                        audio_segment = audio_segment.set_channels(1)
+                    samples = np.array(audio_segment.get_array_of_samples())
+                    audio_data = samples.astype(np.float64) / 32768.0
+                    print(f"✅ pydub (auto-detect): loaded {len(audio_data)} samples at {sr}Hz")
+                except Exception as pydub_auto_err:
+                    print(f"⚠️ pydub auto-detect also failed: {pydub_auto_err}")
+        
+        # Method 1: soundfile (best for WAV/FLAC)
+        if audio_data is None:
+            try:
+                import soundfile as sf
+                audio_data, sr = sf.read(io.BytesIO(audio_bytes))
+                print(f"✅ soundfile: loaded {len(audio_data)} samples at {sr}Hz")
+            except Exception as sf_err:
+                print(f"⚠️ soundfile failed: {sf_err}")
+        
+        # Method 2: scipy.io.wavfile (for standard WAV)
+        if audio_data is None:
+            try:
+                from scipy.io import wavfile
+                sr, audio_data = wavfile.read(io.BytesIO(audio_bytes))
+                audio_data = audio_data.astype(np.float64)
+                # Normalize int16 to float
+                if audio_data.dtype == np.int16 or np.max(np.abs(audio_data)) > 1:
+                    audio_data = audio_data / 32768.0
+                print(f"✅ scipy.io.wavfile: loaded {len(audio_data)} samples at {sr}Hz")
+            except Exception as wav_err:
+                print(f"⚠️ scipy.io.wavfile failed: {wav_err}")
+        
+        # Method 3: pydub with ffmpeg (last resort)
+        if audio_data is None:
+            try:
+                from pydub import AudioSegment
+                audio_segment = AudioSegment.from_file(io.BytesIO(audio_bytes))
+                sr = audio_segment.frame_rate
+                if audio_segment.channels > 1:
+                    audio_segment = audio_segment.set_channels(1)
+                samples = np.array(audio_segment.get_array_of_samples())
+                audio_data = samples.astype(np.float64) / 32768.0
+                print(f"✅ pydub (fallback): loaded {len(audio_data)} samples at {sr}Hz")
+            except Exception as pydub_err:
+                print(f"⚠️ pydub fallback failed: {pydub_err}")
+        
+        if audio_data is None:
+            raise ValueError(f"Could not decode audio. Format: {ext}, ContentType: {content_type}. Try converting to MP3 or WAV.")
         
         # Convert to mono if stereo
         if len(audio_data.shape) > 1:
             audio_data = np.mean(audio_data, axis=1)
         
-        # Normalize
+        # Ensure float64
         audio_data = audio_data.astype(np.float64)
-        if np.max(np.abs(audio_data)) > 0:
-            audio_data = audio_data / np.max(np.abs(audio_data))
+        
+        # Normalize to [-1, 1]
+        max_val = np.max(np.abs(audio_data))
+        if max_val > 0:
+            audio_data = audio_data / max_val
+        
+        print(f"✅ Audio ready: {len(audio_data)} samples, {sr}Hz, duration: {len(audio_data)/sr:.2f}s")
         
     except Exception as e:
+        print(f"❌ Audio processing error: {e}")
         raise HTTPException(status_code=400, detail=f"Error processing audio: {str(e)}")
     
     # Run identification pipeline

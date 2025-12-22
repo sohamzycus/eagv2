@@ -307,113 +307,58 @@ def deduplicate_birds(birds: List[Dict]) -> List[Dict]:
 
 
 def fetch_bird_image(bird_name: str, scientific_name: str = "") -> Optional[str]:
-    """Fetch bird image - PRIORITIZE scientific name for accuracy."""
+    """Fetch bird image - prioritize mobile-friendly sources (iNaturalist)."""
     import requests
+    import urllib.parse
     
-    wiki_url = "https://en.wikipedia.org/w/api.php"
-    # Wikipedia requires User-Agent header
     headers = {
-        "User-Agent": "BirdSense/1.0 (Bird Identification App; contact@birdsense.app)"
+        "User-Agent": "BirdSense/1.0 (Bird Identification App)"
     }
     
-    def get_wiki_image(title: str) -> Optional[str]:
-        """Helper to get image from Wikipedia page."""
-        try:
-            params = {
-                "action": "query",
-                "format": "json",
-                "titles": title,
-                "prop": "pageimages",
-                "pithumbsize": 800,
-                "redirects": 1
-            }
-            resp = requests.get(wiki_url, params=params, headers=headers, timeout=8, verify=False)
-            if resp.status_code == 200 and resp.text:
-                data = resp.json()
-                pages = data.get("query", {}).get("pages", {})
-                for page_id, page in pages.items():
-                    # Skip missing pages
-                    if page_id == "-1" or "missing" in page:
-                        continue
-                    if "thumbnail" in page:
-                        img_url = page["thumbnail"]["source"]
-                        # Get highest resolution
-                        img_url = img_url.replace("/800px-", "/1024px-").replace("/600px-", "/1024px-").replace("/400px-", "/1024px-")
-                        return img_url
-        except Exception as e:
-            print(f"Wiki image error for {title}: {e}")
-        return None
-    
-    # 1. PRIORITY: Scientific name (most accurate)
-    if scientific_name:
-        print(f"🔍 Fetching image for: {scientific_name}")
-        img = get_wiki_image(scientific_name)
-        if img:
-            print(f"✅ Found image via scientific name: {scientific_name}")
-            return img
-    
-    # 2. Try common name with (bird) suffix
-    img = get_wiki_image(f"{bird_name} (bird)")
-    if img:
-        print(f"✅ Found image via: {bird_name} (bird)")
-        return img
-    
-    # 3. Try exact common name
-    img = get_wiki_image(bird_name)
-    if img:
-        print(f"✅ Found image via: {bird_name}")
-        return img
-    
-    # 4. Try Wikimedia Commons directly (more bird images)
+    # 1. PRIORITY: iNaturalist (works on mobile, high quality photos)
     try:
         search_term = scientific_name if scientific_name else bird_name
-        commons_url = "https://commons.wikimedia.org/w/api.php"
-        params = {
-            "action": "query",
-            "format": "json",
-            "generator": "search",
-            "gsrsearch": f"File:{search_term}",
-            "gsrlimit": 5,
-            "prop": "imageinfo",
-            "iiprop": "url",
-            "iiurlwidth": 800
-        }
-        resp = requests.get(commons_url, params=params, headers=headers, timeout=8, verify=False)
-        if resp.status_code == 200 and resp.text:
-            data = resp.json()
-            pages = data.get("query", {}).get("pages", {})
-            for page in pages.values():
-                imageinfo = page.get("imageinfo", [])
-                if imageinfo:
-                    thumb_url = imageinfo[0].get("thumburl")
-                    if thumb_url:
-                        print(f"✅ Found image via Wikimedia Commons")
-                        return thumb_url
-    except Exception as e:
-        print(f"Commons error: {e}")
-    
-    # 5. Try iNaturalist (real photos from citizen scientists)
-    try:
-        search_term = scientific_name if scientific_name else bird_name
-        inaturalist_url = f"https://api.inaturalist.org/v1/taxa?q={search_term}&rank=species&is_active=true&per_page=3"
-        resp = requests.get(inaturalist_url, timeout=5, verify=False)
+        inaturalist_url = f"https://api.inaturalist.org/v1/taxa?q={search_term}&rank=species&is_active=true&per_page=5"
+        resp = requests.get(inaturalist_url, headers=headers, timeout=8, verify=False)
         if resp.status_code == 200:
             results = resp.json().get("results", [])
             for taxon in results:
                 # Verify it's a bird (Aves class)
-                if taxon.get("iconic_taxon_name") == "Aves" or "bird" in taxon.get("preferred_common_name", "").lower():
+                if taxon.get("iconic_taxon_name") == "Aves" or "bird" in str(taxon.get("preferred_common_name", "")).lower():
                     if taxon.get("default_photo"):
                         img_url = taxon["default_photo"].get("medium_url") or taxon["default_photo"].get("original_url")
                         if img_url:
-                            # Get larger version
-                            img_url = img_url.replace("/medium.", "/large.").replace("/square.", "/original.")
-                            print(f"✅ Found image via iNaturalist")
+                            # Use medium size for better mobile loading
+                            img_url = img_url.replace("/square.", "/medium.").replace("/small.", "/medium.")
+                            print(f"✅ Found image via iNaturalist for: {bird_name}")
                             return img_url
     except Exception as e:
-        print(f"iNaturalist error: {e}")
+        print(f"iNaturalist error for {bird_name}: {e}")
     
-    print(f"❌ No image found for: {bird_name} ({scientific_name})")
-    return None
+    # 2. Try eBird/Macaulay Library (Cornell - excellent bird photos)
+    try:
+        search_term = scientific_name if scientific_name else bird_name
+        # Macaulay Library search
+        ml_url = f"https://search.macaulaylibrary.org/api/v1/search?taxonCode=&q={urllib.parse.quote(search_term)}&mediaType=photo&sort=rating_rank_desc&count=1"
+        resp = requests.get(ml_url, headers=headers, timeout=5, verify=False)
+        if resp.status_code == 200:
+            data = resp.json()
+            results = data.get("results", {}).get("content", [])
+            if results and len(results) > 0:
+                asset_id = results[0].get("assetId")
+                if asset_id:
+                    img_url = f"https://cdn.download.ams.birds.cornell.edu/api/v1/asset/{asset_id}/640"
+                    print(f"✅ Found image via Macaulay Library for: {bird_name}")
+                    return img_url
+    except Exception as e:
+        print(f"Macaulay Library error for {bird_name}: {e}")
+    
+    # 3. Fallback: Use Unsplash source (always works, returns relevant bird image)
+    # This is a redirect URL that returns a random image matching the query
+    query = urllib.parse.quote(f"{bird_name} bird")
+    unsplash_url = f"https://source.unsplash.com/600x400/?{query}"
+    print(f"📷 Using Unsplash fallback for: {bird_name}")
+    return unsplash_url
 
 
 def get_enriched_bird_info(bird_name: str, scientific_name: str = "", location: str = "") -> Dict[str, Any]:
@@ -549,14 +494,14 @@ def format_bird_result(bird: Dict, index: int, include_enrichment: bool = True, 
         summary = enriched["summary"][:300] + "..." if len(enriched.get("summary", "")) > 300 else enriched.get("summary", "")
         enrichment_html = f'<div style="color:#475569;font-size:0.9em;line-height:1.5;margin:12px 0;padding:10px;background:#f8fafc;border-radius:8px;border-left:3px solid #3b82f6;">{summary}</div>'
     
-    # Details row
-    details_items = []
+    # Details - habitat, diet, conservation as separate full-width blocks
+    details_html = ""
     if enriched.get("habitat"):
-        habitat = enriched["habitat"][:100]
-        details_items.append(f'<div style="background:#ecfdf5;color:#065f46;padding:6px 10px;border-radius:6px;font-size:0.85em;">🏠 {habitat}</div>')
+        habitat = enriched["habitat"]
+        details_html += f'<div style="background:#ecfdf5;color:#065f46;padding:8px 12px;border-radius:6px;font-size:0.9em;margin:8px 0;white-space:normal;word-wrap:break-word;">🏠 {habitat}</div>'
     if enriched.get("diet"):
-        diet = enriched["diet"][:80]
-        details_items.append(f'<div style="background:#fef3c7;color:#92400e;padding:6px 10px;border-radius:6px;font-size:0.85em;">🍽️ {diet}</div>')
+        diet = enriched["diet"]
+        details_html += f'<div style="background:#fef3c7;color:#92400e;padding:8px 12px;border-radius:6px;font-size:0.9em;margin:8px 0;white-space:normal;word-wrap:break-word;">🍽️ {diet}</div>'
     if enriched.get("conservation"):
         cons = enriched["conservation"]
         cons_labels = {"LC": "Least Concern", "NT": "Near Threatened", "VU": "Vulnerable", "EN": "Endangered", "CR": "Critically Endangered"}
@@ -564,8 +509,7 @@ def format_bird_result(bird: Dict, index: int, include_enrichment: bool = True, 
         cons_key = cons.upper()[:2] if cons else "LC"
         cons_color = cons_colors.get(cons_key, "#64748b")
         cons_label = cons_labels.get(cons_key, cons)
-        details_items.append(f'<div style="background:{cons_color};color:white;padding:6px 10px;border-radius:6px;font-size:0.85em;">🛡️ {cons_label}</div>')
-    details_html = f'<div style="display:flex;flex-wrap:wrap;gap:8px;margin:10px 0;">{" ".join(details_items)}</div>' if details_items else ""
+        details_html += f'<div style="background:{cons_color};color:white;padding:6px 12px;border-radius:6px;font-size:0.9em;display:inline-block;margin:8px 0;">🛡️ {cons_label}</div>'
     
     # Fun facts
     fun_facts_html = ""
@@ -594,16 +538,16 @@ def format_bird_result(bird: Dict, index: int, include_enrichment: bool = True, 
                     india_parts.append(f'<div style="margin:4px 0;">🗣️ {" | ".join(names_str[:3])}</div>')
             
             if india_info.get("regions"):
-                india_parts.append(f'<div style="margin:4px 0;">📍 <b>Found in:</b> {india_info["regions"][:80]}</div>')
+                india_parts.append(f'<div style="margin:6px 0;white-space:normal;word-wrap:break-word;">📍 <b>Found in:</b> {india_info["regions"]}</div>')
             if india_info.get("best_season"):
-                india_parts.append(f'<div style="margin:4px 0;">📅 <b>Best season:</b> {india_info["best_season"]}</div>')
+                india_parts.append(f'<div style="margin:6px 0;white-space:normal;word-wrap:break-word;">📅 <b>Best season:</b> {india_info["best_season"]}</div>')
             if india_info.get("notable_locations"):
-                india_parts.append(f'<div style="margin:4px 0;">🔭 <b>Birding spots:</b> {india_info["notable_locations"][:80]}</div>')
+                india_parts.append(f'<div style="margin:6px 0;white-space:normal;word-wrap:break-word;">🔭 <b>Birding spots:</b> {india_info["notable_locations"]}</div>')
             
             if india_parts:
-                india_html = f'''<div style="margin:10px 0;padding:10px;background:linear-gradient(135deg,#fff7ed,#ffedd5);border-radius:8px;border-left:3px solid #f97316;">
-                    <div style="font-weight:600;color:#c2410c;margin-bottom:6px;">🇮🇳 India</div>
-                    <div style="color:#7c2d12;font-size:0.85em;">{"".join(india_parts)}</div>
+                india_html = f'''<div style="margin:10px 0;padding:12px;background:linear-gradient(135deg,#fff7ed,#ffedd5);border-radius:8px;border-left:3px solid #f97316;overflow:visible;">
+                    <div style="font-weight:600;color:#c2410c;margin-bottom:8px;">🇮🇳 India</div>
+                    <div style="color:#7c2d12;font-size:0.9em;line-height:1.5;">{"".join(india_parts)}</div>
                 </div>'''
         else:
             # Bird not found in India

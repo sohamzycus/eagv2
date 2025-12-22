@@ -226,11 +226,35 @@ class BirdSenseAPI {
       return offlineService.identifyAudio(audioUri, location, month);
     }
 
+    // Detect file type from URI
+    const uriLower = audioUri.toLowerCase();
+    let mimeType = 'audio/wav';
+    let fileName = 'recording.wav';
+    
+    if (uriLower.includes('.m4a') || uriLower.includes('.aac')) {
+      mimeType = 'audio/m4a';
+      fileName = 'recording.m4a';
+    } else if (uriLower.includes('.mp3')) {
+      mimeType = 'audio/mpeg';
+      fileName = 'recording.mp3';
+    } else if (uriLower.includes('.mp4')) {
+      mimeType = 'audio/mp4';
+      fileName = 'recording.mp4';
+    } else if (uriLower.includes('.ogg')) {
+      mimeType = 'audio/ogg';
+      fileName = 'recording.ogg';
+    } else if (uriLower.includes('.flac')) {
+      mimeType = 'audio/flac';
+      fileName = 'recording.flac';
+    }
+
+    console.log(`Audio upload: ${mimeType}, file: ${fileName}, uri: ${audioUri.substring(0, 50)}...`);
+
     const formData = new FormData();
     formData.append('audio_file', {
       uri: audioUri,
-      type: 'audio/wav',
-      name: 'recording.wav',
+      type: mimeType,
+      name: fileName,
     } as any);
     if (location) formData.append('location', location);
     if (month) formData.append('month', month);
@@ -239,6 +263,7 @@ class BirdSenseAPI {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
+      timeout: 120000, // 2 minutes for large audio files
     });
     return response.data;
   }
