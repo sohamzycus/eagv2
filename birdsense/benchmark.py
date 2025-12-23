@@ -416,6 +416,10 @@ class BirdSenseBenchmark:
         print(f"🎵 AUDIO BENCHMARK ({len(self.audio_tests)} tests)")
         print("="*70)
         
+        # Import SAMAudio for enhancement
+        from analysis import SAMAudio
+        sam = SAMAudio()
+        
         results = []
         
         for i, (name, sci, freq_range, pattern) in enumerate(self.audio_tests):
@@ -426,14 +430,17 @@ class BirdSenseBenchmark:
                 # Generate synthetic audio
                 audio, sr = self._generate_bird_audio(freq_range, pattern)
                 
-                # Extract features
-                features = self._extract_features(audio, sr)
+                # 🔊 CRITICAL: Apply SAM-Audio enhancement BEFORE any analysis
+                enhanced_audio = sam.enhance_audio(audio, sr)
                 
-                # Run BirdNET if available
+                # Extract features from ENHANCED audio
+                features = self._extract_features(enhanced_audio, sr)
+                
+                # Run BirdNET on ENHANCED audio
                 birdnet_suggestions = ""
                 birdnet_results = []
                 if BIRDNET_AVAILABLE:
-                    birdnet_results = identify_with_birdnet(audio, sr, "India", "6")
+                    birdnet_results = identify_with_birdnet(enhanced_audio, sr, "India", "6")
                     if birdnet_results:
                         birdnet_suggestions = "\n".join([
                             f"- {r.get('name')} ({r.get('scientific_name', '')}) - {r.get('confidence', 0):.0f}%"

@@ -1,0 +1,266 @@
+INFO: Created TensorFlow Lite XNNPACK delegate for CPU.
+🔍 Checking ollama...
+✅ ollama available
+🔍 Checking cloud...
+✅ cloud available
+Labels loaded.
+load model True
+Model loaded.
+Labels loaded.
+load_species_list_model
+Meta model loaded.
+✅ BirdNET (Cornell) loaded - 6000+ species!
+📊 Benchmark initialized:
+   Description tests: 160
+   Image tests: 20
+   Audio tests: 20
+   Total: 200
+
+======================================================================
+🐦 BIRDSENSE COMPREHENSIVE BENCHMARK
+   Provider: cloud
+   Search Enhancement: ON
+   Timestamp: 2025-12-23T10:28:17.313488
+======================================================================
+
+======================================================================
+📝 DESCRIPTION BENCHMARK (100 tests)
+======================================================================
+[1/100] Indian Peafowl... ✅ → Indian Peafowl
+[2/100] House Sparrow... ✅ → House Sparrow
+[3/100] Common Myna... ✅ → Common Myna
+[4/100] Rose-ringed Parakeet... ✅ → Rose-ringed Parakeet
+[5/100] Asian Koel... ✅ → Asian Koel
+[6/100] Indian Cuckoo... ✅ → Indian Cuckoo
+[7/100] Greater Coucal... ✅ → Greater Coucal
+[8/100] White-throated Kingfisher... ✅ → White-throated Kingfisher
+[9/100] Common Kingfisher... ✅ → Common Kingfisher
+[10/100] Pied Kingfisher... ✅ → Pied Kingfisher
+[11/100] Indian Roller... ✅ → Indian Roller
+[12/100] Green Bee-eater... ✅ → Green Bee-eater
+[13/100] Blue-tailed Bee-eater... ❌ → Green Bee-eater
+[14/100] Indian Grey Hornbill... ✅ → Indian Grey Hornbill
+[15/100] Malabar Pied Hornbill... ❌ → Great Hornbill
+[16/100] Great Hornbill... ✅ → Great Hornbill
+[17/100] Coppersmith Barbet... ✅ → Coppersmith Barbet
+[18/100] Brown-headed Barbet... ✅ → Brown-headed Barbet
+[19/100] White-cheeked Barbet... ✅ → White-cheeked Barbet
+[20/100] Indian Golden Oriole... ✅ → Indian Golden Oriole
+[21/100] Black Drongo... ✅ → Black Drongo
+[22/100] Ashy Drongo... ✅ → Ashy Drongo
+[23/100] Greater Racket-tailed Drongo... ✅ → Greater Racket-tailed Drongo
+[24/100] Red-vented Bulbul... ❌ → Scaly-breasted Munia
+[25/100] Red-whiskered Bulbul... ✅ → Red-whiskered Bulbul
+[26/100] White-browed Bulbul... ✅ → White-browed Bulbul
+[27/100] Oriental Magpie-Robin... ✅ → Oriental Magpie Robin
+[28/100] Indian Robin... ✅ → Indian Robin
+[29/100] Purple Sunbird... ✅ → Purple Sunbird
+[30/100] Purple-rumped Sunbird... ✅ → Purple-rumped Sunbird
+[31/100] Crimson Sunbird... ❌ → Scarlet Minivet
+[32/100] White-eye... ✅ → Indian White-eye
+[33/100] Jungle Babbler... ✅ → Jungle Babbler
+[34/100] Yellow-billed Babbler... ❌ → Large Grey Babbler
+[35/100] Common Tailorbird... ✅ → Tailorbird
+[36/100] Ashy Prinia... ✅ → Ashy Prinia
+[37/100] Plain Prinia... ✅ → Plain Prinia
+[38/100] House Crow... ✅ → House Crow
+[39/100] Large-billed Crow... ✅ → Large-billed Crow
+[40/100] Rufous Treepie... ✅ → Rufous Treepie
+[41/100] Black Kite... ✅ → Black Kite
+[42/100] Brahminy Kite... ✅ → Brahminy Kite
+[43/100] Shikra... ✅ → Shikra
+[44/100] Crested Serpent Eagle... ❌ → Crested Hawk-Eagle
+[45/100] Changeable Hawk-Eagle... ✅ → Crested Hawk-Eagle
+[46/100] Bonelli's Eagle... ❌ → Indian Spotted Eagle
+[47/100] Indian Spotted Eagle... ✅ → Indian Spotted Eagle
+[48/100] White-eyed Buzzard... ✅ → White-eyed Buzzard
+[49/100] Oriental Honey-buzzard... ✅ → Honey Buzzard
+[50/100] Peregrine Falcon... ✅ → Peregrine Falcon
+[51/100] Common Kestrel... ✅ → Common Kestrel
+[52/100] Spotted Owlet... ✅ → Spotted Owlet
+[53/100] Indian Eagle-Owl... ✅ → Indian Eagle-Owl
+[54/100] Barn Owl... ✅ → Barn Owl
+[55/100] Jungle Owlet... ✅ → Jungle Owlet
+[56/100] Indian Pond Heron... ✅ → Indian Pond Heron
+[57/100] Cattle Egret... ✅ → Cattle Egret
+[58/100] Little Egret... ✅ → Little Egret
+[59/100] Great Egret... ✅ → Great Egret
+[60/100] Grey Heron... ✅ → Grey Heron
+[61/100] Purple Heron... ❌ → Black Bittern
+[62/100] Black-crowned Night Heron... ✅ → Black-crowned Night Heron
+[63/100] Painted Stork... ✅ → Painted Stork
+[64/100] Asian Openbill... ✅ → Asian Openbill
+[65/100] Woolly-necked Stork... ✅ → Woolly-necked Stork
+[66/100] Lesser Adjutant... ❌ → Greater Adjutant
+[67/100] White Ibis... ✅ → Black-headed Ibis
+[68/100] Glossy Ibis... ✅ → Glossy Ibis
+[69/100] Eurasian Spoonbill... ✅ → Eurasian Spoonbill
+[70/100] Sarus Crane... ✅ → Sarus Crane
+[71/100] Common Crane... ✅ → Common Crane
+[72/100] White-breasted Waterhen... ✅ → White-breasted Waterhen
+[73/100] Purple Swamphen... ✅ → Purple Swamphen
+[74/100] Common Moorhen... ✅ → Common Moorhen
+[75/100] Eurasian Coot... ✅ → Common Coot
+[76/100] Himalayan Monal... ✅ → Himalayan Monal
+[77/100] Satyr Tragopan... ❌ → Lady Amherst's Pheasant 🔬
+[78/100] Blood Pheasant... ✅ → Blood Pheasant
+[79/100] Kalij Pheasant... ✅ → Kalij Pheasant
+[80/100] Red Junglefowl... ✅ → Red Junglefowl
+[81/100] Grey Junglefowl... ❌ → Sri Lankan Junglefowl
+[82/100] Himalayan Griffon... ✅ → Himalayan Griffon Vulture
+[83/100] Bearded Vulture... ✅ → Bearded Vulture 🔬
+[84/100] Himalayan Snowcock... ✅ → Himalayan Snowcock
+[85/100] White-capped Redstart... ❌ → Common Redstart
+[86/100] Blue Whistling Thrush... ❌ → Common Hill Myna
+[87/100] Spotted Laughingthrush... ❌ → Rufous Laughingthrush
+[88/100] Rufous Sibia... ❌ → Rufous-backed Shrike
+[89/100] Long-tailed Minivet... ❌ → Scarlet Tanager
+[90/100] Verditer Flycatcher... ✅ → Verditer Flycatcher
+[91/100] Indian Pitta... ✅ → Indian Pitta
+[92/100] Sri Lanka Frogmouth... ❌ → Common Nighthawk 🔬
+[93/100] Malabar Trogon... ✅ → Malabar Trogon
+[94/100] Malabar Grey Hornbill... ✅ → Malabar Grey Hornbill
+[95/100] Nilgiri Flycatcher... ✅ → Nilgiri Flycatcher
+[96/100] White-bellied Treepie... ❌ → Rufous Treepie
+[97/100] Kerala Laughingthrush... ❌ → White-throated Laughingthrush
+[98/100] Nilgiri Wood Pigeon... ❌ → Nicobar Pigeon
+[99/100] Andaman Serpent Eagle... ✅ → Andaman Serpent Eagle
+[100/100] Nicobar Pigeon... ✅ → Nicobar Pigeon 🔬
+
+======================================================================
+📷 IMAGE BENCHMARK (20 tests)
+======================================================================
+[1/20] Indian Peafowl... ⚠️ HTTP 429
+[2/20] House Sparrow... ✅ → House Sparrow
+[3/20] Common Myna... ⚠️ HTTP 429
+[4/20] Rose-ringed Parakeet... ⚠️ HTTP 429
+[5/20] Indian Roller... ⚠️ HTTP 429
+[6/20] Green Bee-eater... ⚠️ HTTP 429
+[7/20] White-throated Kingfisher... ⚠️ HTTP 429
+[8/20] Red-vented Bulbul... ⚠️ HTTP 429
+[9/20] Oriental Magpie-Robin... ⚠️ HTTP 429
+[10/20] Black Drongo... ⚠️ HTTP 429
+[11/20] Blue Jay... ✅ → Blue Jay
+[12/20] American Robin... ✅ → American Robin
+[13/20] Mallard... ✅ → Mallard
+[14/20] Greater Flamingo... ⚠️ HTTP 429
+[15/20] Eurasian Hoopoe... ⚠️ HTTP 429
+[16/20] Black Kite... ⚠️ HTTP 429
+[17/20] Brahminy Kite... ⚠️ HTTP 429
+[18/20] Spotted Owlet... ⚠️ HTTP 429
+[19/20] Indian Pond Heron... ⚠️ HTTP 429
+[20/20] Painted Stork... ⚠️ HTTP 429
+
+======================================================================
+🎵 AUDIO BENCHMARK (20 tests)
+======================================================================
+[1/20] Asian Koel... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmpyss4tq57.wav
+✅ → ['Asian Koel', 'Indian Cuckoo']
+[2/20] Common Cuckoo... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmpc8kvnx6d.wav
+❌ → ['Asian Koel', 'Red Collared Dove']
+[3/20] Greater Coucal... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmp_2y9_1t6.wav
+❌ → ['Indian Eagle-Owl', 'Brown Fish Owl']
+[4/20] White-throated Kingfisher... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmpfsnc4che.wav
+❌ → ['Greenish Warbler', 'Purple Sunbird']
+[5/20] Coppersmith Barbet... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmp49yn1wx6.wav
+❌ → ['Red-whiskered Bulbul', 'Asian Koel']
+[6/20] Indian Golden Oriole... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmpl0rp81r_.wav
+❌ → ['Red-whiskered Bulbul', 'Asian Koel']
+[7/20] Black Drongo... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmp0tsnvpom.wav
+❌ → ['Asian Koel', 'Red-vented Bulbul']
+[8/20] Red-vented Bulbul... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmpwwja944y.wav
+❌ → ['Purple Sunbird', 'Greenish Warbler']
+[9/20] Oriental Magpie-Robin... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmp1w5psbvz.wav
+❌ → ['Greenish Warbler', "Tickell's Leaf Warbler"]
+[10/20] Common Tailorbird... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmp6nocpp70.wav
+❌ → ['Greenish Warbler', "Tickell's Leaf Warbler"]
+[11/20] Purple Sunbird... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmpericpax_.wav
+✅ → ['Purple Sunbird', 'Plain Prinia']
+[12/20] Jungle Babbler... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmpi93gnby9.wav
+❌ → ['Asian Koel', 'Red-whiskered Bulbul']
+[13/20] House Crow... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmp5jy6mzob.wav
+❌ → ['Asian Koel', 'Indian Cuckoo']
+[14/20] Indian Roller... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmpzpoc59e0.wav
+❌ → ['Oriental Magpie-Robin', 'Indian Robin']
+[15/20] Green Bee-eater... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmpigo3g8rh.wav
+❌ → ['Greenish Warbler', "Tickell's Leaf Warbler"]
+[16/20] Spotted Owlet... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmp0wox591_.wav
+❌ → ['Asian Koel', 'Indian Cuckoo']
+[17/20] Indian Eagle-Owl... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmpkrbqzyco.wav
+❌ → ['Indian Cuckoo', 'Asian Koel']
+[18/20] Barn Owl... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmpqg5n6o3n.wav
+❌ → ['Asian Koel', 'Red-whiskered Bulbul']
+[19/20] Greater Racket-tailed Drongo... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmpqhra9paq.wav
+❌ → ['Asian Koel', 'Red-whiskered Bulbul']
+[20/20] Indian Pitta... read_audio_data
+read_audio_data: complete, read  2 chunks.
+analyze_recording tmpl3l00qwg.wav
+❌ → ['Asian Koel', 'Indian Cuckoo']
+
+======================================================================
+📊 COMPREHENSIVE BENCHMARK RESULTS
+======================================================================
+
+🏷️  Provider: cloud
+🔍 Search Enhancement: ON
+🔬 Rare Sightings Flagged: 4
+
+──────────────────────────────────────────────────────────────────────
+Category             Tests    Top-1           Top-3           Time      
+──────────────────────────────────────────────────────────────────────
+📝 Description       100      80/100 (80.0%)  80.0%           4049ms
+📷 Image             20       4/20 (20.0%)    20.0%           5316ms
+🎵 Audio             20       2/20 (10.0%)    10.0%           9276ms
+──────────────────────────────────────────────────────────────────────
+📊 TOTAL              140      86/140 (61.4%)  61.4%           4933ms
+──────────────────────────────────────────────────────────────────────
+
+──────────────────────────────────────────────────────────────────────
+BY DIFFICULTY:
+   🟢 Common: 58.9% (66/112)
+   🟡 Uncommon: 72.7% (16/22)
+   🔴 Rare: 50.0% (2/4)
+   🔴 Not native: 100.0% (2/2)
+
+🏆 OVERALL GRADE: C
+======================================================================
+
+💾 Saved: benchmark_20251223_104017.json

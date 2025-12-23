@@ -48,10 +48,124 @@ SAM_FREQ_BANDS = [
 
 # ============ META SAM-AUDIO CLASS ============
 class SAMAudio:
-    """META SAM-inspired audio source separation for bird calls."""
+    """META SAM-inspired audio source separation and enhancement for bird calls."""
     
     def __init__(self):
         self.freq_bands = SAM_FREQ_BANDS
+        self.bird_freq_low = 300   # Hz - lower bound for bird calls
+        self.bird_freq_high = 10000  # Hz - upper bound for bird calls
+    
+    def enhance_audio(self, audio: np.ndarray, sr: int) -> np.ndarray:
+        """
+        🔊 META SAM-Audio Enhancement Pipeline:
+        1. Bandpass filter to bird frequency range (300-10000 Hz)
+        2. Spectral noise reduction
+        3. Dynamic range compression
+        4. Normalization
+        
+        This MUST be called before BirdNET or LLM analysis!
+        """
+        if len(audio) < 1024:
+            return audio
+        
+        try:
+            # Step 1: Bandpass filter to bird frequencies (300-10000 Hz)
+            nyq = sr / 2
+            low_norm = self.bird_freq_low / nyq
+            high_norm = min(self.bird_freq_high / nyq, 0.99)
+            
+            if low_norm < high_norm and low_norm > 0:
+                b, a = signal.butter(4, [low_norm, high_norm], btype='band')
+                audio = signal.filtfilt(b, a, audio)
+            
+            # Step 2: Spectral noise reduction (simple spectral subtraction)
+            # Estimate noise from quietest 10% of signal
+            frame_size = min(2048, len(audio) // 8)
+            if frame_size > 256:
+                num_frames = len(audio) // frame_size
+                frame_energies = []
+                for i in range(num_frames):
+                    frame = audio[i*frame_size:(i+1)*frame_size]
+                    frame_energies.append(np.sum(frame**2))
+                
+                # Find noise floor from quietest frames
+                sorted_energies = sorted(frame_energies)
+                noise_threshold = sorted_energies[max(0, int(num_frames * 0.1))]
+                
+                # Apply soft gating - reduce quiet parts, keep bird calls
+                for i in range(num_frames):
+                    if frame_energies[i] < noise_threshold * 2:
+                        # Reduce noise in quiet parts
+                        start = i * frame_size
+                        end = (i + 1) * frame_size
+                        audio[start:end] *= 0.3  # Attenuate noise
+            
+            # Step 3: Dynamic range compression (make quiet parts louder)
+            # Compute envelope
+            envelope = np.abs(signal.hilbert(audio))
+            envelope = gaussian_filter1d(envelope, sigma=sr//100)  # Smooth ~10ms
+            
+            # Compress dynamic range
+            max_env = np.max(envelope) + 1e-10
+            compression_ratio = 0.5  # Reduce dynamic range by 50%
+            
+            # Apply compression to make bird calls more prominent
+            gain = (envelope / max_env) ** (-compression_ratio + 1)
+            gain = np.clip(gain, 0.5, 3.0)  # Limit gain range
+            audio = audio * gain
+            
+            # Step 4: Final normalization
+            max_val = np.max(np.abs(audio))
+            if max_val > 0:
+                audio = audio / max_val * 0.95  # Leave headroom
+            
+            return audio
+            
+        except Exception as e:
+            print(f"SAM-Audio enhancement error: {e}")
+            return audio
+    
+    def amplify_bird_frequencies(self, audio: np.ndarray, sr: int, 
+                                   target_freq: int = None) -> np.ndarray:
+        """
+        Selectively amplify specific bird frequency ranges.
+        Useful when we know the expected bird's frequency from BirdNET hints.
+        """
+        if len(audio) < 1024:
+            return audio
+        
+        try:
+            # Default: amplify mid-range bird frequencies (1000-4000 Hz)
+            if target_freq is None:
+                low_freq = 1000
+                high_freq = 4000
+            else:
+                # Create band around target frequency
+                low_freq = max(300, target_freq - 500)
+                high_freq = min(10000, target_freq + 500)
+            
+            nyq = sr / 2
+            low_norm = low_freq / nyq
+            high_norm = min(high_freq / nyq, 0.99)
+            
+            if low_norm < high_norm and low_norm > 0:
+                # Create bandpass for target frequencies
+                b, a = signal.butter(3, [low_norm, high_norm], btype='band')
+                enhanced_band = signal.filtfilt(b, a, audio)
+                
+                # Mix enhanced band with original (boost by 2x)
+                audio = audio + enhanced_band * 1.5
+                
+                # Normalize
+                max_val = np.max(np.abs(audio))
+                if max_val > 0:
+                    audio = audio / max_val * 0.95
+            
+            return audio
+            
+        except Exception as e:
+            print(f"Frequency amplification error: {e}")
+            return audio
     
     def detect_bird_segments(self, audio: np.ndarray, sr: int) -> List[Dict]:
         """Detect bird call segments using energy analysis."""
@@ -663,12 +777,95 @@ Which is most likely? Respond with JSON: {{"birds": [{{"name": "...", "scientifi
     return validated
 
 
+# ============ MULTI-SOURCE AUDIO MERGE ============
+def _merge_audio_candidates(candidates: List[Dict]) -> List[Dict]:
+    """
+    Merge audio candidates from multiple sources with weighted scoring.
+    
+    Weights:
+    - BirdNET: 45% (spectrogram pattern matching)
+    - Spectrogram+Vision: 30% (visual pattern analysis)
+    - LLM-Enhanced: 25% (contextual reasoning)
+    """
+    if not candidates:
+        return []
+    
+    # Source weights
+    SOURCE_WEIGHTS = {
+        "BirdNET": 0.45,
+        "Spectrogram+Vision": 0.30,
+        "LLM-Enhanced": 0.25,
+        "BirdNET+LLM": 0.40,
+    }
+    
+    # Group by bird name (case-insensitive)
+    bird_scores = {}
+    
+    for c in candidates:
+        name = c.get("name", "").lower().strip()
+        if not name:
+            continue
+        
+        source = c.get("source", "Unknown")
+        # Extract base source (e.g., "BirdNET (high band)" -> "BirdNET")
+        base_source = source.split("(")[0].strip() if "(" in source else source
+        weight = SOURCE_WEIGHTS.get(base_source, 0.20)
+        
+        confidence = c.get("confidence", 50)
+        weighted_score = weight * confidence
+        
+        if name not in bird_scores:
+            bird_scores[name] = {
+                "name": c.get("name"),
+                "scientific_name": c.get("scientific_name", c.get("scientific", "")),
+                "score": 0,
+                "sources": [],
+                "reasons": [],
+                "count": 0
+            }
+        
+        bird_scores[name]["score"] += weighted_score
+        bird_scores[name]["sources"].append(source)
+        bird_scores[name]["count"] += 1
+        if c.get("reason"):
+            bird_scores[name]["reasons"].append(c["reason"])
+    
+    # Sort by score (higher is better)
+    sorted_birds = sorted(bird_scores.values(), key=lambda x: x["score"], reverse=True)
+    
+    # Normalize to confidence percentages
+    if not sorted_birds:
+        return []
+    
+    max_score = sorted_birds[0]["score"]
+    
+    results = []
+    for bird in sorted_birds[:5]:  # Top 5
+        # Boost if multiple sources agree
+        multi_source_boost = min(1.2, 1 + (bird["count"] - 1) * 0.1)
+        
+        confidence = min(95, int((bird["score"] / max_score) * 100 * multi_source_boost))
+        
+        unique_sources = list(set(bird["sources"]))
+        source_str = " + ".join(unique_sources[:3])
+        
+        results.append({
+            "name": bird["name"],
+            "scientific_name": bird["scientific_name"],
+            "confidence": confidence,
+            "reason": bird["reasons"][0] if bird["reasons"] else f"Identified by: {source_str}",
+            "source": source_str
+        })
+    
+    return results
+
+
 # ============ STREAMING IDENTIFICATION FUNCTIONS ============
 
 def identify_audio_streaming(audio_input, location: str = "", month: str = "") -> Generator[str, None, None]:
     """
-    BirdSense Hybrid Audio Identification.
-    Pipeline: META SAM-Audio → BirdNET → LLM Validation
+    BirdSense Hybrid Audio Identification - ENHANCED VERSION
+    Pipeline: META SAM-Audio → BirdNET → Spectrogram+Vision → LLM Validation
     """
     if audio_input is None:
         yield "<p style='color:#dc2626'>⚠️ Please upload or record audio</p>"
@@ -693,37 +890,49 @@ def identify_audio_streaming(audio_input, location: str = "", month: str = "") -
     
     # Get model info
     model_info = provider_factory.get_model_info("text")
+    vision_info = provider_factory.get_model_info("vision")
     trail = []
+    all_candidates = []  # Collect from all methods
     
     def update_trail(step: str, status: str = "⏳") -> str:
         trail_html = "".join([f"<div style='padding:4px 0;color:#64748b'>{t}</div>" for t in trail])
-        model_badge = f"<div style='font-size:0.8em;color:#3b82f6;margin-bottom:8px'>🤖 {model_info['name']} ({model_info['provider']})</div>"
+        model_badge = f"<div style='font-size:0.8em;color:#3b82f6;margin-bottom:8px'>🤖 {model_info['name']} | 🖼️ {vision_info['name']}</div>"
         return f"""<div style='padding:16px;background:#dbeafe;border-radius:8px'>
-            <h3>🧠 BirdSense Analysis Trail</h3>
+            <h3>🧠 BirdSense Enhanced Audio Analysis</h3>
             {model_badge}
             {trail_html}
             <div style='padding:4px 0;font-weight:bold'>{status} {step}</div>
         </div>"""
     
-    # Stage 1: SAM-Audio - Detect segments AND separate by frequency bands
+    # Stage 1: SAM-Audio Enhancement (CRITICAL - must run before BirdNET!)
     trail.append("✅ Audio loaded")
-    yield update_trail("Stage 1/4: META SAM-Audio filtering...")
+    yield update_trail("Stage 1/5: META SAM-Audio enhancement...")
     
     sam = SAMAudio()
-    segments = sam.detect_bird_segments(audio_data, sr)
-    separated_bands = sam.separate_multiple_birds(audio_data, sr)
+    
+    # 🔊 ENHANCE AUDIO FIRST - This is critical for accuracy!
+    enhanced_audio = sam.enhance_audio(audio_data, sr)
+    trail.append("✅ SAM-Audio: Noise reduction + Bird freq amplification")
+    
+    # Detect bird segments in enhanced audio
+    segments = sam.detect_bird_segments(enhanced_audio, sr)
+    
+    # Separate into frequency bands from enhanced audio
+    separated_bands = sam.separate_multiple_birds(enhanced_audio, sr)
     trail.append(f"✅ SAM-Audio: {len(segments)} segment(s), {len(separated_bands)} frequency band(s)")
     
-    # Stage 2: BirdNET - Run on FULL audio AND each frequency band
-    yield update_trail("Stage 2/4: BirdNET multi-bird analysis...")
+    # Stage 2: BirdNET - Run on ENHANCED audio AND each frequency band
+    yield update_trail("Stage 2/5: BirdNET multi-bird analysis...")
     
     birdnet_results = []
     if BIRDNET_AVAILABLE:
-        # First, analyze the full audio
-        full_results = identify_with_birdnet(audio_data, sr, location, month)
+        # First, analyze the ENHANCED audio (not original!)
+        full_results = identify_with_birdnet(enhanced_audio, sr, location, month)
         if full_results:
+            for r in full_results:
+                r["source"] = "BirdNET (enhanced)"
             birdnet_results.extend(full_results)
-            trail.append(f"✅ BirdNET (full): {len(full_results)} species")
+            trail.append(f"✅ BirdNET (enhanced): {len(full_results)} species")
         
         # Then analyze each separated frequency band for additional birds
         for band in separated_bands[:3]:  # Top 3 energy bands
@@ -735,20 +944,64 @@ def identify_audio_streaming(audio_input, location: str = "", month: str = "") -
                     br_name = br.get("name", "").lower()
                     existing_names = [r.get("name", "").lower() for r in birdnet_results]
                     if br_name and br_name not in existing_names:
-                        br["source"] = f"BirdNET ({band['band']} band)"
+                        br["source"] = f"BirdNET ({band['band']})"
                         birdnet_results.append(br)
         
         if birdnet_results:
+            all_candidates.extend(birdnet_results)
             trail.append(f"✅ BirdNET total: {len(birdnet_results)} candidate(s)")
         else:
             trail.append("⚠️ BirdNET: No matches")
     else:
         trail.append("⚠️ BirdNET: Not available")
     
-    # Stage 3: Features
-    yield update_trail("Stage 3/4: Feature extraction...")
-    features = extract_audio_features(audio_data, sr)
-    trail.append(f"✅ Features: {features['min_freq']}-{features['max_freq']}Hz")
+    # Stage 3: Spectrogram + Vision Model (NEW!)
+    yield update_trail("Stage 3/5: Spectrogram vision analysis...")
+    
+    spectrogram_results = []
+    try:
+        from audio_vision import SpectrogramAnalyzer
+        spec_analyzer = SpectrogramAnalyzer()
+        # Use ENHANCED audio for spectrogram (cleaner visualization)
+        spec_image = spec_analyzer.generate_spectrogram(enhanced_audio, sr)
+        
+        # Use vision model to analyze spectrogram
+        spec_prompt = """Analyze this bird call spectrogram image:
+
+1. **Frequency Pattern** (Y-axis): What frequency range is the call? (Low <1kHz, Medium 1-4kHz, High >4kHz)
+2. **Temporal Pattern** (X-axis): Is the call continuous, repeated, or complex?
+3. **Harmonics**: Are there multiple parallel lines (harmonics)?
+4. **Call Shape**: Rising whistle? Descending? Complex song?
+
+Based on this visual analysis, identify the bird species.
+
+Common India patterns:
+- Rising whistle ~700-1500Hz = Asian Koel
+- Two-note pattern = Common Cuckoo
+- Rapid trill 2-4kHz = Bee-eaters
+- Complex varied song = Magpie-Robin
+
+Respond in JSON: {{"birds": [{{"name": "...", "scientific_name": "...", "confidence": 75, "reason": "Spectrogram shows..."}}]}}"""
+        
+        spec_response = provider_factory.call_vision(spec_image, spec_prompt)
+        spectrogram_results = parse_birds(spec_response)
+        
+        if spectrogram_results:
+            for r in spectrogram_results:
+                r["source"] = "Spectrogram+Vision"
+                # Only add if not already found
+                if r["name"].lower() not in [c.get("name", "").lower() for c in all_candidates]:
+                    all_candidates.append(r)
+            trail.append(f"✅ Spectrogram: {len(spectrogram_results)} candidate(s)")
+        else:
+            trail.append("⚠️ Spectrogram: No visual match")
+    except Exception as e:
+        trail.append(f"⚠️ Spectrogram: Skipped ({str(e)[:30]})")
+    
+    # Stage 4: Features (from ENHANCED audio)
+    yield update_trail("Stage 4/5: Acoustic feature extraction...")
+    features = extract_audio_features(enhanced_audio, sr)
+    trail.append(f"✅ Features (enhanced): {features['min_freq']}-{features['max_freq']}Hz, Peak: {features['peak_freq']}Hz")
     
     features_html = f"""<div style='padding:12px;background:#f1f5f9;border-radius:8px;margin:8px 0'>
         <b>🎵 Acoustic Features:</b><br>
@@ -757,38 +1010,49 @@ def identify_audio_streaming(audio_input, location: str = "", month: str = "") -
         • Syllables: {features['syllables']} | Rhythm: {features['rhythm']}
     </div>"""
     
-    # Stage 4: LLM Validation
-    yield update_trail("Stage 4/4: LLM validation...")
+    # Stage 5: LLM Validation + Enhanced Prompt
+    yield update_trail("Stage 5/5: LLM validation with enhanced reasoning...")
     
-    all_birds = []
+    # Use enhanced audio prompt with all candidates as hints
+    candidate_names = [c.get("name", "") for c in all_candidates[:5]]
     
-    if BIRDNET_AVAILABLE and birdnet_results:
-        trail.append("✅ Validating BirdNET results...")
-        validated = hybrid_llm_validation(birdnet_results, features, location, month)
-        if validated:
-            all_birds.extend(deduplicate_birds(validated))
-            trail.append(f"✅ Validated: {len(validated)} species")
+    prompt_template = get_audio_prompt(provider_factory.active_provider or "ollama", enhanced=True)
+    prompt = prompt_template.format(
+        min_freq=features['min_freq'], max_freq=features['max_freq'],
+        peak_freq=features['peak_freq'], freq_range=features['freq_range'],
+        pattern=features['pattern'], complexity=features['complexity'],
+        syllables=features['syllables'], rhythm=features['rhythm'],
+        duration=features['duration'], quality=features.get('quality', 'Good'),
+        location_info=f"- Location: {location}" if location else "- Location: India",
+        season_info=f"- Season: {month}" if month else ""
+    )
     
-    # Fallback to LLM-only if no BirdNET results
-    if not all_birds:
-        trail.append(f"🔍 {model_info['name']}: Analyzing features...")
-        
-        prompt_template = get_audio_prompt(provider_factory.active_provider or "ollama")
-        prompt = prompt_template.format(
-            min_freq=features['min_freq'], max_freq=features['max_freq'],
-            peak_freq=features['peak_freq'], freq_range=features['freq_range'],
-            pattern=features['pattern'], complexity=features['complexity'],
-            syllables=features['syllables'], rhythm=features['rhythm'],
-            duration=features['duration'], quality=features['quality'],
-            location_info=f"- Location: {location}" if location else "",
-            season_info=f"- Season: {month}" if month else ""
-        )
-        
-        response = provider_factory.call_text(prompt)
-        llm_birds = parse_birds(response)
-        if llm_birds:
-            all_birds.extend(llm_birds)
-            trail.append(f"✅ Identified: {len(llm_birds)} species")
+    # Add candidate hints if available
+    if candidate_names:
+        hint_text = ", ".join([n for n in candidate_names if n])
+        prompt += f"\n\n## 🎯 DETECTION HINTS (from BirdNET/Spectrogram):\nPossible species: {hint_text}\nValidate or correct based on acoustic features."
+    
+    response = provider_factory.call_text(prompt)
+    llm_birds = parse_birds(response)
+    
+    if llm_birds:
+        for r in llm_birds:
+            r["source"] = "LLM-Enhanced"
+            # Add if new OR if higher confidence
+            existing = [c for c in all_candidates if c.get("name", "").lower() == r["name"].lower()]
+            if not existing:
+                all_candidates.append(r)
+            elif r.get("confidence", 0) > existing[0].get("confidence", 0):
+                all_candidates.remove(existing[0])
+                all_candidates.append(r)
+        trail.append(f"✅ LLM validated: {len(llm_birds)} species")
+    
+    # Also validate BirdNET results if they exist
+    if BIRDNET_AVAILABLE and birdnet_results and not llm_birds:
+        trail.append("✅ Using BirdNET as primary source")
+    
+    # Merge all candidates with weighted scoring
+    all_birds = _merge_audio_candidates(all_candidates)
     
     # Final results
     all_birds = deduplicate_birds(all_birds)
@@ -819,7 +1083,10 @@ def identify_audio_streaming(audio_input, location: str = "", month: str = "") -
 
 
 def identify_image_streaming(image, location: str = "") -> Generator[str, None, None]:
-    """BirdSense Image Identification using Vision models."""
+    """
+    BirdSense Image Identification - ENHANCED VERSION
+    Pipeline: Field Marks Analysis → Initial ID → Verification Pass → Regional Filter
+    """
     if image is None:
         yield "<p style='color:#dc2626'>⚠️ Please upload an image</p>"
         return
@@ -833,19 +1100,24 @@ def identify_image_streaming(image, location: str = "") -> Generator[str, None, 
     if location:
         trail.append(f"📍 Location: {location}")
     
-    def update_trail(step: str) -> str:
+    def update_trail(step: str, stage: int = 1, total: int = 3) -> str:
         trail_html = "".join([f"<div style='padding:2px 0;color:#64748b;font-size:0.9em'>{t}</div>" for t in trail])
         model_badge = f"<div style='font-size:0.8em;color:#3b82f6;margin-bottom:8px'>🤖 {model_info['name']} ({model_info['provider']})</div>"
+        progress = int((stage / total) * 100)
         return f"""<div style='padding:16px;background:#dbeafe;border-radius:8px'>
-            <h3>🔍 BirdSense Image Analysis</h3>
+            <h3>🔍 BirdSense Enhanced Image Analysis</h3>
             {model_badge}
+            <div style='height:6px;background:#e2e8f0;border-radius:3px;margin:8px 0;overflow:hidden'>
+                <div style='height:100%;width:{progress}%;background:linear-gradient(to right,#3b82f6,#8b5cf6);transition:width 0.3s'></div>
+            </div>
             {trail_html}
             <div style='padding:4px 0;font-weight:bold'>⏳ {step}</div>
         </div>"""
     
-    yield update_trail(f"Analyzing with {model_info['name']}...")
+    # Stage 1: Primary identification with enhanced prompt
+    yield update_trail(f"Stage 1/3: Field marks analysis...", 1, 3)
     
-    prompt = get_image_prompt(provider_factory.active_provider or "ollama")
+    prompt = get_image_prompt(provider_factory.active_provider or "ollama", enhanced=True)
     response = provider_factory.call_vision(image, prompt)
     
     if not response:
@@ -853,11 +1125,10 @@ def identify_image_streaming(image, location: str = "") -> Generator[str, None, 
         return
     
     trail.append(f"✅ {model_info['name']} complete")
-    yield update_trail("Parsing results...")
     
-    birds = parse_birds(response)
+    primary_birds = parse_birds(response)
     
-    if not birds:
+    if not primary_birds:
         yield f"""<div style='padding:16px;background:#fef2f2;border-radius:8px'>
             <h3>❌ Could not identify birds</h3>
             <details><summary>Raw response</summary>
@@ -866,14 +1137,72 @@ def identify_image_streaming(image, location: str = "") -> Generator[str, None, 
         </div>"""
         return
     
-    birds = deduplicate_birds(birds)
-    trail.append(f"✅ Identified {len(birds)} species")
+    trail.append(f"✅ Pass 1: {len(primary_birds)} candidate(s)")
+    
+    # Stage 2: Verification pass - Check for similar species
+    yield update_trail("Stage 2/3: Similar species verification...", 2, 3)
+    
+    # Check if any candidates might be confused with similar species
+    verified_birds = primary_birds.copy()
+    
+    # Import confusion prompts for similar species check
+    try:
+        from enhanced_prompts import get_confusion_prompt, CONFUSION_SPECIES_MATRIX
+        
+        candidate_names = [b.get("name", "") for b in primary_birds[:3]]
+        confusion_prompt = get_confusion_prompt(candidate_names)
+        
+        if confusion_prompt:
+            # There's a potential confusion - verify
+            verify_prompt = f"""Look at the image again carefully.
+
+{confusion_prompt}
+
+Based on the EXACT features visible in this image, confirm or correct the identification.
+
+Respond in JSON: {{"birds": [{{"name": "...", "scientific_name": "...", "confidence": 85, "reason": "VISIBLE features that confirm this ID: [list specific features]"}}]}}"""
+            
+            verify_response = provider_factory.call_vision(image, verify_prompt)
+            verified = parse_birds(verify_response)
+            
+            if verified and verified[0].get("confidence", 0) > 70:
+                # Use verified result if confident
+                trail.append(f"✅ Similar species verified: {verified[0].get('name')}")
+                verified_birds = verified
+            else:
+                trail.append("✅ Primary ID confirmed")
+        else:
+            trail.append("✅ No similar species confusion")
+    except Exception as e:
+        trail.append(f"⚠️ Verification skipped")
+    
+    # Stage 3: Regional context (if location provided)
+    yield update_trail("Stage 3/3: Finalizing results...", 3, 3)
+    
+    if location:
+        try:
+            from ebird_integration import get_fallback_expected_species
+            expected = get_fallback_expected_species(location, 1)
+            
+            # Boost confidence if bird is expected in region
+            for bird in verified_birds:
+                bird_name = bird.get("name", "").lower()
+                if any(exp.lower() in bird_name or bird_name in exp.lower() for exp in expected):
+                    bird["confidence"] = min(95, bird.get("confidence", 70) + 10)
+                    bird["reason"] = f"{bird.get('reason', '')} [Common in {location}]"
+                    
+            trail.append(f"✅ Regional context applied")
+        except:
+            pass
+    
+    birds = deduplicate_birds(verified_birds)
+    trail.append(f"✅ Final: {len(birds)} species identified")
     
     trail_html = "".join([f"<div style='padding:2px 0;color:#64748b;font-size:0.9em'>{t}</div>" for t in trail])
     result = f"""<div style='padding:16px;background:#dcfce7;border-radius:8px;margin-bottom:16px'>
         <h3>✅ BirdSense Results</h3>
         <p>Identified <b>{len(birds)}</b> species</p>
-        <details><summary style='cursor:pointer;color:#059669'>View trail</summary>
+        <details><summary style='cursor:pointer;color:#059669'>View analysis trail</summary>
         <div style='padding:8px;background:#f0fdf4;border-radius:4px;margin-top:8px'>{trail_html}</div>
         </details>
     </div>"""

@@ -882,6 +882,28 @@ def get_audio_characteristics() -> Dict[str, Dict]:
     return {bird.name: bird.audio_chars for bird in dataset}
 
 
+def get_birds_by_region(region: str) -> List[BirdEntry]:
+    """Get birds found in a specific region."""
+    region_lower = region.lower()
+    dataset = get_full_dataset()
+    
+    matching = []
+    for bird in dataset:
+        # Check if region matches any native region
+        for native in bird.native_regions:
+            if region_lower in native.lower():
+                matching.append(bird)
+                break
+    
+    return matching
+
+
+def get_birds_by_rarity(rarity: str) -> List[BirdEntry]:
+    """Get birds by rarity level in India."""
+    dataset = get_full_dataset()
+    return [bird for bird in dataset if bird.rarity_in_india == rarity]
+
+
 # Stats
 if __name__ == "__main__":
     dataset = get_full_dataset()

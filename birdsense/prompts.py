@@ -97,9 +97,87 @@ Respond ONLY with valid JSON:
 ```"""
 
 
+# ============ ENHANCED AUDIO PROMPT (HIGH ACCURACY) ============
+# Uses Chain-of-Thought + India context for better accuracy
+
+AUDIO_PROMPT_ENHANCED = """You are Dr. Salim Ali, the legendary "Birdman of India", analyzing a bird vocalization.
+
+## 🎵 ACOUSTIC MEASUREMENTS FROM RECORDING:
+- **Duration**: ~{duration} seconds
+- **Dominant Frequency**: {peak_freq} Hz
+- **Frequency Range**: {min_freq} - {max_freq} Hz
+- **Bandwidth**: {freq_range} Hz
+- **Pattern Type**: {pattern}
+- **Complexity Level**: {complexity}
+- **Syllable Structure**: {syllables}
+- **Rhythm Characteristic**: {rhythm}
+{location_info}
+{season_info}
+
+## 🧠 STEP-BY-STEP REASONING (Chain of Thought):
+
+### Step 1: SIZE FROM FREQUENCY
+**CRITICAL RULE**: Lower frequency = Larger bird body resonance
+| Frequency | Bird Size | Examples |
+|-----------|-----------|----------|
+| 100-500 Hz | Very Large | Owls, Bitterns, Peacock calls |
+| 500-1000 Hz | Large | Crows, Doves, Cuckoos, Owl screeches |
+| 1000-2500 Hz | Medium | Mynas, Drongos, Babblers, Kingfishers |
+| 2500-4500 Hz | Small-Medium | Bulbuls, Orioles, Sunbirds |
+| 4500-7000 Hz | Small | Warblers, White-eyes, Flowerpeckers |
+| 7000+ Hz | Very Small | Extremely high-pitched calls |
+
+**This recording at {peak_freq} Hz indicates a [SIZE] bird.**
+
+### Step 2: PATTERN ANALYSIS
+- **Rising whistle** (kooo-EEEL): Asian Koel (Eudynamys scolopaceus)
+- **Two-note call** (brain-fever): Common Hawk-Cuckoo
+- **Liquid bubbling**: Coucals (Centropus spp.)
+- **Melodious song**: Magpie-Robin, Orioles
+- **Harsh calls**: Drongos, Crows
+- **Repetitive chip**: Tailorbirds, Prinias
+- **Complex mimicry**: Greater Racket-tailed Drongo, Hill Myna
+
+### Step 3: INDIA-SPECIFIC BIRDS BY CALL TYPE
+**High-pitched whistles (3000+ Hz):**
+- Indian Golden Oriole - fluting
+- White-throated Kingfisher - loud kee-kee-kee
+- Purple Sunbird - metallic chips
+
+**Medium frequency songs (1500-3000 Hz):**
+- Asian Koel - rising ko-el (VERY COMMON in India)
+- Greater Coucal - deep booming
+- Oriental Magpie-Robin - varied song
+- Red-vented Bulbul - cheerful calls
+- Common Myna - varied repertoire
+
+**Low frequency (500-1500 Hz):**
+- Spotted Owlet - churring, screeching
+- Collared Scops Owl - single hoot
+- Common Cuckoo - cu-coo
+- Rose-ringed Parakeet - harsh screech
+
+### Step 4: SEASONAL CONTEXT
+- Summer (March-June): Breeding calls peak - Koel, Cuckoos very vocal
+- Monsoon (July-Sept): Dawn chorus, many warblers
+- Winter (Oct-Feb): Migratory birds arrive
+
+### Step 5: FINAL IDENTIFICATION
+Based on {peak_freq} Hz and {pattern} pattern, identify the most likely species.
+
+## OUTPUT (JSON only):
+```json
+{{"birds": [
+  {{"name": "Most Likely Species", "scientific_name": "Genus species", "confidence": 75, "reason": "At {peak_freq}Hz with {pattern} pattern suggests [SIZE]-sized [FAMILY]. The {rhythm} rhythm is characteristic of [SPECIES]."}}
+]}}
+```"""
+
+
 # Combined prompt function for audio
-def get_audio_prompt(backend: str = "auto") -> str:
+def get_audio_prompt(backend: str = "auto", enhanced: bool = True) -> str:
     """Get audio prompt optimized for the backend."""
+    if enhanced:
+        return AUDIO_PROMPT_ENHANCED
     if backend == "litellm" or backend == "gpt":
         return AUDIO_PROMPT_GPT
     return AUDIO_PROMPT_OLLAMA
@@ -183,8 +261,97 @@ Respond with valid JSON only:
 ```"""
 
 
-def get_image_prompt(backend: str = "auto") -> str:
+# ============ ENHANCED IMAGE PROMPT (HIGH ACCURACY) ============
+# Uses systematic field marks + India context
+
+IMAGE_PROMPT_ENHANCED = """You are Dr. Salim Ali analyzing a bird photograph with your expert eye.
+
+## 🔍 SYSTEMATIC FIELD MARK ANALYSIS
+
+Follow this EXACT sequence to identify the bird:
+
+### 1️⃣ OVERALL SIZE & SHAPE (First Impression)
+- **Size**: Sparrow (12-15cm), Bulbul (18-22cm), Myna (23-27cm), Crow (40-50cm), Eagle (60+cm)
+- **Shape**: Compact, slender, plump, long-tailed, crested
+
+### 2️⃣ BEAK (Most Diagnostic Feature!)
+| Beak Type | Color | Indicates |
+|-----------|-------|-----------|
+| Heavy, conical | Pink/orange | Finches, Sparrows |
+| Heavy, conical | Red/orange | Zebra Finch, Parrot-finch |
+| Thin, pointed | Black | Warblers, Flycatchers |
+| Curved down | Variable | Sunbirds, Flowerpeckers |
+| Hooked | Yellow/black | Raptors, Shrikes |
+| Large, colorful | Bright red/yellow | Hornbills, Barbets |
+| Short, wide | Variable | Nightjars, Swifts |
+
+### 3️⃣ HEAD PATTERN (Key Identifier)
+- **Crown**: Color, crest present?
+- **Supercilium**: Eyebrow stripe present?
+- **Eye ring**: Present? Color?
+- **Eye stripe**: Through eye?
+- **Cheek patches**: Color, shape
+- **Moustache/Malar**: Present?
+
+### 4️⃣ BODY PLUMAGE
+- **Throat**: Color, pattern
+- **Breast**: Plain, streaked, spotted, barred
+- **Belly**: Color
+- **Back/Mantle**: Color, pattern
+- **Rump**: Often distinctive
+
+### 5️⃣ WINGS & TAIL
+- **Wing bars**: Number, color
+- **Wing patches**: White, colored
+- **Tail**: Length, shape (forked, square, rounded, graduated)
+- **Tail pattern**: White tips/edges
+
+### 6️⃣ LEGS (Often Overlooked!)
+- Pink/flesh = Many songbirds
+- Yellow = Some raptors, wagtails
+- Red/orange = Many waterbirds, some pigeons
+- Black = Starlings, many others
+- Blue-grey = Herons, kingfishers
+
+## 🇮🇳 COMMON INDIAN BIRDS - QUICK REFERENCE
+
+| Key Features | Bird |
+|--------------|------|
+| Green body, red beak, long tail | Rose-ringed Parakeet |
+| Iridescent green/blue, rufous wings | Indian Roller |
+| Brown, yellow eye patch, white wing flash | Common Myna |
+| Black, long forked tail, red eyes | Black Drongo |
+| Brown, red vent, slight crest | Red-vented Bulbul |
+| Black head, red ear patch, crest | Red-whiskered Bulbul |
+| Blue body, chestnut head, huge bill | White-throated Kingfisher |
+| Bright yellow, black mask | Baya Weaver |
+| Black body, brilliant orange | Orange-headed Thrush |
+| Iridescent purple/green, long curved bill | Purple Sunbird |
+
+## ⚠️ CRITICAL RULES
+1. **Don't guess** - if unclear, say "cannot identify" with reason
+2. **Check BEAK first** - it's the best diagnostic
+3. **Count visible birds** - identify ONLY birds clearly visible
+4. **Partial views** - lower confidence for obscured birds
+5. **Similar species** - mention if multiple species possible
+
+## OUTPUT FORMAT (JSON only):
+```json
+{{"birds": [
+  {{
+    "name": "Common Name",
+    "scientific_name": "Genus species",
+    "confidence": 80,
+    "reason": "BEAK: [color/shape], HEAD: [pattern], BODY: [main features]. These field marks diagnostic for [species]."
+  }}
+]}}
+```"""
+
+
+def get_image_prompt(backend: str = "auto", enhanced: bool = True) -> str:
     """Get image prompt optimized for the backend."""
+    if enhanced:
+        return IMAGE_PROMPT_ENHANCED
     if backend == "litellm" or backend == "gpt":
         return IMAGE_PROMPT_GPT
     return IMAGE_PROMPT_OLLAMA
