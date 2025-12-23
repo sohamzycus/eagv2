@@ -1,0 +1,385 @@
+{
+  "summary": {
+    "total_files": 10,
+    "tested": 10,
+    "correct": 9,
+    "accuracy": 90.0,
+    "birdnet_available": true,
+    "llm_backend": "cloud",
+    "timestamp": "2025-12-23T17:56:35.014689"
+  },
+  "results": [
+    {
+      "file": "Dicrurus leucophaeus_Ashy Drongo.mp3",
+      "expected_scientific": "Dicrurus leucophaeus Ashy Drongo",
+      "expected_common": "Ashy Drongo",
+      "expected_names": [
+        "ashy drongo",
+        "dicrurus leucophaeus ashy drongo",
+        "ashy drongo"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Ashy Drongo",
+          "scientific_name": "Dicrurus leucophaeus",
+          "confidence": 92,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 5392,
+      "features": {
+        "duration": 11.99,
+        "min_freq": 2390,
+        "max_freq": 6266,
+        "peak_freq": 4091,
+        "freq_range": 3876,
+        "pattern": "complex_song",
+        "syllables": 15,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Acridotheres tristis tristis_Common myna.mp3",
+      "expected_scientific": "Acridotheres tristis tristis Common myna",
+      "expected_common": "Common myna",
+      "expected_names": [
+        "common myna",
+        "acridotheres tristis tristis common myna",
+        "common myna"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Common Myna",
+          "scientific_name": "Acridotheres tristis",
+          "confidence": 94,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Bare-throated Whistler",
+          "scientific_name": "Pachycephala nudigula",
+          "confidence": 23,
+          "source": "BirdNET+LLM"
+        },
+        {
+          "name": "Unknown species",
+          "scientific_name": "Unknown",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 6798,
+      "features": {
+        "duration": 7.89,
+        "min_freq": 1981,
+        "max_freq": 3596,
+        "peak_freq": 3165,
+        "freq_range": 1615,
+        "pattern": "complex_song",
+        "syllables": 13,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Psilopogon haemacephalus_Coppersmith Barbet_2.m4a",
+      "expected_scientific": "Psilopogon haemacephalus Coppersmith Barbet",
+      "expected_common": "Coppersmith Barbet",
+      "expected_names": [
+        "coppersmith barbet",
+        "psilopogon haemacephalus coppersmith barbet",
+        "coppersmith barbet"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Coppersmith Barbet",
+          "scientific_name": "Psilopogon haemacephalus",
+          "confidence": 75,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Malabar Barbet",
+          "scientific_name": "Psilopogon malabaricus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2754,
+      "features": {
+        "duration": 13.26,
+        "min_freq": 753,
+        "max_freq": 6438,
+        "peak_freq": 6266,
+        "freq_range": 5685,
+        "pattern": "complex_song",
+        "syllables": 28,
+        "complexity": "high",
+        "rhythm": "moderate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "orthotomus sutorius_common tailorbird_24-35-27.0132-N_72-43-21.288-N.wav",
+      "expected_scientific": "orthotomus sutorius common tailorbird",
+      "expected_common": "24-35-27.0132-N 72-43-21.288-N",
+      "expected_names": [
+        "24-35-27.0132-n 72-43-21.288-n",
+        "orthotomus sutorius common tailorbird",
+        "72-43-21.288-n"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Common Tailorbird",
+          "scientific_name": "Orthotomus sutorius",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3244,
+      "features": {
+        "duration": 21.14,
+        "min_freq": 2627,
+        "max_freq": 7235,
+        "peak_freq": 7149,
+        "freq_range": 4608,
+        "pattern": "complex_song",
+        "syllables": 31,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Cuculus canorus_Common Cuckoo.mp3",
+      "expected_scientific": "Cuculus canorus Common Cuckoo",
+      "expected_common": "Common Cuckoo",
+      "expected_names": [
+        "common cuckoo",
+        "cuculus canorus common cuckoo",
+        "common cuckoo"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Common Cuckoo",
+          "scientific_name": "Cuculus canorus",
+          "confidence": 99,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Ortolan Bunting",
+          "scientific_name": "Emberiza hortulana",
+          "confidence": 70,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Red-headed Bunting",
+          "scientific_name": "Emberiza bruniceps",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2026,
+      "features": {
+        "duration": 8.46,
+        "min_freq": 538,
+        "max_freq": 667,
+        "peak_freq": 538,
+        "freq_range": 129,
+        "pattern": "complex_song",
+        "syllables": 12,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Elanus caeruleus_Black-winged Kite.mp3",
+      "expected_scientific": "Elanus caeruleus Black-winged Kite",
+      "expected_common": "Black-winged Kite",
+      "expected_names": [
+        "black-winged kite",
+        "elanus caeruleus black-winged kite",
+        "black-winged kite"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Black Woodpecker",
+          "scientific_name": "Dryocopus martius",
+          "confidence": 79,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Barn Owl",
+          "scientific_name": "Tyto alba",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 2198,
+      "features": {
+        "duration": 6.79,
+        "min_freq": 322,
+        "max_freq": 6115,
+        "peak_freq": 344,
+        "freq_range": 5793,
+        "pattern": "complex_song",
+        "syllables": 10,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Amandava amandava_Red Avadavat.mp3",
+      "expected_scientific": "Amandava amandava Red Avadavat",
+      "expected_common": "Red Avadavat",
+      "expected_names": [
+        "red avadavat",
+        "amandava amandava red avadavat",
+        "red avadavat"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Red Avadavat",
+          "scientific_name": "Amandava amandava",
+          "confidence": 99,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Common Kingfisher",
+          "scientific_name": "Alcedo atthis",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2438,
+      "features": {
+        "duration": 9.72,
+        "min_freq": 5361,
+        "max_freq": 6481,
+        "peak_freq": 5404,
+        "freq_range": 1120,
+        "pattern": "repeated_phrases",
+        "syllables": 5,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Grus grus_Common Crane.m4a",
+      "expected_scientific": "Grus grus Common Crane",
+      "expected_common": "Common Crane",
+      "expected_names": [
+        "common crane",
+        "grus grus common crane",
+        "common crane"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Common Crane",
+          "scientific_name": "Grus grus",
+          "confidence": 96,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 4188,
+      "features": {
+        "duration": 34.09,
+        "min_freq": 820,
+        "max_freq": 7171,
+        "peak_freq": 1968,
+        "freq_range": 6351,
+        "pattern": "complex_song",
+        "syllables": 37,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Acridotheres ginginianus_Bank Myna.mp3",
+      "expected_scientific": "Acridotheres ginginianus Bank Myna",
+      "expected_common": "Bank Myna",
+      "expected_names": [
+        "bank myna",
+        "acridotheres ginginianus bank myna",
+        "bank myna"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Bank Myna",
+          "scientific_name": "Acridotheres ginginianus",
+          "confidence": 54,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 6061,
+      "features": {
+        "duration": 56.42,
+        "min_freq": 1658,
+        "max_freq": 5577,
+        "peak_freq": 3919,
+        "freq_range": 3919,
+        "pattern": "complex_song",
+        "syllables": 56,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Passer domesticus_House Sparrow_2.m4a",
+      "expected_scientific": "Passer domesticus House Sparrow",
+      "expected_common": "House Sparrow",
+      "expected_names": [
+        "house sparrow",
+        "passer domesticus house sparrow",
+        "house sparrow"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "House Sparrow",
+          "scientific_name": "Passer domesticus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2581,
+      "features": {
+        "duration": 13.7,
+        "min_freq": 4242,
+        "max_freq": 7127,
+        "peak_freq": 4888,
+        "freq_range": 2885,
+        "pattern": "complex_song",
+        "syllables": 11,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    }
+  ]
+}

@@ -35,6 +35,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code (refactored architecture)
 COPY app.py providers.py analysis.py ./
 COPY prompts.py confusion_rules.py feedback.py ./
+COPY audio_vision.py enhanced_prompts.py ./
+COPY bird_dataset.py research_tools.py ebird_integration.py ./
+COPY enhanced_analysis.py ./
 COPY env-template.txt ./
 
 # Copy API module

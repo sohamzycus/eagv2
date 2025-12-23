@@ -23,8 +23,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import api, { BirdResult } from '../../src/services/api';
+import api, { BirdResult, AnalysisTrail as AnalysisTrailData } from '../../src/services/api';
 import BirdCard from '../../src/components/BirdCard';
+import AnalysisTrail from '../../src/components/AnalysisTrail';
 
 export default function ImageScreen() {
   const insets = useSafeAreaInsets();
@@ -36,6 +37,7 @@ export default function ImageScreen() {
   const [modelUsed, setModelUsed] = useState('');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [analysisTrail, setAnalysisTrail] = useState<AnalysisTrailData | null>(null);
   
   // Animations
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -98,9 +100,15 @@ export default function ImageScreen() {
     setBirds([]);
     setError(null);
     setIsAnalyzing(true);
+    setAnalysisTrail(null);
 
     try {
       const result = await api.identifyImageFile(uri, location || undefined);
+      
+      // Save analysis trail
+      if (result.analysis_trail) {
+        setAnalysisTrail(result.analysis_trail);
+      }
       
       // Stream results
       const allBirds = result.birds || [];
@@ -236,7 +244,15 @@ export default function ImageScreen() {
                   <Text style={styles.resultsBadgeText}>{processingTime}ms</Text>
                 </View>
               </View>
-              <Text style={styles.resultsModel}>{modelUsed}</Text>
+              
+              {/* Analysis Trail */}
+              {analysisTrail && (
+                <AnalysisTrail
+                  trail={analysisTrail}
+                  processingTimeMs={processingTime}
+                  modelUsed={modelUsed}
+                />
+              )}
               
               {birds.map((bird, index) => (
                 <BirdCard

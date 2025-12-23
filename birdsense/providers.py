@@ -423,10 +423,13 @@ class ProviderFactory:
         is_azure = os.environ.get("IS_AZURE", "false").lower() == "true"
         azure_deployment = os.environ.get("AZURE_DEPLOYMENT", "")
         
+        # API key - check multiple sources for flexibility
+        api_key = os.environ.get("LITELLM_API_KEY") or os.environ.get("OPENAI_API_KEY") or ""
+        
         if is_azure and azure_deployment:
             # Azure OpenAI
             azure_config = ProviderConfig(
-                api_key=os.environ.get("LITELLM_API_KEY", ""),
+                api_key=api_key,
                 api_base=os.environ.get("LITELLM_API_BASE", ""),
                 deployment=azure_deployment,
                 api_version=os.environ.get("AZURE_API_VERSION", "2024-02-15-preview"),
@@ -437,7 +440,7 @@ class ProviderFactory:
         else:
             # OpenAI / LiteLLM
             openai_config = ProviderConfig(
-                api_key=os.environ.get("LITELLM_API_KEY", ""),
+                api_key=api_key,
                 api_base=os.environ.get("LITELLM_API_BASE", "https://api.openai.com"),
                 vision_model=os.environ.get("LITELLM_VISION_MODEL", "gpt-4o"),
                 text_model=os.environ.get("LITELLM_TEXT_MODEL", "gpt-4o")

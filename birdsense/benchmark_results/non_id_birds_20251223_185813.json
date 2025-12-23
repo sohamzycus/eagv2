@@ -1,0 +1,439 @@
+{
+  "summary": {
+    "total_files": 12,
+    "tested": 12,
+    "correct": 7,
+    "accuracy": 58.33,
+    "birdnet_available": true,
+    "llm_backend": "cloud",
+    "timestamp": "2025-12-23T18:58:13.506447"
+  },
+  "results": [
+    {
+      "file": "parakeet.wav",
+      "expected_scientific": "",
+      "expected_common": "parakeet",
+      "expected_names": [
+        "parakeet"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "House Crow",
+          "scientific_name": "Corvus splendens",
+          "confidence": 78,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Rose-ringed Parakeet",
+          "scientific_name": "Psittacula krameri",
+          "confidence": 55,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 7002,
+      "features": {
+        "duration": 48.28,
+        "min_freq": 732,
+        "max_freq": 8613,
+        "peak_freq": 2282,
+        "freq_range": 7881,
+        "pattern": "complex_song",
+        "syllables": 37,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "white checcked barbet.m4a",
+      "expected_scientific": "",
+      "expected_common": "white checcked barbet",
+      "expected_names": [
+        "white checcked barbet"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "White-cheeked Barbet",
+          "scientific_name": "Psilopogon viridis",
+          "confidence": 96,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Moustached Barbet",
+          "scientific_name": "Psilopogon incognitus",
+          "confidence": 49,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2219,
+      "features": {
+        "duration": 10.57,
+        "min_freq": 344,
+        "max_freq": 2670,
+        "peak_freq": 1270,
+        "freq_range": 2326,
+        "pattern": "complex_song",
+        "syllables": 15,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "common tailorbird.m4a",
+      "expected_scientific": "",
+      "expected_common": "common tailorbird",
+      "expected_names": [
+        "common tailorbird"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Common Hawk-Cuckoo",
+          "scientific_name": "Hierococcyx varius",
+          "confidence": 97,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Common Tailorbird",
+          "scientific_name": "Orthotomus sutorius",
+          "confidence": 51,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 8437,
+      "features": {
+        "duration": 79.68,
+        "min_freq": 1570,
+        "max_freq": 6445,
+        "peak_freq": 1851,
+        "freq_range": 4875,
+        "pattern": "complex_song",
+        "syllables": 80,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Asian koel.m4a",
+      "expected_scientific": "",
+      "expected_common": "Asian koel",
+      "expected_names": [
+        "asian koel"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Asian Koel",
+          "scientific_name": "Eudynamys scolopaceus",
+          "confidence": 96,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Highland Tinamou",
+          "scientific_name": "Nothocercus bonapartei",
+          "confidence": 0,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2996,
+      "features": {
+        "duration": 14.16,
+        "min_freq": 1162,
+        "max_freq": 1701,
+        "peak_freq": 1507,
+        "freq_range": 539,
+        "pattern": "complex_song",
+        "syllables": 9,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Crimson backed Sunbird .mp3",
+      "expected_scientific": "",
+      "expected_common": "Crimson backed Sunbird ",
+      "expected_names": [
+        "crimson backed sunbird "
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Crimson-backed Sunbird",
+          "scientific_name": "Leptocoma minima",
+          "confidence": 76,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 4867,
+      "features": {
+        "duration": 32.86,
+        "min_freq": 4285,
+        "max_freq": 7364,
+        "peak_freq": 6782,
+        "freq_range": 3079,
+        "pattern": "complex_song",
+        "syllables": 24,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Ziting cisticola phone.wav",
+      "expected_scientific": "",
+      "expected_common": "Ziting cisticola phone",
+      "expected_names": [
+        "ziting cisticola phone"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Clamorous Reed Warbler",
+          "scientific_name": "Acrocephalus stentoreus",
+          "confidence": 57,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 3926,
+      "features": {
+        "duration": 20.47,
+        "min_freq": 516,
+        "max_freq": 6912,
+        "peak_freq": 6244,
+        "freq_range": 6396,
+        "pattern": "complex_song",
+        "syllables": 28,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "bee eater.wav",
+      "expected_scientific": "",
+      "expected_common": "bee eater",
+      "expected_names": [
+        "bee eater"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Long-tufted Screech-Owl",
+          "scientific_name": "Megascops sanctaecatarinae",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        },
+        {
+          "name": "Loggerhead Shrike",
+          "scientific_name": "Lanius ludovicianus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 2363,
+      "features": {
+        "duration": 6.08,
+        "min_freq": 473,
+        "max_freq": 8656,
+        "peak_freq": 645,
+        "freq_range": 8183,
+        "pattern": "complex_song",
+        "syllables": 12,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "oriental magpie robin.aac",
+      "expected_scientific": "",
+      "expected_common": "oriental magpie robin",
+      "expected_names": [
+        "oriental magpie robin"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Oriental Magpie-Robin",
+          "scientific_name": "Copsychus saularis",
+          "confidence": 93,
+          "source": "BirdNET"
+        },
+        {
+          "name": "House Crow",
+          "scientific_name": "Corvus splendens",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 5799,
+      "features": {
+        "duration": 41.24,
+        "min_freq": 2670,
+        "max_freq": 7924,
+        "peak_freq": 3574,
+        "freq_range": 5254,
+        "pattern": "complex_song",
+        "syllables": 52,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Purple sunbird.m4a",
+      "expected_scientific": "",
+      "expected_common": "Purple sunbird",
+      "expected_names": [
+        "purple sunbird"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Purple Sunbird",
+          "scientific_name": "Cinnyris asiaticus",
+          "confidence": 68,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3850,
+      "features": {
+        "duration": 19.74,
+        "min_freq": 516,
+        "max_freq": 5835,
+        "peak_freq": 5189,
+        "freq_range": 5319,
+        "pattern": "complex_song",
+        "syllables": 17,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "magpie4.aac",
+      "expected_scientific": "",
+      "expected_common": "magpie4",
+      "expected_names": [
+        "magpie4"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Oriental Magpie-Robin",
+          "scientific_name": "Copsychus saularis",
+          "confidence": 97,
+          "source": "BirdNET"
+        },
+        {
+          "name": "House Crow",
+          "scientific_name": "Corvus splendens",
+          "confidence": 56,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 5960,
+      "features": {
+        "duration": 37.15,
+        "min_freq": 689,
+        "max_freq": 8828,
+        "peak_freq": 7192,
+        "freq_range": 8139,
+        "pattern": "repeated_phrases",
+        "syllables": 4,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "magpie1.wav",
+      "expected_scientific": "",
+      "expected_common": "magpie1",
+      "expected_names": [
+        "magpie1"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Oriental Magpie-Robin",
+          "scientific_name": "Copsychus saularis",
+          "confidence": 78,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Common Sandpiper",
+          "scientific_name": "Actitis hypoleucos",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 2038,
+      "features": {
+        "duration": 7.12,
+        "min_freq": 430,
+        "max_freq": 8204,
+        "peak_freq": 645,
+        "freq_range": 7774,
+        "pattern": "repeated_phrases",
+        "syllables": 5,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "magpie3.wav",
+      "expected_scientific": "",
+      "expected_common": "magpie3",
+      "expected_names": [
+        "magpie3"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Oriental Magpie-Robin",
+          "scientific_name": "Copsychus saularis",
+          "confidence": 78,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Common Sandpiper",
+          "scientific_name": "Actitis hypoleucos",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 2201,
+      "features": {
+        "duration": 7.12,
+        "min_freq": 430,
+        "max_freq": 8204,
+        "peak_freq": 645,
+        "freq_range": 7774,
+        "pattern": "repeated_phrases",
+        "syllables": 5,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    }
+  ]
+}

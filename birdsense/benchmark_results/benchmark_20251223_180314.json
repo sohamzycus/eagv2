@@ -1,0 +1,4416 @@
+{
+  "summary": {
+    "total_files": 122,
+    "tested": 122,
+    "correct": 88,
+    "accuracy": 72.13,
+    "birdnet_available": true,
+    "llm_backend": "cloud",
+    "timestamp": "2025-12-23T18:03:14.869228"
+  },
+  "results": [
+    {
+      "file": "Dicrurus leucophaeus_Ashy Drongo.mp3",
+      "expected_scientific": "Dicrurus leucophaeus Ashy Drongo",
+      "expected_common": "Ashy Drongo",
+      "expected_names": [
+        "ashy drongo",
+        "dicrurus leucophaeus ashy drongo",
+        "ashy drongo"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Ashy Drongo",
+          "scientific_name": "Dicrurus leucophaeus",
+          "confidence": 92,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3283,
+      "features": {
+        "duration": 11.99,
+        "min_freq": 2390,
+        "max_freq": 6266,
+        "peak_freq": 4091,
+        "freq_range": 3876,
+        "pattern": "complex_song",
+        "syllables": 15,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Acridotheres tristis tristis_Common myna.mp3",
+      "expected_scientific": "Acridotheres tristis tristis Common myna",
+      "expected_common": "Common myna",
+      "expected_names": [
+        "common myna",
+        "acridotheres tristis tristis common myna",
+        "common myna"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Common Myna",
+          "scientific_name": "Acridotheres tristis",
+          "confidence": 94,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Bare-throated Whistler",
+          "scientific_name": "Pachycephala nudigula",
+          "confidence": 23,
+          "source": "BirdNET+LLM"
+        },
+        {
+          "name": "Unknown species",
+          "scientific_name": "Unknown",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2375,
+      "features": {
+        "duration": 7.89,
+        "min_freq": 1981,
+        "max_freq": 3596,
+        "peak_freq": 3165,
+        "freq_range": 1615,
+        "pattern": "complex_song",
+        "syllables": 13,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Psilopogon haemacephalus_Coppersmith Barbet_2.m4a",
+      "expected_scientific": "Psilopogon haemacephalus Coppersmith Barbet",
+      "expected_common": "Coppersmith Barbet",
+      "expected_names": [
+        "coppersmith barbet",
+        "psilopogon haemacephalus coppersmith barbet",
+        "coppersmith barbet"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Coppersmith Barbet",
+          "scientific_name": "Psilopogon haemacephalus",
+          "confidence": 75,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Malabar Barbet",
+          "scientific_name": "Psilopogon malabaricus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2482,
+      "features": {
+        "duration": 13.26,
+        "min_freq": 753,
+        "max_freq": 6438,
+        "peak_freq": 6266,
+        "freq_range": 5685,
+        "pattern": "complex_song",
+        "syllables": 28,
+        "complexity": "high",
+        "rhythm": "moderate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "orthotomus sutorius_common tailorbird_24-35-27.0132-N_72-43-21.288-N.wav",
+      "expected_scientific": "orthotomus sutorius common tailorbird",
+      "expected_common": "24-35-27.0132-N 72-43-21.288-N",
+      "expected_names": [
+        "24-35-27.0132-n 72-43-21.288-n",
+        "orthotomus sutorius common tailorbird",
+        "72-43-21.288-n"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Common Tailorbird",
+          "scientific_name": "Orthotomus sutorius",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3393,
+      "features": {
+        "duration": 21.14,
+        "min_freq": 2627,
+        "max_freq": 7235,
+        "peak_freq": 7149,
+        "freq_range": 4608,
+        "pattern": "complex_song",
+        "syllables": 31,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Cuculus canorus_Common Cuckoo.mp3",
+      "expected_scientific": "Cuculus canorus Common Cuckoo",
+      "expected_common": "Common Cuckoo",
+      "expected_names": [
+        "common cuckoo",
+        "cuculus canorus common cuckoo",
+        "common cuckoo"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Common Cuckoo",
+          "scientific_name": "Cuculus canorus",
+          "confidence": 99,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Ortolan Bunting",
+          "scientific_name": "Emberiza hortulana",
+          "confidence": 70,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Red-headed Bunting",
+          "scientific_name": "Emberiza bruniceps",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2049,
+      "features": {
+        "duration": 8.46,
+        "min_freq": 538,
+        "max_freq": 667,
+        "peak_freq": 538,
+        "freq_range": 129,
+        "pattern": "complex_song",
+        "syllables": 12,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Elanus caeruleus_Black-winged Kite.mp3",
+      "expected_scientific": "Elanus caeruleus Black-winged Kite",
+      "expected_common": "Black-winged Kite",
+      "expected_names": [
+        "black-winged kite",
+        "elanus caeruleus black-winged kite",
+        "black-winged kite"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Black Woodpecker",
+          "scientific_name": "Dryocopus martius",
+          "confidence": 79,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Barn Owl",
+          "scientific_name": "Tyto alba",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 1773,
+      "features": {
+        "duration": 6.79,
+        "min_freq": 322,
+        "max_freq": 6115,
+        "peak_freq": 344,
+        "freq_range": 5793,
+        "pattern": "complex_song",
+        "syllables": 10,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Amandava amandava_Red Avadavat.mp3",
+      "expected_scientific": "Amandava amandava Red Avadavat",
+      "expected_common": "Red Avadavat",
+      "expected_names": [
+        "red avadavat",
+        "amandava amandava red avadavat",
+        "red avadavat"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Red Avadavat",
+          "scientific_name": "Amandava amandava",
+          "confidence": 99,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Common Kingfisher",
+          "scientific_name": "Alcedo atthis",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2622,
+      "features": {
+        "duration": 9.72,
+        "min_freq": 5361,
+        "max_freq": 6481,
+        "peak_freq": 5404,
+        "freq_range": 1120,
+        "pattern": "repeated_phrases",
+        "syllables": 5,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Grus grus_Common Crane.m4a",
+      "expected_scientific": "Grus grus Common Crane",
+      "expected_common": "Common Crane",
+      "expected_names": [
+        "common crane",
+        "grus grus common crane",
+        "common crane"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Common Crane",
+          "scientific_name": "Grus grus",
+          "confidence": 96,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 5557,
+      "features": {
+        "duration": 34.09,
+        "min_freq": 820,
+        "max_freq": 7171,
+        "peak_freq": 1968,
+        "freq_range": 6351,
+        "pattern": "complex_song",
+        "syllables": 37,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Acridotheres ginginianus_Bank Myna.mp3",
+      "expected_scientific": "Acridotheres ginginianus Bank Myna",
+      "expected_common": "Bank Myna",
+      "expected_names": [
+        "bank myna",
+        "acridotheres ginginianus bank myna",
+        "bank myna"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Bank Myna",
+          "scientific_name": "Acridotheres ginginianus",
+          "confidence": 54,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 7000,
+      "features": {
+        "duration": 56.42,
+        "min_freq": 1658,
+        "max_freq": 5577,
+        "peak_freq": 3919,
+        "freq_range": 3919,
+        "pattern": "complex_song",
+        "syllables": 56,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Passer domesticus_House Sparrow_2.m4a",
+      "expected_scientific": "Passer domesticus House Sparrow",
+      "expected_common": "House Sparrow",
+      "expected_names": [
+        "house sparrow",
+        "passer domesticus house sparrow",
+        "house sparrow"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "House Sparrow",
+          "scientific_name": "Passer domesticus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3179,
+      "features": {
+        "duration": 13.7,
+        "min_freq": 4242,
+        "max_freq": 7127,
+        "peak_freq": 4888,
+        "freq_range": 2885,
+        "pattern": "complex_song",
+        "syllables": 11,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Strix leptogrammica_Brown Wood Owl.m4a",
+      "expected_scientific": "Strix leptogrammica Brown Wood Owl",
+      "expected_common": "Brown Wood Owl",
+      "expected_names": [
+        "brown wood owl",
+        "strix leptogrammica brown wood owl",
+        "brown wood owl"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Brown Wood-Owl",
+          "scientific_name": "Strix leptogrammica",
+          "confidence": 55,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2553,
+      "features": {
+        "duration": 16.35,
+        "min_freq": 279,
+        "max_freq": 1270,
+        "peak_freq": 602,
+        "freq_range": 991,
+        "pattern": "complex_song",
+        "syllables": 10,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Prinia sylvatica_Jungle Prinia.mp3",
+      "expected_scientific": "Prinia sylvatica Jungle Prinia",
+      "expected_common": "Jungle Prinia",
+      "expected_names": [
+        "jungle prinia",
+        "prinia sylvatica jungle prinia",
+        "jungle prinia"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Asian Koel",
+          "scientific_name": "Eudynamys scolopaceus",
+          "confidence": 91,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Jungle Prinia",
+          "scientific_name": "Prinia sylvatica",
+          "confidence": 97,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3597,
+      "features": {
+        "duration": 18.96,
+        "min_freq": 1184,
+        "max_freq": 3036,
+        "peak_freq": 1270,
+        "freq_range": 1852,
+        "pattern": "complex_song",
+        "syllables": 8,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Ploceus philippinus_Baya Weaver_2.m4a",
+      "expected_scientific": "Ploceus philippinus Baya Weaver",
+      "expected_common": "Baya Weaver",
+      "expected_names": [
+        "baya weaver",
+        "ploceus philippinus baya weaver",
+        "baya weaver"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Baya Weaver",
+          "scientific_name": "Ploceus philippinus",
+          "confidence": 79,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2791,
+      "features": {
+        "duration": 9.89,
+        "min_freq": 2239,
+        "max_freq": 5900,
+        "peak_freq": 5577,
+        "freq_range": 3661,
+        "pattern": "complex_song",
+        "syllables": 12,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Anser anser_Greylag geese.m4a",
+      "expected_scientific": "Anser anser Greylag geese",
+      "expected_common": "Greylag geese",
+      "expected_names": [
+        "greylag geese",
+        "anser anser greylag geese",
+        "greylag geese"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Graylag Goose",
+          "scientific_name": "Anser anser",
+          "confidence": 98,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 4204,
+      "features": {
+        "duration": 33.56,
+        "min_freq": 796,
+        "max_freq": 1664,
+        "peak_freq": 1218,
+        "freq_range": 868,
+        "pattern": "complex_song",
+        "syllables": 50,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Merops orientalis_Asian Green Bee-eater.m4a",
+      "expected_scientific": "Merops orientalis Asian Green Bee-eater",
+      "expected_common": "Asian Green Bee-eater",
+      "expected_names": [
+        "asian green bee-eater",
+        "merops orientalis asian green bee-eater",
+        "asian green bee-eater"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Yellow-backed Oriole",
+          "scientific_name": "Icterus chrysater",
+          "confidence": 82,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Green Bee-eater",
+          "scientific_name": "Merops orientalis",
+          "confidence": 68,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2272,
+      "features": {
+        "duration": 12.4,
+        "min_freq": 904,
+        "max_freq": 3531,
+        "peak_freq": 2217,
+        "freq_range": 2627,
+        "pattern": "complex_song",
+        "syllables": 8,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Psittacula krameri_Rose-ringed Parakeet.m4a",
+      "expected_scientific": "Psittacula krameri Rose-ringed Parakeet",
+      "expected_common": "Rose-ringed Parakeet",
+      "expected_names": [
+        "rose-ringed parakeet",
+        "psittacula krameri rose-ringed parakeet",
+        "rose-ringed parakeet"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Rose-ringed Parakeet",
+          "scientific_name": "Psittacula krameri",
+          "confidence": 95,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 4662,
+      "features": {
+        "duration": 17.76,
+        "min_freq": 1830,
+        "max_freq": 4866,
+        "peak_freq": 2433,
+        "freq_range": 3036,
+        "pattern": "complex_song",
+        "syllables": 29,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Pericrocotus cinnamomeus_Small Minivet.m4a",
+      "expected_scientific": "Pericrocotus cinnamomeus Small Minivet",
+      "expected_common": "Small Minivet",
+      "expected_names": [
+        "small minivet",
+        "pericrocotus cinnamomeus small minivet",
+        "small minivet"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Small Minivet",
+          "scientific_name": "Pericrocotus cinnamomeus",
+          "confidence": 99,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Goldcrest",
+          "scientific_name": "Regulus regulus",
+          "confidence": 95,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 4001,
+      "features": {
+        "duration": 26.4,
+        "min_freq": 3057,
+        "max_freq": 7278,
+        "peak_freq": 7213,
+        "freq_range": 4221,
+        "pattern": "complex_song",
+        "syllables": 16,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Vanellus indicus_Red-Wattled Lapwing_2.m4a",
+      "expected_scientific": "Vanellus indicus Red-Wattled Lapwing",
+      "expected_common": "Red-Wattled Lapwing",
+      "expected_names": [
+        "red-wattled lapwing",
+        "vanellus indicus red-wattled lapwing",
+        "red-wattled lapwing"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Little Grass Frog",
+          "scientific_name": "Pseudacris ocularis",
+          "confidence": 76,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Long-tailed Tapaculo",
+          "scientific_name": "Scytalopus micropterus",
+          "confidence": 26,
+          "source": "BirdNET+LLM"
+        },
+        {
+          "name": "Unknown species",
+          "scientific_name": "Unknown",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 2867,
+      "features": {
+        "duration": 12.86,
+        "min_freq": 1291,
+        "max_freq": 6976,
+        "peak_freq": 1399,
+        "freq_range": 5685,
+        "pattern": "complex_song",
+        "syllables": 13,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Alcedo atthis_Common Kingfisher.mp3",
+      "expected_scientific": "Alcedo atthis Common Kingfisher",
+      "expected_common": "Common Kingfisher",
+      "expected_names": [
+        "common kingfisher",
+        "alcedo atthis common kingfisher",
+        "common kingfisher"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Oriental Magpie-Robin",
+          "scientific_name": "Copsychus saularis",
+          "confidence": 75,
+          "source": ""
+        },
+        {
+          "name": "Indian Golden Oriole",
+          "scientific_name": "Oriolus kundoo",
+          "confidence": 60,
+          "source": ""
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 4282,
+      "features": {
+        "duration": 5.98,
+        "min_freq": 2260,
+        "max_freq": 5555,
+        "peak_freq": 5211,
+        "freq_range": 3295,
+        "pattern": "complex_song",
+        "syllables": 7,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Haliaeetus leucoryphus_Palla's Fish Eagle.m4a",
+      "expected_scientific": "Haliaeetus leucoryphus Palla's Fish Eagle",
+      "expected_common": "Palla's Fish Eagle",
+      "expected_names": [
+        "palla's fish eagle",
+        "haliaeetus leucoryphus palla's fish eagle",
+        "palla's fish eagle"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Red-and-yellow Barbet",
+          "scientific_name": "Trachyphonus erythrocephalus",
+          "confidence": 85,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Pale-vented Bush-hen",
+          "scientific_name": "Amaurornis moluccana",
+          "confidence": 44,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 5046,
+      "features": {
+        "duration": 29.72,
+        "min_freq": 1141,
+        "max_freq": 1550,
+        "peak_freq": 1464,
+        "freq_range": 409,
+        "pattern": "complex_song",
+        "syllables": 49,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Dendrocitta vagabunda_Rufous Treepie.mp3",
+      "expected_scientific": "Dendrocitta vagabunda Rufous Treepie",
+      "expected_common": "Rufous Treepie",
+      "expected_names": [
+        "rufous treepie",
+        "dendrocitta vagabunda rufous treepie",
+        "rufous treepie"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Rufous Treepie",
+          "scientific_name": "Dendrocitta vagabunda",
+          "confidence": 96,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Eurasian Magpie",
+          "scientific_name": "Pica pica",
+          "confidence": 78,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Gray-backed Shrike",
+          "scientific_name": "Lanius tephronotus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 1928,
+      "features": {
+        "duration": 6.84,
+        "min_freq": 1851,
+        "max_freq": 6244,
+        "peak_freq": 2347,
+        "freq_range": 4393,
+        "pattern": "complex_song",
+        "syllables": 12,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Psilopogon zeylanicus_Brown-headed Barbet.mp3",
+      "expected_scientific": "Psilopogon zeylanicus Brown-headed Barbet",
+      "expected_common": "Brown-headed Barbet",
+      "expected_names": [
+        "brown-headed barbet",
+        "psilopogon zeylanicus brown-headed barbet",
+        "brown-headed barbet"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Brown-headed Barbet",
+          "scientific_name": "Psilopogon zeylanicus",
+          "confidence": 99,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 5129,
+      "features": {
+        "duration": 31.09,
+        "min_freq": 796,
+        "max_freq": 1356,
+        "peak_freq": 904,
+        "freq_range": 560,
+        "pattern": "complex_song",
+        "syllables": 41,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Argya caudata_Common Babbler.mp3",
+      "expected_scientific": "Argya caudata Common Babbler",
+      "expected_common": "Common Babbler",
+      "expected_names": [
+        "common babbler",
+        "argya caudata common babbler",
+        "common babbler"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Common Redshank",
+          "scientific_name": "Tringa totanus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2942,
+      "features": {
+        "duration": 17.24,
+        "min_freq": 1851,
+        "max_freq": 5490,
+        "peak_freq": 5404,
+        "freq_range": 3639,
+        "pattern": "complex_song",
+        "syllables": 16,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "corvus splendens_house crow_19-5-10.5144-N_73-0-24.39-N.wav",
+      "expected_scientific": "corvus splendens house crow",
+      "expected_common": "19-5-10.5144-N 73-0-24.39-N",
+      "expected_names": [
+        "19-5-10.5144-n 73-0-24.39-n",
+        "corvus splendens house crow",
+        "73-0-24.39-n"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "House Crow",
+          "scientific_name": "Corvus splendens",
+          "confidence": 71,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 4586,
+      "features": {
+        "duration": 13.24,
+        "min_freq": 1464,
+        "max_freq": 7751,
+        "peak_freq": 1808,
+        "freq_range": 6287,
+        "pattern": "complex_song",
+        "syllables": 10,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Eremopterix griseus_Ashy-crowned Sparrow-Lark.mp3",
+      "expected_scientific": "Eremopterix griseus Ashy-crowned Sparrow-Lark",
+      "expected_common": "Ashy-crowned Sparrow-Lark",
+      "expected_names": [
+        "ashy-crowned sparrow-lark",
+        "eremopterix griseus ashy-crowned sparrow-lark",
+        "ashy-crowned sparrow-lark"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Gray Francolin",
+          "scientific_name": "Ortygornis pondicerianus",
+          "confidence": 76,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Long-billed Pipit",
+          "scientific_name": "Anthus similis",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 3625,
+      "features": {
+        "duration": 16.9,
+        "min_freq": 1658,
+        "max_freq": 5340,
+        "peak_freq": 2670,
+        "freq_range": 3682,
+        "pattern": "complex_song",
+        "syllables": 6,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "prinia buchanani_rufous-fronted prinia_26-29-53.8008-N_74-35-6.144-N.wav",
+      "expected_scientific": "prinia buchanani rufous-fronted prinia",
+      "expected_common": "26-29-53.8008-N 74-35-6.144-N",
+      "expected_names": [
+        "26-29-53.8008-n 74-35-6.144-n",
+        "prinia buchanani rufous-fronted prinia",
+        "74-35-6.144-n"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Rufous-fronted Prinia",
+          "scientific_name": "Prinia buchanani",
+          "confidence": 74,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Jungle Prinia",
+          "scientific_name": "Prinia sylvatica",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3345,
+      "features": {
+        "duration": 20.54,
+        "min_freq": 430,
+        "max_freq": 8290,
+        "peak_freq": 538,
+        "freq_range": 7860,
+        "pattern": "complex_song",
+        "syllables": 10,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Euodice malabarica_Indian Silverbill.mp3",
+      "expected_scientific": "Euodice malabarica Indian Silverbill",
+      "expected_common": "Indian Silverbill",
+      "expected_names": [
+        "indian silverbill",
+        "euodice malabarica indian silverbill",
+        "indian silverbill"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Common Kingfisher",
+          "scientific_name": "Alcedo atthis",
+          "confidence": 84,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Indian Silverbill",
+          "scientific_name": "Euodice malabarica",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2517,
+      "features": {
+        "duration": 15.2,
+        "min_freq": 3337,
+        "max_freq": 6115,
+        "peak_freq": 6115,
+        "freq_range": 2778,
+        "pattern": "complex_song",
+        "syllables": 6,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Ploceus philippinus_Baya Weaver.mp3",
+      "expected_scientific": "Ploceus philippinus Baya Weaver",
+      "expected_common": "Baya Weaver",
+      "expected_names": [
+        "baya weaver",
+        "ploceus philippinus baya weaver",
+        "baya weaver"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Baya Weaver",
+          "scientific_name": "Ploceus philippinus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2069,
+      "features": {
+        "duration": 9.17,
+        "min_freq": 689,
+        "max_freq": 6438,
+        "peak_freq": 3488,
+        "freq_range": 5749,
+        "pattern": "repeated_phrases",
+        "syllables": 4,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Chloropsis jerdoni_Jerdon's Leafbird.mp3",
+      "expected_scientific": "Chloropsis jerdoni Jerdon's Leafbird",
+      "expected_common": "Jerdon's Leafbird",
+      "expected_names": [
+        "jerdon's leafbird",
+        "chloropsis jerdoni jerdon's leafbird",
+        "jerdon's leafbird"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Golden-fronted Leafbird",
+          "scientific_name": "Chloropsis aurifrons",
+          "confidence": 54,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3804,
+      "features": {
+        "duration": 31.35,
+        "min_freq": 2605,
+        "max_freq": 5620,
+        "peak_freq": 3574,
+        "freq_range": 3015,
+        "pattern": "complex_song",
+        "syllables": 42,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "rose-ringed parakeet_coppersmith barbet.wav",
+      "expected_scientific": "rose-ringed parakeet coppersmith barbet",
+      "expected_common": "coppersmith barbet",
+      "expected_names": [
+        "coppersmith barbet",
+        "rose-ringed parakeet coppersmith barbet",
+        "coppersmith barbet"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Coppersmith Barbet",
+          "scientific_name": "Psilopogon haemacephalus",
+          "confidence": 82,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3803,
+      "features": {
+        "duration": 21.58,
+        "min_freq": 3768,
+        "max_freq": 7450,
+        "peak_freq": 4801,
+        "freq_range": 3682,
+        "pattern": "complex_song",
+        "syllables": 10,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Pycnonotus cafer_Red-vented Bulbul.mp3",
+      "expected_scientific": "Pycnonotus cafer Red-vented Bulbul",
+      "expected_common": "Red-vented Bulbul",
+      "expected_names": [
+        "red-vented bulbul",
+        "pycnonotus cafer red-vented bulbul",
+        "red-vented bulbul"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Red-vented Bulbul",
+          "scientific_name": "Pycnonotus cafer",
+          "confidence": 76,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 4266,
+      "features": {
+        "duration": 23.07,
+        "min_freq": 1571,
+        "max_freq": 2648,
+        "peak_freq": 1916,
+        "freq_range": 1077,
+        "pattern": "complex_song",
+        "syllables": 11,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Phylloscopus nitidus_Green Warbler.mp3",
+      "expected_scientific": "Phylloscopus nitidus Green Warbler",
+      "expected_common": "Green Warbler",
+      "expected_names": [
+        "green warbler",
+        "phylloscopus nitidus green warbler",
+        "green warbler"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Green Warbler",
+          "scientific_name": "Phylloscopus nitidus",
+          "confidence": 80,
+          "source": "BirdNET"
+        },
+        {
+          "name": "White Wagtail",
+          "scientific_name": "Motacilla alba",
+          "confidence": 97,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2828,
+      "features": {
+        "duration": 11.86,
+        "min_freq": 1701,
+        "max_freq": 6890,
+        "peak_freq": 5469,
+        "freq_range": 5189,
+        "pattern": "complex_song",
+        "syllables": 6,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Pitta brachyura_Indian Pitta_2.m4a",
+      "expected_scientific": "Pitta brachyura Indian Pitta",
+      "expected_common": "Indian Pitta",
+      "expected_names": [
+        "indian pitta",
+        "pitta brachyura indian pitta",
+        "indian pitta"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Indian Pitta",
+          "scientific_name": "Pitta brachyura",
+          "confidence": 81,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Striped Owl",
+          "scientific_name": "Asio clamator",
+          "confidence": 87,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3622,
+      "features": {
+        "duration": 25.63,
+        "min_freq": 645,
+        "max_freq": 4521,
+        "peak_freq": 1335,
+        "freq_range": 3876,
+        "pattern": "complex_song",
+        "syllables": 11,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Acridotheres fuscus_Jungle Myna.mp3",
+      "expected_scientific": "Acridotheres fuscus Jungle Myna",
+      "expected_common": "Jungle Myna",
+      "expected_names": [
+        "jungle myna",
+        "acridotheres fuscus jungle myna",
+        "jungle myna"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Common Myna",
+          "scientific_name": "Acridotheres tristis",
+          "confidence": 84,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 1803,
+      "features": {
+        "duration": 7.13,
+        "min_freq": 1765,
+        "max_freq": 5512,
+        "peak_freq": 2260,
+        "freq_range": 3747,
+        "pattern": "complex_song",
+        "syllables": 14,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Pavo cristatus_Indian Peafowl.mp3",
+      "expected_scientific": "Pavo cristatus Indian Peafowl",
+      "expected_common": "Indian Peafowl",
+      "expected_names": [
+        "indian peafowl",
+        "pavo cristatus indian peafowl",
+        "indian peafowl"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Indian Peafowl",
+          "scientific_name": "Pavo cristatus",
+          "confidence": 99,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Greater Ani",
+          "scientific_name": "Crotophaga major",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 1813,
+      "features": {
+        "duration": 5.02,
+        "min_freq": 1184,
+        "max_freq": 2540,
+        "peak_freq": 1227,
+        "freq_range": 1356,
+        "pattern": "repeated_phrases",
+        "syllables": 4,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Myophonus caeruleus_Blue-whistling Thrush.m4a",
+      "expected_scientific": "Myophonus caeruleus Blue-whistling Thrush",
+      "expected_common": "Blue-whistling Thrush",
+      "expected_names": [
+        "blue-whistling thrush",
+        "myophonus caeruleus blue-whistling thrush",
+        "blue-whistling thrush"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Rufous Treepie",
+          "scientific_name": "Dendrocitta vagabunda",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 3318,
+      "features": {
+        "duration": 22.41,
+        "min_freq": 1873,
+        "max_freq": 5921,
+        "peak_freq": 2325,
+        "freq_range": 4048,
+        "pattern": "complex_song",
+        "syllables": 30,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Prinia socialis_Ashy Prinia.mp3",
+      "expected_scientific": "Prinia socialis Ashy Prinia",
+      "expected_common": "Ashy Prinia",
+      "expected_names": [
+        "ashy prinia",
+        "prinia socialis ashy prinia",
+        "ashy prinia"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Graceful Prinia",
+          "scientific_name": "Prinia gracilis",
+          "confidence": 85,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Common House-Martin",
+          "scientific_name": "Delichon urbicum",
+          "confidence": 84,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Plain Prinia",
+          "scientific_name": "Prinia inornata",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2370,
+      "features": {
+        "duration": 11.26,
+        "min_freq": 538,
+        "max_freq": 4931,
+        "peak_freq": 4801,
+        "freq_range": 4393,
+        "pattern": "complex_song",
+        "syllables": 15,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Copsychus malabaricus_White-rumped Shama.m4a",
+      "expected_scientific": "Copsychus malabaricus White-rumped Shama",
+      "expected_common": "White-rumped Shama",
+      "expected_names": [
+        "white-rumped shama",
+        "copsychus malabaricus white-rumped shama",
+        "white-rumped shama"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Spotted Laughingthrush",
+          "scientific_name": "Ianthocincla ocellata",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 4191,
+      "features": {
+        "duration": 26.73,
+        "min_freq": 775,
+        "max_freq": 2734,
+        "peak_freq": 2282,
+        "freq_range": 1959,
+        "pattern": "complex_song",
+        "syllables": 13,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Accipiter badius_Shikra.mp3",
+      "expected_scientific": "Accipiter badius Shikra",
+      "expected_common": "Shikra",
+      "expected_names": [
+        "shikra",
+        "accipiter badius shikra",
+        "shikra"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Eurasian Kestrel",
+          "scientific_name": "Falco tinnunculus",
+          "confidence": 74,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Palestine Sunbird",
+          "scientific_name": "Cinnyris osea",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 1872,
+      "features": {
+        "duration": 6.16,
+        "min_freq": 3660,
+        "max_freq": 7235,
+        "peak_freq": 4198,
+        "freq_range": 3575,
+        "pattern": "complex_song",
+        "syllables": 13,
+        "complexity": "high",
+        "rhythm": "moderate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Psilopogon haemacephalus_Coppersmith Barbet.mp3",
+      "expected_scientific": "Psilopogon haemacephalus Coppersmith Barbet",
+      "expected_common": "Coppersmith Barbet",
+      "expected_names": [
+        "coppersmith barbet",
+        "psilopogon haemacephalus coppersmith barbet",
+        "coppersmith barbet"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Gray Treepie",
+          "scientific_name": "Dendrocitta formosae",
+          "confidence": 62,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 2089,
+      "features": {
+        "duration": 10.29,
+        "min_freq": 732,
+        "max_freq": 6309,
+        "peak_freq": 1033,
+        "freq_range": 5577,
+        "pattern": "complex_song",
+        "syllables": 7,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Milvus migrans_Black Kite.m4a",
+      "expected_scientific": "Milvus migrans Black Kite",
+      "expected_common": "Black Kite",
+      "expected_names": [
+        "black kite",
+        "milvus migrans black kite",
+        "black kite"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Black Kite",
+          "scientific_name": "Milvus migrans",
+          "confidence": 95,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Large-billed Crow",
+          "scientific_name": "Corvus macrorhynchos",
+          "confidence": 85,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Barn Owl",
+          "scientific_name": "Tyto alba",
+          "confidence": 84,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 5521,
+      "features": {
+        "duration": 16.76,
+        "min_freq": 990,
+        "max_freq": 2153,
+        "peak_freq": 1227,
+        "freq_range": 1163,
+        "pattern": "complex_song",
+        "syllables": 9,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Argya striata_Jungle Babbler.mp3",
+      "expected_scientific": "Argya striata Jungle Babbler",
+      "expected_common": "Jungle Babbler",
+      "expected_names": [
+        "jungle babbler",
+        "argya striata jungle babbler",
+        "jungle babbler"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Jungle Babbler",
+          "scientific_name": "Argya striata",
+          "confidence": 89,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3840,
+      "features": {
+        "duration": 14.55,
+        "min_freq": 1830,
+        "max_freq": 5857,
+        "peak_freq": 3962,
+        "freq_range": 4027,
+        "pattern": "complex_song",
+        "syllables": 13,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "pycnonotus jocosus_red whiskered bulbul_12-45-7.0884-N_77-35-59.244-N.wav",
+      "expected_scientific": "pycnonotus jocosus red whiskered bulbul",
+      "expected_common": "12-45-7.0884-N 77-35-59.244-N",
+      "expected_names": [
+        "12-45-7.0884-n 77-35-59.244-n",
+        "pycnonotus jocosus red whiskered bulbul",
+        "77-35-59.244-n"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Large-billed Crow",
+          "scientific_name": "Corvus macrorhynchos",
+          "confidence": 91,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 5544,
+      "features": {
+        "duration": 34.14,
+        "min_freq": 1184,
+        "max_freq": 3380,
+        "peak_freq": 1722,
+        "freq_range": 2196,
+        "pattern": "complex_song",
+        "syllables": 23,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Pycnonotus jocosus_Red-whiskered Bulbul.mp3",
+      "expected_scientific": "Pycnonotus jocosus Red-whiskered Bulbul",
+      "expected_common": "Red-whiskered Bulbul",
+      "expected_names": [
+        "red-whiskered bulbul",
+        "pycnonotus jocosus red-whiskered bulbul",
+        "red-whiskered bulbul"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Red-whiskered Bulbul",
+          "scientific_name": "Pycnonotus jocosus",
+          "confidence": 94,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Gray-crowned Warbler",
+          "scientific_name": "Phylloscopus tephrocephalus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2800,
+      "features": {
+        "duration": 15.65,
+        "min_freq": 2605,
+        "max_freq": 4134,
+        "peak_freq": 2734,
+        "freq_range": 1529,
+        "pattern": "complex_song",
+        "syllables": 8,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Apus affinis_Little Swift.mp3",
+      "expected_scientific": "Apus affinis Little Swift",
+      "expected_common": "Little Swift",
+      "expected_names": [
+        "little swift",
+        "apus affinis little swift",
+        "little swift"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Little Swift",
+          "scientific_name": "Apus affinis",
+          "confidence": 96,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Yellow-faced Grassquit",
+          "scientific_name": "Tiaris olivaceus",
+          "confidence": 78,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 1275,
+      "features": {
+        "duration": 2.04,
+        "min_freq": 4134,
+        "max_freq": 5340,
+        "peak_freq": 4823,
+        "freq_range": 1206,
+        "pattern": "simple_call",
+        "syllables": 2,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Streptopelia decaocto_Eurasian Collared Dove.mp3",
+      "expected_scientific": "Streptopelia decaocto Eurasian Collared Dove",
+      "expected_common": "Eurasian Collared Dove",
+      "expected_names": [
+        "eurasian collared dove",
+        "streptopelia decaocto eurasian collared dove",
+        "eurasian collared dove"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Eurasian Collared-Dove",
+          "scientific_name": "Streptopelia decaocto",
+          "confidence": 99,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2876,
+      "features": {
+        "duration": 19.7,
+        "min_freq": 495,
+        "max_freq": 581,
+        "peak_freq": 538,
+        "freq_range": 86,
+        "pattern": "complex_song",
+        "syllables": 22,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Culicicapa ceylonensis_Grey-headed Canary-flycatcher.mp3",
+      "expected_scientific": "Culicicapa ceylonensis Grey-headed Canary-flycatcher",
+      "expected_common": "Grey-headed Canary-flycatcher",
+      "expected_names": [
+        "grey-headed canary-flycatcher",
+        "culicicapa ceylonensis grey-headed canary-flycatcher",
+        "grey-headed canary-flycatcher"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Gray-headed Canary-Flycatcher",
+          "scientific_name": "Culicicapa ceylonensis",
+          "confidence": 99,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Narcissus Flycatcher",
+          "scientific_name": "Ficedula narcissina",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3008,
+      "features": {
+        "duration": 16.35,
+        "min_freq": 3488,
+        "max_freq": 4608,
+        "peak_freq": 4349,
+        "freq_range": 1120,
+        "pattern": "complex_song",
+        "syllables": 13,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "ceryle rudis_pied kingfisher_16-51-3.186-N_74-33-20.34-N.wav",
+      "expected_scientific": "ceryle rudis pied kingfisher",
+      "expected_common": "16-51-3.186-N 74-33-20.34-N",
+      "expected_names": [
+        "16-51-3.186-n 74-33-20.34-n",
+        "ceryle rudis pied kingfisher",
+        "74-33-20.34-n"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Black-tailed Trogon",
+          "scientific_name": "Trogon melanurus",
+          "confidence": 61,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 5404,
+      "features": {
+        "duration": 38.98,
+        "min_freq": 387,
+        "max_freq": 6438,
+        "peak_freq": 5534,
+        "freq_range": 6051,
+        "pattern": "complex_song",
+        "syllables": 54,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Pellorneum ruficeps_Puff-throated Babbler.m4a",
+      "expected_scientific": "Pellorneum ruficeps Puff-throated Babbler",
+      "expected_common": "Puff-throated Babbler",
+      "expected_names": [
+        "puff-throated babbler",
+        "pellorneum ruficeps puff-throated babbler",
+        "puff-throated babbler"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Puff-throated Babbler",
+          "scientific_name": "Pellorneum ruficeps",
+          "confidence": 99,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3090,
+      "features": {
+        "duration": 25.52,
+        "min_freq": 2304,
+        "max_freq": 2993,
+        "peak_freq": 2304,
+        "freq_range": 689,
+        "pattern": "complex_song",
+        "syllables": 20,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Oriolus kundoo_Indian Golden Oriole.m4a",
+      "expected_scientific": "Oriolus kundoo Indian Golden Oriole",
+      "expected_common": "Indian Golden Oriole",
+      "expected_names": [
+        "indian golden oriole",
+        "oriolus kundoo indian golden oriole",
+        "indian golden oriole"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Barn Owl",
+          "scientific_name": "Tyto alba",
+          "confidence": 56,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 2925,
+      "features": {
+        "duration": 17.88,
+        "min_freq": 1055,
+        "max_freq": 7105,
+        "peak_freq": 6244,
+        "freq_range": 6050,
+        "pattern": "complex_song",
+        "syllables": 17,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Vanellus duvaucelii_River Lapwing.m4a",
+      "expected_scientific": "Vanellus duvaucelii River Lapwing",
+      "expected_common": "River Lapwing",
+      "expected_names": [
+        "river lapwing",
+        "vanellus duvaucelii river lapwing",
+        "river lapwing"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "River Lapwing",
+          "scientific_name": "Vanellus duvaucelii",
+          "confidence": 82,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3067,
+      "features": {
+        "duration": 16.0,
+        "min_freq": 2648,
+        "max_freq": 5835,
+        "peak_freq": 2820,
+        "freq_range": 3187,
+        "pattern": "complex_song",
+        "syllables": 12,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Copsychus fulicatus_Indian Robin.mp3",
+      "expected_scientific": "Copsychus fulicatus Indian Robin",
+      "expected_common": "Indian Robin",
+      "expected_names": [
+        "indian robin",
+        "copsychus fulicatus indian robin",
+        "indian robin"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Indian Robin",
+          "scientific_name": "Copsychus fulicatus",
+          "confidence": 96,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Rock Pigeon",
+          "scientific_name": "Columba livia",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2750,
+      "features": {
+        "duration": 16.48,
+        "min_freq": 732,
+        "max_freq": 5598,
+        "peak_freq": 5038,
+        "freq_range": 4866,
+        "pattern": "complex_song",
+        "syllables": 10,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Eudynamys scolopaceus_Asian Koel.mp3",
+      "expected_scientific": "Eudynamys scolopaceus Asian Koel",
+      "expected_common": "Asian Koel",
+      "expected_names": [
+        "asian koel",
+        "eudynamys scolopaceus asian koel",
+        "asian koel"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Asian Koel",
+          "scientific_name": "Eudynamys scolopaceus",
+          "confidence": 99,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Chestnut-backed Tanager",
+          "scientific_name": "Stilpnia preciosa",
+          "confidence": 0,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2409,
+      "features": {
+        "duration": 6.01,
+        "min_freq": 1356,
+        "max_freq": 1658,
+        "peak_freq": 1658,
+        "freq_range": 302,
+        "pattern": "repeated_phrases",
+        "syllables": 3,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "milvus migrans_black kite_12-59-13.3008-N_77-30-9.288-N.wav",
+      "expected_scientific": "milvus migrans black kite",
+      "expected_common": "12-59-13.3008-N 77-30-9.288-N",
+      "expected_names": [
+        "12-59-13.3008-n 77-30-9.288-n",
+        "milvus migrans black kite",
+        "77-30-9.288-n"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Black Kite",
+          "scientific_name": "Milvus migrans",
+          "confidence": 87,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 6139,
+      "features": {
+        "duration": 45.82,
+        "min_freq": 990,
+        "max_freq": 8699,
+        "peak_freq": 3359,
+        "freq_range": 7709,
+        "pattern": "complex_song",
+        "syllables": 38,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Elanus axillaris_Black-shouldered Kite.m4a",
+      "expected_scientific": "Elanus axillaris Black-shouldered Kite",
+      "expected_common": "Black-shouldered Kite",
+      "expected_names": [
+        "black-shouldered kite",
+        "elanus axillaris black-shouldered kite",
+        "black-shouldered kite"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Black-crowned Night-Heron",
+          "scientific_name": "Nycticorax nycticorax",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 2467,
+      "features": {
+        "duration": 12.96,
+        "min_freq": 925,
+        "max_freq": 2174,
+        "peak_freq": 1378,
+        "freq_range": 1249,
+        "pattern": "complex_song",
+        "syllables": 10,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Oriolus xanthornus_Black-hooded Oriole.mp3",
+      "expected_scientific": "Oriolus xanthornus Black-hooded Oriole",
+      "expected_common": "Black-hooded Oriole",
+      "expected_names": [
+        "black-hooded oriole",
+        "oriolus xanthornus black-hooded oriole",
+        "black-hooded oriole"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Black-hooded Oriole",
+          "scientific_name": "Oriolus xanthornus",
+          "confidence": 84,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2476,
+      "features": {
+        "duration": 13.4,
+        "min_freq": 1787,
+        "max_freq": 2002,
+        "peak_freq": 1959,
+        "freq_range": 215,
+        "pattern": "repeated_phrases",
+        "syllables": 3,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Cyornis tickelliae_Tickell's Blue Flycatcher.m4a",
+      "expected_scientific": "Cyornis tickelliae Tickell's Blue Flycatcher",
+      "expected_common": "Tickell's Blue Flycatcher",
+      "expected_names": [
+        "tickell's blue flycatcher",
+        "cyornis tickelliae tickell's blue flycatcher",
+        "tickell's blue flycatcher"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Tickell's Blue Flycatcher",
+          "scientific_name": "Cyornis tickelliae",
+          "confidence": 98,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Pale-chinned Blue Flycatcher",
+          "scientific_name": "Cyornis poliogenys",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3040,
+      "features": {
+        "duration": 19.83,
+        "min_freq": 3143,
+        "max_freq": 8441,
+        "peak_freq": 6998,
+        "freq_range": 5298,
+        "pattern": "complex_song",
+        "syllables": 8,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Dinopium benghalense_Black-rumped Flameback.mp3",
+      "expected_scientific": "Dinopium benghalense Black-rumped Flameback",
+      "expected_common": "Black-rumped Flameback",
+      "expected_names": [
+        "black-rumped flameback",
+        "dinopium benghalense black-rumped flameback",
+        "black-rumped flameback"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Ruddy Crake",
+          "scientific_name": "Laterallus ruber",
+          "confidence": 83,
+          "source": "BirdNET"
+        },
+        {
+          "name": "White-throated Kingfisher",
+          "scientific_name": "Halcyon smyrnensis",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 1529,
+      "features": {
+        "duration": 2.04,
+        "min_freq": 2497,
+        "max_freq": 3596,
+        "peak_freq": 2648,
+        "freq_range": 1099,
+        "pattern": "repeated_phrases",
+        "syllables": 3,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Mycteria leucocephala_Painted Stork.m4a",
+      "expected_scientific": "Mycteria leucocephala Painted Stork",
+      "expected_common": "Painted Stork",
+      "expected_names": [
+        "painted stork",
+        "mycteria leucocephala painted stork",
+        "painted stork"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Carrion Crow",
+          "scientific_name": "Corvus corone",
+          "confidence": 70,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Rook",
+          "scientific_name": "Corvus frugilegus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 3352,
+      "features": {
+        "duration": 24.15,
+        "min_freq": 1119,
+        "max_freq": 2196,
+        "peak_freq": 1701,
+        "freq_range": 1077,
+        "pattern": "complex_song",
+        "syllables": 23,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Ocyceros birostris_Indian Grey Hornbill_2.mp3",
+      "expected_scientific": "Ocyceros birostris Indian Grey Hornbill",
+      "expected_common": "Indian Grey Hornbill",
+      "expected_names": [
+        "indian grey hornbill",
+        "ocyceros birostris indian grey hornbill",
+        "indian grey hornbill"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Purple Sunbird",
+          "scientific_name": "Cinnyris asiaticus",
+          "confidence": 75,
+          "source": ""
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 1411,
+      "features": {
+        "duration": 1.25,
+        "min_freq": 2713,
+        "max_freq": 5857,
+        "peak_freq": 4457,
+        "freq_range": 3144,
+        "pattern": "simple_call",
+        "syllables": 1,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Eumyias thalassinus_Verditer Flycatcher.m4a",
+      "expected_scientific": "Eumyias thalassinus Verditer Flycatcher",
+      "expected_common": "Verditer Flycatcher",
+      "expected_names": [
+        "verditer flycatcher",
+        "eumyias thalassinus verditer flycatcher",
+        "verditer flycatcher"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Verditer Flycatcher",
+          "scientific_name": "Eumyias thalassinus",
+          "confidence": 96,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Lineated Barbet",
+          "scientific_name": "Psilopogon lineatus",
+          "confidence": 67,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2282,
+      "features": {
+        "duration": 11.8,
+        "min_freq": 516,
+        "max_freq": 4112,
+        "peak_freq": 732,
+        "freq_range": 3596,
+        "pattern": "repeated_phrases",
+        "syllables": 4,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Dendrocitta vagabunda_Rufous Treepie_2.m4a",
+      "expected_scientific": "Dendrocitta vagabunda Rufous Treepie",
+      "expected_common": "Rufous Treepie",
+      "expected_names": [
+        "rufous treepie",
+        "dendrocitta vagabunda rufous treepie",
+        "rufous treepie"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Greater Racket-tailed Drongo",
+          "scientific_name": "Dicrurus paradiseus",
+          "confidence": 90,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 2606,
+      "features": {
+        "duration": 12.14,
+        "min_freq": 1787,
+        "max_freq": 2131,
+        "peak_freq": 2067,
+        "freq_range": 344,
+        "pattern": "repeated_phrases",
+        "syllables": 5,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Terpsiphone paradisi_Indian Paradise Flycatcher_2.m4a",
+      "expected_scientific": "Terpsiphone paradisi Indian Paradise Flycatcher",
+      "expected_common": "Indian Paradise Flycatcher",
+      "expected_names": [
+        "indian paradise flycatcher",
+        "terpsiphone paradisi indian paradise flycatcher",
+        "indian paradise flycatcher"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Indian Paradise-Flycatcher",
+          "scientific_name": "Terpsiphone paradisi",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2177,
+      "features": {
+        "duration": 8.92,
+        "min_freq": 2067,
+        "max_freq": 6158,
+        "peak_freq": 5749,
+        "freq_range": 4091,
+        "pattern": "repeated_phrases",
+        "syllables": 4,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Vanellus indicus_Red-wattled Lapwing.mp3",
+      "expected_scientific": "Vanellus indicus Red-wattled Lapwing",
+      "expected_common": "Red-wattled Lapwing",
+      "expected_names": [
+        "red-wattled lapwing",
+        "vanellus indicus red-wattled lapwing",
+        "red-wattled lapwing"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Red-wattled Lapwing",
+          "scientific_name": "Vanellus indicus",
+          "confidence": 99,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2578,
+      "features": {
+        "duration": 14.39,
+        "min_freq": 2067,
+        "max_freq": 6459,
+        "peak_freq": 2562,
+        "freq_range": 4392,
+        "pattern": "complex_song",
+        "syllables": 9,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Parus cinereus_Cinereous Tit_2.mp3",
+      "expected_scientific": "Parus cinereus Cinereous Tit",
+      "expected_common": "Cinereous Tit",
+      "expected_names": [
+        "cinereous tit",
+        "parus cinereus cinereous tit",
+        "cinereous tit"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Cinereous Tit",
+          "scientific_name": "Parus cinereus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2452,
+      "features": {
+        "duration": 13.06,
+        "min_freq": 409,
+        "max_freq": 6933,
+        "peak_freq": 5254,
+        "freq_range": 6524,
+        "pattern": "repeated_phrases",
+        "syllables": 5,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Ardea intermedia_Intermediate Egret.mp3",
+      "expected_scientific": "Ardea intermedia Intermediate Egret",
+      "expected_common": "Intermediate Egret",
+      "expected_names": [
+        "intermediate egret",
+        "ardea intermedia intermediate egret",
+        "intermediate egret"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Great Egret",
+          "scientific_name": "Ardea alba",
+          "confidence": 67,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 1419,
+      "features": {
+        "duration": 2.98,
+        "min_freq": 925,
+        "max_freq": 5900,
+        "peak_freq": 1162,
+        "freq_range": 4975,
+        "pattern": "repeated_phrases",
+        "syllables": 5,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Psilopogon lineatus_Lineated Barbet.mp3",
+      "expected_scientific": "Psilopogon lineatus Lineated Barbet",
+      "expected_common": "Lineated Barbet",
+      "expected_names": [
+        "lineated barbet",
+        "psilopogon lineatus lineated barbet",
+        "lineated barbet"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Lineated Barbet",
+          "scientific_name": "Psilopogon lineatus",
+          "confidence": 99,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Oriental Magpie-Robin",
+          "scientific_name": "Copsychus saularis",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2084,
+      "features": {
+        "duration": 7.03,
+        "min_freq": 839,
+        "max_freq": 990,
+        "peak_freq": 925,
+        "freq_range": 151,
+        "pattern": "complex_song",
+        "syllables": 11,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Malabar barbet, White throated kingfisher.m4a",
+      "expected_scientific": "",
+      "expected_common": "",
+      "expected_names": [
+        "malabar barbet",
+        "white throated kingfisher"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "White-throated Kingfisher",
+          "scientific_name": "Halcyon smyrnensis",
+          "confidence": 97,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Coppersmith Barbet",
+          "scientific_name": "Psilopogon haemacephalus",
+          "confidence": 78,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Malabar Barbet",
+          "scientific_name": "Psilopogon malabaricus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2725,
+      "features": {
+        "duration": 14.3,
+        "min_freq": 689,
+        "max_freq": 3143,
+        "peak_freq": 3057,
+        "freq_range": 2454,
+        "pattern": "complex_song",
+        "syllables": 20,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "cisticola juncidis_zitting cisticola_10-4-53.0832-N_77-3-56.34-N.wav",
+      "expected_scientific": "cisticola juncidis zitting cisticola",
+      "expected_common": "10-4-53.0832-N 77-3-56.34-N",
+      "expected_names": [
+        "10-4-53.0832-n 77-3-56.34-n",
+        "cisticola juncidis zitting cisticola",
+        "77-3-56.34-n"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Zitting Cisticola",
+          "scientific_name": "Cisticola juncidis",
+          "confidence": 97,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 1723,
+      "features": {
+        "duration": 6.57,
+        "min_freq": 279,
+        "max_freq": 732,
+        "peak_freq": 366,
+        "freq_range": 453,
+        "pattern": "repeated_phrases",
+        "syllables": 5,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Dendrocoptes auriceps_Brown-fronted Woodpecker.mp3",
+      "expected_scientific": "Dendrocoptes auriceps Brown-fronted Woodpecker",
+      "expected_common": "Brown-fronted Woodpecker",
+      "expected_names": [
+        "brown-fronted woodpecker",
+        "dendrocoptes auriceps brown-fronted woodpecker",
+        "brown-fronted woodpecker"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Common Snipe",
+          "scientific_name": "Gallinago gallinago",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 1993,
+      "features": {
+        "duration": 5.59,
+        "min_freq": 2088,
+        "max_freq": 2605,
+        "peak_freq": 2497,
+        "freq_range": 517,
+        "pattern": "complex_song",
+        "syllables": 13,
+        "complexity": "high",
+        "rhythm": "moderate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Argya striata_Jungle Babbler_2.m4a",
+      "expected_scientific": "Argya striata Jungle Babbler",
+      "expected_common": "Jungle Babbler",
+      "expected_names": [
+        "jungle babbler",
+        "argya striata jungle babbler",
+        "jungle babbler"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Jungle Babbler",
+          "scientific_name": "Argya striata",
+          "confidence": 99,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3793,
+      "features": {
+        "duration": 16.37,
+        "min_freq": 1205,
+        "max_freq": 6309,
+        "peak_freq": 5986,
+        "freq_range": 5104,
+        "pattern": "complex_song",
+        "syllables": 12,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Hirundo rustica_Barn Swallow.mp3",
+      "expected_scientific": "Hirundo rustica Barn Swallow",
+      "expected_common": "Barn Swallow",
+      "expected_names": [
+        "barn swallow",
+        "hirundo rustica barn swallow",
+        "barn swallow"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Barn Swallow",
+          "scientific_name": "Hirundo rustica",
+          "confidence": 70,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Purple Heron",
+          "scientific_name": "Ardea purpurea",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2165,
+      "features": {
+        "duration": 7.16,
+        "min_freq": 602,
+        "max_freq": 5383,
+        "peak_freq": 3531,
+        "freq_range": 4781,
+        "pattern": "complex_song",
+        "syllables": 6,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Ardea purpurea_Purple Heron.mp3",
+      "expected_scientific": "Ardea purpurea Purple Heron",
+      "expected_common": "Purple Heron",
+      "expected_names": [
+        "purple heron",
+        "ardea purpurea purple heron",
+        "purple heron"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Greater Coucal",
+          "scientific_name": "Centropus sinensis",
+          "confidence": 75,
+          "source": ""
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 1738,
+      "features": {
+        "duration": 4.28,
+        "min_freq": 301,
+        "max_freq": 3208,
+        "peak_freq": 387,
+        "freq_range": 2907,
+        "pattern": "repeated_phrases",
+        "syllables": 3,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Bubulcus coromandus_Eastern Cattle Egret.mp3",
+      "expected_scientific": "Bubulcus coromandus Eastern Cattle Egret",
+      "expected_common": "Eastern Cattle Egret",
+      "expected_names": [
+        "eastern cattle egret",
+        "bubulcus coromandus eastern cattle egret",
+        "eastern cattle egret"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Cattle Egret",
+          "scientific_name": "Bubulcus ibis",
+          "confidence": 41,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 4285,
+      "features": {
+        "duration": 28.5,
+        "min_freq": 430,
+        "max_freq": 1593,
+        "peak_freq": 818,
+        "freq_range": 1163,
+        "pattern": "complex_song",
+        "syllables": 16,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Dicrurus paradiseus_Greater Racket-tailed Drongo.mp3",
+      "expected_scientific": "Dicrurus paradiseus Greater Racket-tailed Drongo",
+      "expected_common": "Greater Racket-tailed Drongo",
+      "expected_names": [
+        "greater racket-tailed drongo",
+        "dicrurus paradiseus greater racket-tailed drongo",
+        "greater racket-tailed drongo"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Ashy Drongo",
+          "scientific_name": "Dicrurus leucophaeus",
+          "confidence": 56,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2545,
+      "features": {
+        "duration": 6.97,
+        "min_freq": 2067,
+        "max_freq": 3897,
+        "peak_freq": 2605,
+        "freq_range": 1830,
+        "pattern": "repeated_phrases",
+        "syllables": 5,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Melanerpes flavifrons_Yellow-fronted Woodpecker.m4a",
+      "expected_scientific": "Melanerpes flavifrons Yellow-fronted Woodpecker",
+      "expected_common": "Yellow-fronted Woodpecker",
+      "expected_names": [
+        "yellow-fronted woodpecker",
+        "melanerpes flavifrons yellow-fronted woodpecker",
+        "yellow-fronted woodpecker"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Yellow-fronted Woodpecker",
+          "scientific_name": "Melanerpes flavifrons",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2430,
+      "features": {
+        "duration": 13.03,
+        "min_freq": 1012,
+        "max_freq": 7902,
+        "peak_freq": 1916,
+        "freq_range": 6890,
+        "pattern": "complex_song",
+        "syllables": 10,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Hierococcyx varius_common hawk cuckoo.wav",
+      "expected_scientific": "Hierococcyx varius common hawk cuckoo",
+      "expected_common": "common hawk cuckoo",
+      "expected_names": [
+        "common hawk cuckoo",
+        "hierococcyx varius common hawk cuckoo",
+        "common hawk cuckoo"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Savanna Nightjar",
+          "scientific_name": "Caprimulgus affinis",
+          "confidence": 99,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Black-cheeked Gnateater",
+          "scientific_name": "Conopophaga melanops",
+          "confidence": 0,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 5382,
+      "features": {
+        "duration": 41.46,
+        "min_freq": 3466,
+        "max_freq": 8204,
+        "peak_freq": 6632,
+        "freq_range": 4738,
+        "pattern": "complex_song",
+        "syllables": 21,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Sterna aurantia_River Tern.m4a",
+      "expected_scientific": "Sterna aurantia River Tern",
+      "expected_common": "River Tern",
+      "expected_names": [
+        "river tern",
+        "sterna aurantia river tern",
+        "river tern"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "River Tern",
+          "scientific_name": "Sterna aurantia",
+          "confidence": 92,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3075,
+      "features": {
+        "duration": 17.86,
+        "min_freq": 1055,
+        "max_freq": 8914,
+        "peak_freq": 2993,
+        "freq_range": 7859,
+        "pattern": "complex_song",
+        "syllables": 15,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Glaucidium radiatum_Jungle Owlet.mp3",
+      "expected_scientific": "Glaucidium radiatum Jungle Owlet",
+      "expected_common": "Jungle Owlet",
+      "expected_names": [
+        "jungle owlet",
+        "glaucidium radiatum jungle owlet",
+        "jungle owlet"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Jungle Owlet",
+          "scientific_name": "Glaucidium radiatum",
+          "confidence": 95,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Common Raven",
+          "scientific_name": "Corvus corax",
+          "confidence": 71,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2951,
+      "features": {
+        "duration": 16.77,
+        "min_freq": 947,
+        "max_freq": 4198,
+        "peak_freq": 1098,
+        "freq_range": 3251,
+        "pattern": "complex_song",
+        "syllables": 13,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Pycnonotus xantholaemus_Yellow-throated Bulbul.m4a",
+      "expected_scientific": "Pycnonotus xantholaemus Yellow-throated Bulbul",
+      "expected_common": "Yellow-throated Bulbul",
+      "expected_names": [
+        "yellow-throated bulbul",
+        "pycnonotus xantholaemus yellow-throated bulbul",
+        "yellow-throated bulbul"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Brant",
+          "scientific_name": "Branta bernicla",
+          "confidence": 74,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Common Bulbul",
+          "scientific_name": "Pycnonotus barbatus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3031,
+      "features": {
+        "duration": 17.86,
+        "min_freq": 1701,
+        "max_freq": 3014,
+        "peak_freq": 1722,
+        "freq_range": 1313,
+        "pattern": "complex_song",
+        "syllables": 10,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "copsychus saularis_oriental-magpie robin_22-17-43.62-N_80-35-44.52-N.wav",
+      "expected_scientific": "copsychus saularis oriental-magpie robin",
+      "expected_common": "22-17-43.62-N 80-35-44.52-N",
+      "expected_names": [
+        "22-17-43.62-n 80-35-44.52-n",
+        "copsychus saularis oriental-magpie robin",
+        "80-35-44.52-n"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Pale-billed Flowerpecker",
+          "scientific_name": "Dicaeum erythrorhynchos",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 3371,
+      "features": {
+        "duration": 22.18,
+        "min_freq": 5857,
+        "max_freq": 6890,
+        "peak_freq": 6632,
+        "freq_range": 1033,
+        "pattern": "complex_song",
+        "syllables": 22,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Otus bakkamoena_Indian Scops Owl.mp3",
+      "expected_scientific": "Otus bakkamoena Indian Scops Owl",
+      "expected_common": "Indian Scops Owl",
+      "expected_names": [
+        "indian scops owl",
+        "otus bakkamoena indian scops owl",
+        "indian scops owl"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Indian Scops-Owl",
+          "scientific_name": "Otus bakkamoena",
+          "confidence": 99,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 1566,
+      "features": {
+        "duration": 6.74,
+        "min_freq": 473,
+        "max_freq": 1550,
+        "peak_freq": 904,
+        "freq_range": 1077,
+        "pattern": "simple_call",
+        "syllables": 2,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Treron phoenicopterus_Yellow-footed Green Pigeon_2.m4a",
+      "expected_scientific": "Treron phoenicopterus Yellow-footed Green Pigeon",
+      "expected_common": "Yellow-footed Green Pigeon",
+      "expected_names": [
+        "yellow-footed green pigeon",
+        "treron phoenicopterus yellow-footed green pigeon",
+        "yellow-footed green pigeon"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Spotted Dove",
+          "scientific_name": "Streptopelia chinensis",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 3496,
+      "features": {
+        "duration": 18.41,
+        "min_freq": 818,
+        "max_freq": 1916,
+        "peak_freq": 1055,
+        "freq_range": 1098,
+        "pattern": "complex_song",
+        "syllables": 7,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Taccocua leschenaultii_Sirkeer Malkoha.mp3",
+      "expected_scientific": "Taccocua leschenaultii Sirkeer Malkoha",
+      "expected_common": "Sirkeer Malkoha",
+      "expected_names": [
+        "sirkeer malkoha",
+        "taccocua leschenaultii sirkeer malkoha",
+        "sirkeer malkoha"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Barn Owl",
+          "scientific_name": "Tyto alba",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 2666,
+      "features": {
+        "duration": 14.58,
+        "min_freq": 1291,
+        "max_freq": 4651,
+        "peak_freq": 2799,
+        "freq_range": 3360,
+        "pattern": "repeated_phrases",
+        "syllables": 4,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Terpsiphone paradisi_Indian Paradise Flycatcher.mp3",
+      "expected_scientific": "Terpsiphone paradisi Indian Paradise Flycatcher",
+      "expected_common": "Indian Paradise Flycatcher",
+      "expected_names": [
+        "indian paradise flycatcher",
+        "terpsiphone paradisi indian paradise flycatcher",
+        "indian paradise flycatcher"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Crimson Sunbird",
+          "scientific_name": "Aethopyga siparaja",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 1753,
+      "features": {
+        "duration": 5.41,
+        "min_freq": 3402,
+        "max_freq": 6330,
+        "peak_freq": 5404,
+        "freq_range": 2928,
+        "pattern": "complex_song",
+        "syllables": 6,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Turnix sylvaticus_Common buttonquail.mp3",
+      "expected_scientific": "Turnix sylvaticus Common buttonquail",
+      "expected_common": "Common buttonquail",
+      "expected_names": [
+        "common buttonquail",
+        "turnix sylvaticus common buttonquail",
+        "common buttonquail"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Common Merganser",
+          "scientific_name": "Mergus merganser",
+          "confidence": 76,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Ryukyu Scops-Owl",
+          "scientific_name": "Otus elegans",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2464,
+      "features": {
+        "duration": 12.33,
+        "min_freq": 344,
+        "max_freq": 2196,
+        "peak_freq": 2110,
+        "freq_range": 1852,
+        "pattern": "simple_call",
+        "syllables": 2,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Galloperdix lunulata_Painted Spurfowl.m4a",
+      "expected_scientific": "Galloperdix lunulata Painted Spurfowl",
+      "expected_common": "Painted Spurfowl",
+      "expected_names": [
+        "painted spurfowl",
+        "galloperdix lunulata painted spurfowl",
+        "painted spurfowl"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "White-breasted Waterhen",
+          "scientific_name": "Amaurornis phoenicurus",
+          "confidence": 78,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Malabar Barbet",
+          "scientific_name": "Psilopogon malabaricus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 2963,
+      "features": {
+        "duration": 19.53,
+        "min_freq": 602,
+        "max_freq": 3251,
+        "peak_freq": 990,
+        "freq_range": 2649,
+        "pattern": "complex_song",
+        "syllables": 41,
+        "complexity": "high",
+        "rhythm": "moderate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Dicrurus macrocercus_Black Drongo.mp3",
+      "expected_scientific": "Dicrurus macrocercus Black Drongo",
+      "expected_common": "Black Drongo",
+      "expected_names": [
+        "black drongo",
+        "dicrurus macrocercus black drongo",
+        "black drongo"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Black Drongo",
+          "scientific_name": "Dicrurus macrocercus",
+          "confidence": 94,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Purple Sunbird",
+          "scientific_name": "Cinnyris asiaticus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2466,
+      "features": {
+        "duration": 11.83,
+        "min_freq": 2605,
+        "max_freq": 4844,
+        "peak_freq": 3919,
+        "freq_range": 2239,
+        "pattern": "repeated_phrases",
+        "syllables": 5,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Psittacula himalayana_Slaty-headed Parakeet.m4a",
+      "expected_scientific": "Psittacula himalayana Slaty-headed Parakeet",
+      "expected_common": "Slaty-headed Parakeet",
+      "expected_names": [
+        "slaty-headed parakeet",
+        "psittacula himalayana slaty-headed parakeet",
+        "slaty-headed parakeet"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Slaty-headed Parakeet",
+          "scientific_name": "Psittacula himalayana",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2405,
+      "features": {
+        "duration": 12.26,
+        "min_freq": 1701,
+        "max_freq": 3273,
+        "peak_freq": 2863,
+        "freq_range": 1572,
+        "pattern": "complex_song",
+        "syllables": 10,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Mulleripicus pulverulentus_Great Slaty Woodpecker.m4a",
+      "expected_scientific": "Mulleripicus pulverulentus Great Slaty Woodpecker",
+      "expected_common": "Great Slaty Woodpecker",
+      "expected_names": [
+        "great slaty woodpecker",
+        "mulleripicus pulverulentus great slaty woodpecker",
+        "great slaty woodpecker"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Great Slaty Woodpecker",
+          "scientific_name": "Mulleripicus pulverulentus",
+          "confidence": 74,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2992,
+      "features": {
+        "duration": 19.46,
+        "min_freq": 1335,
+        "max_freq": 2196,
+        "peak_freq": 1959,
+        "freq_range": 861,
+        "pattern": "complex_song",
+        "syllables": 24,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Alcippe poioicephala_Brown-cheeked Fulvetta.mp3",
+      "expected_scientific": "Alcippe poioicephala Brown-cheeked Fulvetta",
+      "expected_common": "Brown-cheeked Fulvetta",
+      "expected_names": [
+        "brown-cheeked fulvetta",
+        "alcippe poioicephala brown-cheeked fulvetta",
+        "brown-cheeked fulvetta"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Brown-cheeked Fulvetta",
+          "scientific_name": "Alcippe poioicephala",
+          "confidence": 99,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Black-faced Laughingthrush",
+          "scientific_name": "Trochalopteron affine",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 1704,
+      "features": {
+        "duration": 4.39,
+        "min_freq": 2648,
+        "max_freq": 3186,
+        "peak_freq": 3057,
+        "freq_range": 538,
+        "pattern": "repeated_phrases",
+        "syllables": 4,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Athene brama_Spotted Owlet.m4a",
+      "expected_scientific": "Athene brama Spotted Owlet",
+      "expected_common": "Spotted Owlet",
+      "expected_names": [
+        "spotted owlet",
+        "athene brama spotted owlet",
+        "spotted owlet"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Yellow-throated Toucan",
+          "scientific_name": "Ramphastos ambiguus",
+          "confidence": 82,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Black Drongo",
+          "scientific_name": "Dicrurus macrocercus",
+          "confidence": 65,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 2696,
+      "features": {
+        "duration": 16.56,
+        "min_freq": 1141,
+        "max_freq": 4112,
+        "peak_freq": 1550,
+        "freq_range": 2971,
+        "pattern": "complex_song",
+        "syllables": 17,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Cypsiurus balasiensis_Asian Palm Swift.mp3",
+      "expected_scientific": "Cypsiurus balasiensis Asian Palm Swift",
+      "expected_common": "Asian Palm Swift",
+      "expected_names": [
+        "asian palm swift",
+        "cypsiurus balasiensis asian palm swift",
+        "asian palm swift"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Asian Palm-Swift",
+          "scientific_name": "Cypsiurus balasiensis",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 1634,
+      "features": {
+        "duration": 3.0,
+        "min_freq": 409,
+        "max_freq": 5749,
+        "peak_freq": 430,
+        "freq_range": 5340,
+        "pattern": "complex_song",
+        "syllables": 6,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Ducula cuprea_Nilgiri Imperial Pigeon.m4a",
+      "expected_scientific": "Ducula cuprea Nilgiri Imperial Pigeon",
+      "expected_common": "Nilgiri Imperial Pigeon",
+      "expected_names": [
+        "nilgiri imperial pigeon",
+        "ducula cuprea nilgiri imperial pigeon",
+        "nilgiri imperial pigeon"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Pale-legged Leaf Warbler",
+          "scientific_name": "Phylloscopus tenellipes",
+          "confidence": 94,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Brown-cheeked Fulvetta",
+          "scientific_name": "Alcippe poioicephala",
+          "confidence": 83,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Slaty-bellied Tesia",
+          "scientific_name": "Tesia olivea",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 3829,
+      "features": {
+        "duration": 26.03,
+        "min_freq": 968,
+        "max_freq": 3100,
+        "peak_freq": 3014,
+        "freq_range": 2132,
+        "pattern": "complex_song",
+        "syllables": 11,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Clanga clanga_Greater Spotted Eagle.m4a",
+      "expected_scientific": "Clanga clanga Greater Spotted Eagle",
+      "expected_common": "Greater Spotted Eagle",
+      "expected_names": [
+        "greater spotted eagle",
+        "clanga clanga greater spotted eagle",
+        "greater spotted eagle"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Eurasian Curlew",
+          "scientific_name": "Numenius arquata",
+          "confidence": 97,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Small Minivet",
+          "scientific_name": "Pericrocotus cinnamomeus",
+          "confidence": 57,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 2586,
+      "features": {
+        "duration": 14.7,
+        "min_freq": 1507,
+        "max_freq": 6847,
+        "peak_freq": 6761,
+        "freq_range": 5340,
+        "pattern": "complex_song",
+        "syllables": 9,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Otus bakkamoena_Indian Scops Owl_2.m4a",
+      "expected_scientific": "Otus bakkamoena Indian Scops Owl",
+      "expected_common": "Indian Scops Owl",
+      "expected_names": [
+        "indian scops owl",
+        "otus bakkamoena indian scops owl",
+        "indian scops owl"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Indian Scops-Owl",
+          "scientific_name": "Otus bakkamoena",
+          "confidence": 99,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Greater White-fronted Goose",
+          "scientific_name": "Anser albifrons",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2268,
+      "features": {
+        "duration": 9.15,
+        "min_freq": 559,
+        "max_freq": 7321,
+        "peak_freq": 904,
+        "freq_range": 6762,
+        "pattern": "complex_song",
+        "syllables": 15,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Anthracoceros albirostris_Oriental Pied Hornbill.m4a",
+      "expected_scientific": "Anthracoceros albirostris Oriental Pied Hornbill",
+      "expected_common": "Oriental Pied Hornbill",
+      "expected_names": [
+        "oriental pied hornbill",
+        "anthracoceros albirostris oriental pied hornbill",
+        "oriental pied hornbill"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Oriental Pied-Hornbill",
+          "scientific_name": "Anthracoceros albirostris",
+          "confidence": 90,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2678,
+      "features": {
+        "duration": 15.91,
+        "min_freq": 1270,
+        "max_freq": 3337,
+        "peak_freq": 2497,
+        "freq_range": 2067,
+        "pattern": "complex_song",
+        "syllables": 22,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Cuculus micropterus_Indian Cuckoo_2.m4a",
+      "expected_scientific": "Cuculus micropterus Indian Cuckoo",
+      "expected_common": "Indian Cuckoo",
+      "expected_names": [
+        "indian cuckoo",
+        "cuculus micropterus indian cuckoo",
+        "indian cuckoo"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Indian Cuckoo",
+          "scientific_name": "Cuculus micropterus",
+          "confidence": 99,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2529,
+      "features": {
+        "duration": 15.98,
+        "min_freq": 1162,
+        "max_freq": 1335,
+        "peak_freq": 1291,
+        "freq_range": 173,
+        "pattern": "complex_song",
+        "syllables": 14,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Parus cinereus_Cinerous Tit.m4a",
+      "expected_scientific": "Parus cinereus Cinerous Tit",
+      "expected_common": "Cinerous Tit",
+      "expected_names": [
+        "cinerous tit",
+        "parus cinereus cinerous tit",
+        "cinerous tit"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "European Serin",
+          "scientific_name": "Serinus serinus",
+          "confidence": 70,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Great Tit",
+          "scientific_name": "Parus major",
+          "confidence": 98,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2520,
+      "features": {
+        "duration": 12.82,
+        "min_freq": 3811,
+        "max_freq": 6761,
+        "peak_freq": 6223,
+        "freq_range": 2950,
+        "pattern": "complex_song",
+        "syllables": 9,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Culicicapa ceylonensis_Grey-headed Canary Flycatcher_2.m4a",
+      "expected_scientific": "Culicicapa ceylonensis Grey-headed Canary Flycatcher",
+      "expected_common": "Grey-headed Canary Flycatcher",
+      "expected_names": [
+        "grey-headed canary flycatcher",
+        "culicicapa ceylonensis grey-headed canary flycatcher",
+        "grey-headed canary flycatcher"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Gray-headed Canary-Flycatcher",
+          "scientific_name": "Culicicapa ceylonensis",
+          "confidence": 98,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Blue-and-white Flycatcher",
+          "scientific_name": "Cyanoptila cyanomelana",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3327,
+      "features": {
+        "duration": 19.92,
+        "min_freq": 3789,
+        "max_freq": 5038,
+        "peak_freq": 4198,
+        "freq_range": 1249,
+        "pattern": "complex_song",
+        "syllables": 17,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Chrysocolaptes guttacristatus_Greater Flameback.m4a",
+      "expected_scientific": "Chrysocolaptes guttacristatus Greater Flameback",
+      "expected_common": "Greater Flameback",
+      "expected_names": [
+        "greater flameback",
+        "chrysocolaptes guttacristatus greater flameback",
+        "greater flameback"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Ryukyu Scops-Owl",
+          "scientific_name": "Otus elegans",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 2480,
+      "features": {
+        "duration": 11.91,
+        "min_freq": 559,
+        "max_freq": 3509,
+        "peak_freq": 1335,
+        "freq_range": 2950,
+        "pattern": "complex_song",
+        "syllables": 7,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Harpactes fasciatus_Malabar Trogon.m4a",
+      "expected_scientific": "Harpactes fasciatus Malabar Trogon",
+      "expected_common": "Malabar Trogon",
+      "expected_names": [
+        "malabar trogon",
+        "harpactes fasciatus malabar trogon",
+        "malabar trogon"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Malabar Trogon",
+          "scientific_name": "Harpactes fasciatus",
+          "confidence": 95,
+          "source": "BirdNET"
+        },
+        {
+          "name": "White-cheeked Barbet",
+          "scientific_name": "Psilopogon viridis",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2885,
+      "features": {
+        "duration": 17.83,
+        "min_freq": 925,
+        "max_freq": 2497,
+        "peak_freq": 1313,
+        "freq_range": 1572,
+        "pattern": "complex_song",
+        "syllables": 16,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Caprimulgus asiaticus_Indian Nightjar.m4a",
+      "expected_scientific": "Caprimulgus asiaticus Indian Nightjar",
+      "expected_common": "Indian Nightjar",
+      "expected_names": [
+        "indian nightjar",
+        "caprimulgus asiaticus indian nightjar",
+        "indian nightjar"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Indian Nightjar",
+          "scientific_name": "Caprimulgus asiaticus",
+          "confidence": 99,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Clamorous Reed Warbler",
+          "scientific_name": "Acrocephalus stentoreus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2217,
+      "features": {
+        "duration": 12.45,
+        "min_freq": 2260,
+        "max_freq": 7773,
+        "peak_freq": 7342,
+        "freq_range": 5513,
+        "pattern": "complex_song",
+        "syllables": 31,
+        "complexity": "high",
+        "rhythm": "moderate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Passer domesticus_House Sparrow.mp3",
+      "expected_scientific": "Passer domesticus House Sparrow",
+      "expected_common": "House Sparrow",
+      "expected_names": [
+        "house sparrow",
+        "passer domesticus house sparrow",
+        "house sparrow"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "House Sparrow",
+          "scientific_name": "Passer domesticus",
+          "confidence": 78,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Eurasian Tree Sparrow",
+          "scientific_name": "Passer montanus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2800,
+      "features": {
+        "duration": 15.86,
+        "min_freq": 925,
+        "max_freq": 5964,
+        "peak_freq": 3875,
+        "freq_range": 5039,
+        "pattern": "complex_song",
+        "syllables": 41,
+        "complexity": "high",
+        "rhythm": "moderate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Halcyon smyrnensis_White-throated Kingfisher.m4a",
+      "expected_scientific": "Halcyon smyrnensis White-throated Kingfisher",
+      "expected_common": "White-throated Kingfisher",
+      "expected_names": [
+        "white-throated kingfisher",
+        "halcyon smyrnensis white-throated kingfisher",
+        "white-throated kingfisher"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "White-throated Kingfisher",
+          "scientific_name": "Halcyon smyrnensis",
+          "confidence": 99,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Woodland Kingfisher",
+          "scientific_name": "Halcyon senegalensis",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3487,
+      "features": {
+        "duration": 17.51,
+        "min_freq": 2411,
+        "max_freq": 3100,
+        "peak_freq": 2756,
+        "freq_range": 689,
+        "pattern": "complex_song",
+        "syllables": 10,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Phylloscopus trochiloides_Greenish Warbler.mp3",
+      "expected_scientific": "Phylloscopus trochiloides Greenish Warbler",
+      "expected_common": "Greenish Warbler",
+      "expected_names": [
+        "greenish warbler",
+        "phylloscopus trochiloides greenish warbler",
+        "greenish warbler"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Greenish Warbler",
+          "scientific_name": "Phylloscopus trochiloides",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 4011,
+      "features": {
+        "duration": 6.19,
+        "min_freq": 3328,
+        "max_freq": 7031,
+        "peak_freq": 6796,
+        "freq_range": 3703,
+        "pattern": "repeated_phrases",
+        "syllables": 5,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Geokichla citrina_Orange-headed Thrush.m4a",
+      "expected_scientific": "Geokichla citrina Orange-headed Thrush",
+      "expected_common": "Orange-headed Thrush",
+      "expected_names": [
+        "orange-headed thrush",
+        "geokichla citrina orange-headed thrush",
+        "orange-headed thrush"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Orange-headed Thrush",
+          "scientific_name": "Geokichla citrina",
+          "confidence": 98,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3887,
+      "features": {
+        "duration": 20.36,
+        "min_freq": 1894,
+        "max_freq": 2799,
+        "peak_freq": 2174,
+        "freq_range": 905,
+        "pattern": "complex_song",
+        "syllables": 18,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Treron phoenicopterus_Yellow-footed Green Pigeon.m4a",
+      "expected_scientific": "Treron phoenicopterus Yellow-footed Green Pigeon",
+      "expected_common": "Yellow-footed Green Pigeon",
+      "expected_names": [
+        "yellow-footed green pigeon",
+        "treron phoenicopterus yellow-footed green pigeon",
+        "yellow-footed green pigeon"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Red-vented Bulbul",
+          "scientific_name": "Pycnonotus cafer",
+          "confidence": 86,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 3902,
+      "features": {
+        "duration": 23.31,
+        "min_freq": 1270,
+        "max_freq": 6352,
+        "peak_freq": 1873,
+        "freq_range": 5082,
+        "pattern": "complex_song",
+        "syllables": 22,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Himantopus himantopus_Black-winged Stilt.mp3",
+      "expected_scientific": "Himantopus himantopus Black-winged Stilt",
+      "expected_common": "Black-winged Stilt",
+      "expected_names": [
+        "black-winged stilt",
+        "himantopus himantopus black-winged stilt",
+        "black-winged stilt"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Black-winged Stilt",
+          "scientific_name": "Himantopus himantopus",
+          "confidence": 94,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2317,
+      "features": {
+        "duration": 10.87,
+        "min_freq": 344,
+        "max_freq": 3552,
+        "peak_freq": 3509,
+        "freq_range": 3208,
+        "pattern": "complex_song",
+        "syllables": 16,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Psilopogon virens_Great Barbet.mp3",
+      "expected_scientific": "Psilopogon virens Great Barbet",
+      "expected_common": "Great Barbet",
+      "expected_names": [
+        "great barbet",
+        "psilopogon virens great barbet",
+        "great barbet"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Great Barbet",
+          "scientific_name": "Psilopogon virens",
+          "confidence": 99,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 5124,
+      "features": {
+        "duration": 40.83,
+        "min_freq": 1205,
+        "max_freq": 1507,
+        "peak_freq": 1248,
+        "freq_range": 302,
+        "pattern": "complex_song",
+        "syllables": 54,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Cuculus micropterus_Indian Cuckoo.mp3",
+      "expected_scientific": "Cuculus micropterus Indian Cuckoo",
+      "expected_common": "Indian Cuckoo",
+      "expected_names": [
+        "indian cuckoo",
+        "cuculus micropterus indian cuckoo",
+        "indian cuckoo"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Indian Cuckoo",
+          "scientific_name": "Cuculus micropterus",
+          "confidence": 99,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Black-throated Bobwhite",
+          "scientific_name": "Colinus nigrogularis",
+          "confidence": 63,
+          "source": "BirdNET+LLM"
+        },
+        {
+          "name": "LeConte's Thrasher",
+          "scientific_name": "Toxostoma lecontei",
+          "confidence": 41,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2318,
+      "features": {
+        "duration": 8.88,
+        "min_freq": 1076,
+        "max_freq": 1335,
+        "peak_freq": 1291,
+        "freq_range": 259,
+        "pattern": "complex_song",
+        "syllables": 11,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Ocyceros griseus_Malabar Grey Hornbill.m4a",
+      "expected_scientific": "Ocyceros griseus Malabar Grey Hornbill",
+      "expected_common": "Malabar Grey Hornbill",
+      "expected_names": [
+        "malabar grey hornbill",
+        "ocyceros griseus malabar grey hornbill",
+        "malabar grey hornbill"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Malabar Gray Hornbill",
+          "scientific_name": "Ocyceros griseus",
+          "confidence": 86,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 1971,
+      "features": {
+        "duration": 8.06,
+        "min_freq": 990,
+        "max_freq": 1550,
+        "peak_freq": 1248,
+        "freq_range": 560,
+        "pattern": "complex_song",
+        "syllables": 6,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Oriolus xanthornus_Black-hooded Oriole_2.m4a",
+      "expected_scientific": "Oriolus xanthornus Black-hooded Oriole",
+      "expected_common": "Black-hooded Oriole",
+      "expected_names": [
+        "black-hooded oriole",
+        "oriolus xanthornus black-hooded oriole",
+        "black-hooded oriole"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Black-hooded Oriole",
+          "scientific_name": "Oriolus xanthornus",
+          "confidence": 95,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2704,
+      "features": {
+        "duration": 16.58,
+        "min_freq": 1636,
+        "max_freq": 2131,
+        "peak_freq": 2088,
+        "freq_range": 495,
+        "pattern": "repeated_phrases",
+        "syllables": 4,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Coracias benghalensis_Indian Roller_2.m4a",
+      "expected_scientific": "Coracias benghalensis Indian Roller",
+      "expected_common": "Indian Roller",
+      "expected_names": [
+        "indian roller",
+        "coracias benghalensis indian roller",
+        "indian roller"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Jungle Babbler",
+          "scientific_name": "Argya striata",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 2787,
+      "features": {
+        "duration": 18.65,
+        "min_freq": 279,
+        "max_freq": 2627,
+        "peak_freq": 2390,
+        "freq_range": 2348,
+        "pattern": "complex_song",
+        "syllables": 11,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Corvus macrorhynchos_Large billed crow.mp3",
+      "expected_scientific": "Corvus macrorhynchos Large billed crow",
+      "expected_common": "Large billed crow",
+      "expected_names": [
+        "large billed crow",
+        "corvus macrorhynchos large billed crow",
+        "large billed crow"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Large-billed Crow",
+          "scientific_name": "Corvus macrorhynchos",
+          "confidence": 98,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Oriental Turtle-Dove",
+          "scientific_name": "Streptopelia orientalis",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 1536,
+      "features": {
+        "duration": 3.84,
+        "min_freq": 1055,
+        "max_freq": 1679,
+        "peak_freq": 1291,
+        "freq_range": 624,
+        "pattern": "repeated_phrases",
+        "syllables": 5,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Acrocephalus dumetorum_Blyth's Reed Warbler.mp3",
+      "expected_scientific": "Acrocephalus dumetorum Blyth's Reed Warbler",
+      "expected_common": "Blyth's Reed Warbler",
+      "expected_names": [
+        "blyth's reed warbler",
+        "acrocephalus dumetorum blyth's reed warbler",
+        "blyth's reed warbler"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Clamorous Reed Warbler",
+          "scientific_name": "Acrocephalus stentoreus",
+          "confidence": 68,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2041,
+      "features": {
+        "duration": 9.3,
+        "min_freq": 2304,
+        "max_freq": 5490,
+        "peak_freq": 4371,
+        "freq_range": 3186,
+        "pattern": "repeated_phrases",
+        "syllables": 4,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Coracias benghalensis_Indian Roller.mp3",
+      "expected_scientific": "Coracias benghalensis Indian Roller",
+      "expected_common": "Indian Roller",
+      "expected_names": [
+        "indian roller",
+        "coracias benghalensis indian roller",
+        "indian roller"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Indian Roller",
+          "scientific_name": "Coracias benghalensis",
+          "confidence": 97,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3025,
+      "features": {
+        "duration": 15.44,
+        "min_freq": 753,
+        "max_freq": 4198,
+        "peak_freq": 1722,
+        "freq_range": 3445,
+        "pattern": "complex_song",
+        "syllables": 12,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Ceryle rudis_Pied Kingfisher.m4a",
+      "expected_scientific": "Ceryle rudis Pied Kingfisher",
+      "expected_common": "Pied Kingfisher",
+      "expected_names": [
+        "pied kingfisher",
+        "ceryle rudis pied kingfisher",
+        "pied kingfisher"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "White-spotted Flufftail",
+          "scientific_name": "Sarothrura pulchra",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 4034,
+      "features": {
+        "duration": 31.21,
+        "min_freq": 602,
+        "max_freq": 1399,
+        "peak_freq": 1012,
+        "freq_range": 797,
+        "pattern": "complex_song",
+        "syllables": 38,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Pitta brachyura_Indian Pitta.mp3",
+      "expected_scientific": "Pitta brachyura Indian Pitta",
+      "expected_common": "Indian Pitta",
+      "expected_names": [
+        "indian pitta",
+        "pitta brachyura indian pitta",
+        "indian pitta"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Indian Pitta",
+          "scientific_name": "Pitta brachyura",
+          "confidence": 99,
+          "source": "BirdNET"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 3776,
+      "features": {
+        "duration": 12.77,
+        "min_freq": 2002,
+        "max_freq": 2971,
+        "peak_freq": 2971,
+        "freq_range": 969,
+        "pattern": "complex_song",
+        "syllables": 6,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Porphyrio poliocephalus_Grey-headed Swamphen.mp3",
+      "expected_scientific": "Porphyrio poliocephalus Grey-headed Swamphen",
+      "expected_common": "Grey-headed Swamphen",
+      "expected_names": [
+        "grey-headed swamphen",
+        "porphyrio poliocephalus grey-headed swamphen",
+        "grey-headed swamphen"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Gray-headed Swamphen",
+          "scientific_name": "Porphyrio poliocephalus",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 1926,
+      "features": {
+        "duration": 6.37,
+        "min_freq": 387,
+        "max_freq": 4242,
+        "peak_freq": 387,
+        "freq_range": 3855,
+        "pattern": "repeated_phrases",
+        "syllables": 4,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Pastor roseus_Rosy Starling.m4a",
+      "expected_scientific": "Pastor roseus Rosy Starling",
+      "expected_common": "Rosy Starling",
+      "expected_names": [
+        "rosy starling",
+        "pastor roseus rosy starling",
+        "rosy starling"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Bushtit",
+          "scientific_name": "Psaltriparus minimus",
+          "confidence": 73,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Black Stork",
+          "scientific_name": "Ciconia nigra",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": false,
+      "processing_time_ms": 2976,
+      "features": {
+        "duration": 19.74,
+        "min_freq": 1162,
+        "max_freq": 6869,
+        "peak_freq": 1937,
+        "freq_range": 5707,
+        "pattern": "complex_song",
+        "syllables": 23,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    },
+    {
+      "file": "Spilopelia senegalensis_Laughing Dove.m4a",
+      "expected_scientific": "Spilopelia senegalensis Laughing Dove",
+      "expected_common": "Laughing Dove",
+      "expected_names": [
+        "laughing dove",
+        "spilopelia senegalensis laughing dove",
+        "laughing dove"
+      ],
+      "status": "success",
+      "predictions": [
+        {
+          "name": "Laughing Dove",
+          "scientific_name": "Streptopelia senegalensis",
+          "confidence": 98,
+          "source": "BirdNET"
+        },
+        {
+          "name": "Spotted Dove",
+          "scientific_name": "Streptopelia chinensis",
+          "confidence": 60,
+          "source": "BirdNET+LLM"
+        }
+      ],
+      "correct": true,
+      "processing_time_ms": 2275,
+      "features": {
+        "duration": 13.03,
+        "min_freq": 581,
+        "max_freq": 775,
+        "peak_freq": 753,
+        "freq_range": 194,
+        "pattern": "complex_song",
+        "syllables": 7,
+        "complexity": "high",
+        "rhythm": "slow/deliberate",
+        "quality": "clear"
+      }
+    }
+  ]
+}

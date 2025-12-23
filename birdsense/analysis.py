@@ -22,6 +22,19 @@ from typing import List, Dict, Any, Optional, Generator
 from providers import provider_factory
 from prompts import get_audio_prompt, get_image_prompt, get_description_prompt, get_enrichment_prompt
 
+# Import enhanced corrections and filters
+try:
+    from enhanced_prompts import (
+        filter_non_indian_birds, 
+        apply_acoustic_correction, 
+        CONFUSION_SPECIES_MATRIX,
+        get_confusion_prompt
+    )
+    ENHANCED_CORRECTIONS_AVAILABLE = True
+except ImportError:
+    ENHANCED_CORRECTIONS_AVAILABLE = False
+    print("⚠️ Enhanced corrections not available")
+
 # ============ BIRDNET SETUP ============
 BIRDNET_AVAILABLE = False
 birdnet_analyzer = None
@@ -955,48 +968,56 @@ def identify_audio_streaming(audio_input, location: str = "", month: str = "") -
     else:
         trail.append("⚠️ BirdNET: Not available")
     
-    # Stage 3: Spectrogram + Vision Model (NEW!)
-    yield update_trail("Stage 3/5: Spectrogram vision analysis...")
+    # Stage 3: Spectrogram + Vision Model
+    # Skip on cloud if BirdNET found enough candidates (optimization for speed)
+    import os
+    skip_spectrogram = os.environ.get("SKIP_SPECTROGRAM", "false").lower() == "true"
+    has_enough_birdnet = len(all_candidates) >= 3  # BirdNET found multiple candidates
     
     spectrogram_results = []
-    try:
-        from audio_vision import SpectrogramAnalyzer
-        spec_analyzer = SpectrogramAnalyzer()
-        # Use ENHANCED audio for spectrogram (cleaner visualization)
-        spec_image = spec_analyzer.generate_spectrogram(enhanced_audio, sr)
-        
-        # Use vision model to analyze spectrogram
-        spec_prompt = """Analyze this bird call spectrogram image:
+    if skip_spectrogram or has_enough_birdnet:
+        trail.append(f"⏩ Spectrogram: Skipped (BirdNET found {len(all_candidates)} candidates)")
+    else:
+        yield update_trail("Stage 3/5: Spectrogram vision analysis...")
+        try:
+            from audio_vision import SpectrogramAnalyzer
+            import concurrent.futures
+            
+            spec_analyzer = SpectrogramAnalyzer()
+            # Use ENHANCED audio for spectrogram (cleaner visualization)
+            spec_image = spec_analyzer.generate_spectrogram(enhanced_audio, sr)
+            
+            # Use vision model to analyze spectrogram with timeout
+            spec_prompt = """Analyze this bird call spectrogram. Identify the bird species based on:
+- Frequency range (Y-axis)
+- Temporal pattern (X-axis) 
+- Harmonics and call shape
 
-1. **Frequency Pattern** (Y-axis): What frequency range is the call? (Low <1kHz, Medium 1-4kHz, High >4kHz)
-2. **Temporal Pattern** (X-axis): Is the call continuous, repeated, or complex?
-3. **Harmonics**: Are there multiple parallel lines (harmonics)?
-4. **Call Shape**: Rising whistle? Descending? Complex song?
+Common India patterns: Rising whistle=Koel, Two-note=Cuckoo, Rapid trill=Bee-eater, Complex song=Magpie-Robin
 
-Based on this visual analysis, identify the bird species.
-
-Common India patterns:
-- Rising whistle ~700-1500Hz = Asian Koel
-- Two-note pattern = Common Cuckoo
-- Rapid trill 2-4kHz = Bee-eaters
-- Complex varied song = Magpie-Robin
-
-Respond in JSON: {{"birds": [{{"name": "...", "scientific_name": "...", "confidence": 75, "reason": "Spectrogram shows..."}}]}}"""
-        
-        spec_response = provider_factory.call_vision(spec_image, spec_prompt)
-        spectrogram_results = parse_birds(spec_response)
-        
-        if spectrogram_results:
-            for r in spectrogram_results:
-                r["source"] = "Spectrogram+Vision"
-                # Only add if not already found
-                if r["name"].lower() not in [c.get("name", "").lower() for c in all_candidates]:
-                    all_candidates.append(r)
-            trail.append(f"✅ Spectrogram: {len(spectrogram_results)} candidate(s)")
-        else:
-            trail.append("⚠️ Spectrogram: No visual match")
-    except Exception as e:
-        trail.append(f"⚠️ Spectrogram: Skipped ({str(e)[:30]})")
+Respond in JSON: {{"birds": [{{"name": "...", "scientific_name": "...", "confidence": 75, "reason": "..."}}]}}"""
+            
+            # Run with 15 second timeout
+            with concurrent.futures.ThreadPoolExecutor() as executor:
+                future = executor.submit(provider_factory.call_vision, spec_image, spec_prompt)
+                try:
+                    spec_response = future.result(timeout=15)
+                    spectrogram_results = parse_birds(spec_response)
+                except concurrent.futures.TimeoutError:
+                    trail.append("⚠️ Spectrogram: Timeout (>15s)")
+                    spectrogram_results = []
+            
+            if spectrogram_results:
+                for r in spectrogram_results:
+                    r["source"] = "Spectrogram+Vision"
+                    # Only add if not already found
+                    if r["name"].lower() not in [c.get("name", "").lower() for c in all_candidates]:
+                        all_candidates.append(r)
+                trail.append(f"✅ Spectrogram: {len(spectrogram_results)} candidate(s)")
+            elif not any("Timeout" in t for t in trail):
+                trail.append("⚠️ Spectrogram: No visual match")
+        except Exception as e:
+            trail.append(f"⚠️ Spectrogram: Skipped ({str(e)[:30]})")
     
     # Stage 4: Features (from ENHANCED audio)
     yield update_trail("Stage 4/5: Acoustic feature extraction...")
@@ -1053,6 +1074,16 @@ Respond in JSON: {{"birds": [{{"name": "...", "scientific_name": "...", "confide
     
     # Merge all candidates with weighted scoring
     all_birds = _merge_audio_candidates(all_candidates)
+    
+    # Apply acoustic-based corrections (e.g., Magpie vs Magpie-Robin)
+    if ENHANCED_CORRECTIONS_AVAILABLE and features:
+        trail.append("🔄 Applying acoustic corrections...")
+        all_birds = apply_acoustic_correction(all_birds, features)
+        
+    # Filter out non-Indian species if location is India
+    if ENHANCED_CORRECTIONS_AVAILABLE and location and "india" in location.lower():
+        trail.append("🌏 Filtering for Indian region...")
+        all_birds = filter_non_indian_birds(all_birds, location)
     
     # Final results
     all_birds = deduplicate_birds(all_birds)

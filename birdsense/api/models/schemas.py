@@ -42,6 +42,49 @@ class UserInfo(BaseModel):
     is_active: bool = True
 
 
+# ============ ANALYSIS TRAIL MODELS ============
+
+class AudioFeatures(BaseModel):
+    """Acoustic features extracted from audio."""
+    duration: float = Field(description="Duration in seconds")
+    min_freq: int = Field(description="Minimum frequency in Hz")
+    max_freq: int = Field(description="Maximum frequency in Hz")
+    peak_freq: int = Field(description="Peak/dominant frequency in Hz")
+    freq_range: int = Field(description="Frequency range in Hz")
+    pattern: str = Field(description="Temporal pattern (simple_call, complex_song, etc.)")
+    complexity: str = Field(description="Complexity level (low, medium, high)")
+    syllables: int = Field(description="Number of syllables detected")
+    rhythm: str = Field(description="Rhythm description")
+    quality: str = Field(description="Signal quality")
+
+
+class ImageFeatures(BaseModel):
+    """Visual features analyzed from image."""
+    size_estimate: Optional[str] = Field(None, description="Estimated size (sparrow, crow, eagle)")
+    primary_colors: Optional[List[str]] = Field(None, description="Primary colors observed")
+    beak_description: Optional[str] = Field(None, description="Beak shape and color")
+    distinctive_features: Optional[List[str]] = Field(None, description="Key identifying features")
+    pose: Optional[str] = Field(None, description="Bird pose (perched, flying, swimming)")
+
+
+class AnalysisStep(BaseModel):
+    """Single step in the analysis trail."""
+    step: str = Field(description="Step name")
+    status: str = Field(description="Status (completed, warning, error)")
+    details: Optional[str] = Field(None, description="Additional details")
+    duration_ms: Optional[int] = Field(None, description="Step duration in ms")
+
+
+class AnalysisTrail(BaseModel):
+    """Complete analysis trail showing the identification pipeline."""
+    pipeline: str = Field(description="Pipeline used (audio, image, description)")
+    steps: List[AnalysisStep] = Field(default_factory=list, description="Analysis steps")
+    audio_features: Optional[AudioFeatures] = Field(None, description="Audio features if audio analysis")
+    image_features: Optional[ImageFeatures] = Field(None, description="Image features if image analysis")
+    sources_used: List[str] = Field(default_factory=list, description="Sources that contributed (BirdNET, SAM-Audio, Vision, LLM)")
+    enhancement_applied: bool = Field(False, description="Whether SAM-Audio enhancement was applied")
+
+
 # ============ BIRD IDENTIFICATION MODELS ============
 
 class BirdResult(BaseModel):
@@ -62,16 +105,22 @@ class BirdResult(BaseModel):
     
     # India-specific
     india_info: Optional[Dict[str, Any]] = Field(None, description="India-specific information")
+    
+    # Confidence backing
+    confidence_factors: Optional[Dict[str, Any]] = Field(None, description="Factors supporting confidence score")
 
 
 class IdentificationResponse(BaseModel):
-    """Bird identification response."""
+    """Bird identification response with full analysis trail."""
     success: bool
     birds: List[BirdResult] = Field(default_factory=list)
     total_birds: int = 0
     processing_time_ms: int = Field(description="Processing time in milliseconds")
     model_used: str = Field(description="Model used for identification")
     timestamp: datetime = Field(default_factory=datetime.utcnow)
+    
+    # Analysis trail for transparency
+    analysis_trail: Optional[AnalysisTrail] = Field(None, description="Detailed analysis trail")
     
     model_config = {
         "json_schema_extra": {

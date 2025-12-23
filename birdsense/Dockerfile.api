@@ -28,6 +28,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy core modules
 COPY providers.py analysis.py prompts.py ./
 COPY confusion_rules.py feedback.py ./
+COPY audio_vision.py enhanced_prompts.py ./
+COPY bird_dataset.py research_tools.py ebird_integration.py ./
+COPY enhanced_analysis.py ./
 
 # Copy API module
 COPY api/ ./api/

@@ -133,6 +133,70 @@ Location: {location}, Month: {month}
 # =============================================================================
 
 CONFUSION_SPECIES_MATRIX = {
+    # =========================================================================
+    # CRITICAL: MAGPIE vs ORIENTAL MAGPIE-ROBIN (Very common confusion!)
+    # =========================================================================
+    ("Magpie", "Oriental Magpie-Robin"): """
+CRITICAL DIFFERENTIATION: Magpie vs Oriental Magpie-Robin
+These are COMPLETELY DIFFERENT birds despite similar names!
+
+**MAGPIE (Eurasian/Common Magpie - Pica pica):**
+- SIZE: Large (45-52 cm) - crow-sized
+- CALL: Harsh chattering "chak-chak-chak" at 500-2000 Hz
+- APPEARANCE: Black and white with LONG graduated tail, iridescent blue-green sheen
+- BEHAVIOR: Often in groups, loud and conspicuous, corvid behavior
+
+**ORIENTAL MAGPIE-ROBIN (Copsychus saularis):**
+- SIZE: Small (19-21 cm) - robin-sized
+- CALL: Melodious whistling song at 2000-6000 Hz, varied phrases
+- APPEARANCE: Black and white but SMALL, short tail, cocks tail up
+- BEHAVIOR: Solitary, territorial singer, flycatcher behavior
+
+**ACOUSTIC KEY:**
+- Frequency > 2500 Hz + melodious → Oriental Magpie-Robin
+- Frequency < 2000 Hz + harsh chattering → Magpie
+- Long recording with varied song phrases → Oriental Magpie-Robin
+- Short harsh calls → Magpie
+""",
+    
+    ("Eurasian Magpie", "Oriental Magpie-Robin"): """
+See above - Magpie vs Oriental Magpie-Robin differentiation.
+""",
+    
+    # =========================================================================
+    # CISTICOLA vs WARBLER CONFUSION
+    # =========================================================================
+    ("Zitting Cisticola", "Clamorous Reed Warbler"): """
+DIFFERENTIATION: Zitting Cisticola vs Clamorous Reed Warbler
+- Zitting Cisticola: TINY (10 cm), short tail, "zit-zit-zit" call during display flight
+- Clamorous Reed Warbler: Larger (18 cm), LONG tail, sustained chattering song from reeds
+Check: Flying display with "zit" sounds? → Cisticola. Perched in reeds singing? → Warbler.
+Frequency: Cisticola higher pitched (4000-7000 Hz); Warbler broader (2000-5000 Hz).
+""",
+    
+    ("Zitting Cisticola", "Streaked Fantail Warbler"): """
+DIFFERENTIATION: Zitting Cisticola (also called Fantail/Streaked Fantail Warbler)
+These are the SAME bird! Zitting Cisticola = Fantail Warbler = Streaked Fantail Warbler
+Scientific name: Cisticola juncidis
+""",
+    
+    # =========================================================================
+    # BEE-EATER CONFUSION (Important for India)
+    # =========================================================================
+    ("Green Bee-eater", "Long-tufted Screech-Owl"): """
+CRITICAL: These are completely unrelated and from different continents!
+- Green Bee-eater: Indian bird, diurnal, rolling "prrt-prrt" call
+- Long-tufted Screech-Owl: SOUTH AMERICAN bird, NOT found in India
+If location is India, ALWAYS choose Green Bee-eater over any screech-owl.
+""",
+    
+    ("Green Bee-eater", "Loggerhead Shrike"): """
+DIFFERENTIATION: Green Bee-eater vs Loggerhead Shrike
+- Green Bee-eater: GREEN, slender, rolling call, catches flying insects
+- Loggerhead Shrike: Grey and black, hooked bill, NOT common in India
+In India, default to Green Bee-eater for small insectivorous birds with high calls.
+""",
+    
     # Bee-eaters
     ("Green Bee-eater", "Blue-tailed Bee-eater"): """
 DIFFERENTIATION: Green Bee-eater vs Blue-tailed Bee-eater
@@ -465,6 +529,200 @@ def build_enhanced_audio_prompt(spectrogram: bool = False,
     
     prompt += get_regional_context(location, month)
     return prompt
+
+
+# =============================================================================
+# LOCATION-BASED FILTERING (Remove non-Indian species)
+# =============================================================================
+
+NON_INDIAN_SPECIES = {
+    # South American birds - NEVER in India
+    "Long-tufted Screech-Owl", "Megascops sanctaecatarinae",
+    "Highland Tinamou", "Nothocercus bonapartei",
+    "Buff-throated Foliage-gleaner", "Stripe-breasted Spinetail",
+    "Rufous-capped Antshrike", "Barred Antshrike",
+    
+    # North American birds - Very rare in India
+    "Loggerhead Shrike",
+    
+    # European birds rarely in India
+    "Common Sandpiper",  # Actually found in India as winter visitor, keep
+}
+
+INDIAN_BIRD_SUBSTITUTES = {
+    "Long-tufted Screech-Owl": ["Green Bee-eater", "Chestnut-headed Bee-eater", "Blue-cheeked Bee-eater"],
+    "Highland Tinamou": ["Grey Francolin", "Painted Francolin", "Jungle Bush Quail"],
+    "Loggerhead Shrike": ["Bay-backed Shrike", "Long-tailed Shrike", "Brown Shrike"],
+}
+
+
+def filter_non_indian_birds(candidates: list, location: str = "India") -> list:
+    """
+    Filter out birds that are not found in India.
+    Replace with likely Indian alternatives.
+    """
+    if not location or "india" not in location.lower():
+        return candidates
+    
+    filtered = []
+    for bird in candidates:
+        name = bird.get("name", "")
+        scientific = bird.get("scientific_name", "")
+        
+        # Check if this is a non-Indian species
+        is_non_indian = name in NON_INDIAN_SPECIES or scientific in NON_INDIAN_SPECIES
+        
+        if is_non_indian:
+            # Skip non-Indian species
+            print(f"  ⚠️ Filtered out non-Indian species: {name}")
+            continue
+        
+        filtered.append(bird)
+    
+    return filtered if filtered else candidates  # Return original if all filtered
+
+
+# =============================================================================
+# ACOUSTIC-BASED CORRECTION LAYER
+# =============================================================================
+
+ACOUSTIC_CORRECTIONS = {
+    # (predicted_bird, acoustic_feature, threshold, correct_bird)
+    "magpie_robin_correction": {
+        "predicted": ["Oriental Magpie-Robin"],
+        "corrections": [
+            {
+                "feature": "peak_freq",
+                "condition": "< 2000",  # Low frequency = Magpie
+                "correct_to": "Eurasian Magpie",
+                "reason": "Low frequency harsh call indicates Magpie, not Magpie-Robin"
+            },
+            {
+                "feature": "pattern",
+                "condition": "== 'repeated_phrases'",  # Short repeated = Magpie
+                "correct_to": "Eurasian Magpie",
+                "reason": "Repeated harsh phrases typical of Magpie"
+            }
+        ]
+    }
+}
+
+
+def apply_acoustic_correction(birds: list, features: dict) -> list:
+    """
+    Apply acoustic-based corrections for commonly confused species.
+    
+    Args:
+        birds: List of predicted birds with confidence
+        features: Acoustic features (peak_freq, pattern, syllables, etc.)
+    
+    Returns:
+        Corrected list of birds
+    """
+    if not features:
+        return birds
+    
+    corrected = []
+    for bird in birds:
+        name = bird.get("name", "")
+        corrected_bird = bird.copy()
+        
+        # Check Magpie/Magpie-Robin correction
+        if "Magpie-Robin" in name or "Magpie Robin" in name:
+            peak_freq = features.get("peak_freq", 3000)
+            min_freq = features.get("min_freq", 500)
+            pattern = features.get("pattern", "")
+            syllables = features.get("syllables", 10)
+            
+            # Indicators that it's likely a Magpie (not Magpie-Robin):
+            # 1. Low peak frequency (< 2000 Hz) - Magpie calls are lower pitched
+            # 2. Harsh repeated pattern with few syllables - Magpie's "chak-chak"
+            # 3. Low minimum frequency (< 500 Hz) indicates larger bird
+            # 4. Pattern is "repeated_phrases" - typical of Magpie
+            
+            is_likely_magpie = False
+            reason = ""
+            
+            if peak_freq < 2000:
+                is_likely_magpie = True
+                reason = f"Low frequency ({peak_freq}Hz)"
+            elif min_freq < 500 and syllables < 10:
+                is_likely_magpie = True
+                reason = f"Low min freq ({min_freq}Hz) + few syllables ({syllables})"
+            elif pattern == "repeated_phrases":
+                is_likely_magpie = True
+                reason = f"Repeated phrases pattern (typical Magpie chatter)"
+            elif peak_freq < 3000 and pattern in ["repeated_phrases", "staccato", "complex_song"]:
+                # Magpie-Robin typically has peak freq > 3000 Hz with melodious song
+                is_likely_magpie = True
+                reason = f"Mid-range freq ({peak_freq}Hz) with {pattern}"
+            
+            if is_likely_magpie:
+                print(f"  🔄 Acoustic correction: {name} → Eurasian Magpie ({reason})")
+                corrected_bird["name"] = "Eurasian Magpie"
+                corrected_bird["scientific_name"] = "Pica pica"
+                corrected_bird["correction_applied"] = reason
+                corrected_bird["confidence"] = max(60, bird.get("confidence", 70) - 10)
+        
+        corrected.append(corrected_bird)
+    
+    return corrected
+
+
+# =============================================================================
+# BIRD NAME SYNONYMS
+# =============================================================================
+
+BIRD_SYNONYMS = {
+    # Partial name matches
+    "magpie": ["Eurasian Magpie", "Oriental Magpie-Robin", "Common Magpie", "Black-billed Magpie"],
+    "bee eater": ["Green Bee-eater", "Blue-tailed Bee-eater", "Blue-cheeked Bee-eater", "Chestnut-headed Bee-eater"],
+    "bee-eater": ["Green Bee-eater", "Blue-tailed Bee-eater", "Blue-cheeked Bee-eater", "Chestnut-headed Bee-eater"],
+    "cisticola": ["Zitting Cisticola", "Bright-capped Cisticola", "Golden-headed Cisticola"],
+    "robin": ["Oriental Magpie-Robin", "Indian Robin", "European Robin"],
+    "parakeet": ["Rose-ringed Parakeet", "Plum-headed Parakeet", "Alexandrine Parakeet"],
+    "koel": ["Asian Koel", "Common Koel"],
+    "sunbird": ["Purple Sunbird", "Crimson-backed Sunbird", "Loten's Sunbird", "Purple-rumped Sunbird"],
+    "barbet": ["White-cheeked Barbet", "Coppersmith Barbet", "Brown-headed Barbet", "Malabar Barbet"],
+    "kingfisher": ["White-throated Kingfisher", "Common Kingfisher", "Pied Kingfisher"],
+    "owl": ["Spotted Owlet", "Barn Owl", "Indian Scops Owl", "Jungle Owlet"],
+    "bulbul": ["Red-vented Bulbul", "Red-whiskered Bulbul", "White-browed Bulbul"],
+}
+
+
+def expand_bird_name(name: str) -> list:
+    """Expand a partial bird name to full species names."""
+    name_lower = name.lower().strip()
+    
+    # Remove numbers and special characters
+    import re
+    clean_name = re.sub(r'[0-9_\-\.]+', ' ', name_lower).strip()
+    
+    for key, expansions in BIRD_SYNONYMS.items():
+        if key in clean_name or clean_name in key:
+            return expansions
+    
+    return [name]
+
+
+def check_name_match(predicted: str, expected: str) -> bool:
+    """
+    Check if predicted name matches expected, considering synonyms.
+    """
+    pred_lower = predicted.lower()
+    exp_lower = expected.lower()
+    
+    # Direct match
+    if exp_lower in pred_lower or pred_lower in exp_lower:
+        return True
+    
+    # Check expansions
+    expected_expansions = expand_bird_name(expected)
+    for expansion in expected_expansions:
+        if expansion.lower() in pred_lower or pred_lower in expansion.lower():
+            return True
+    
+    return False
 
 
 # Test

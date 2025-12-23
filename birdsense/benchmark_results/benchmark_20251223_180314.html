@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐦 BirdSense Benchmark Report</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: #e2e8f0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { text-align: center; margin-bottom: 30px; font-size: 2.5em; }
+        h1 span { color: #22c55e; }
+        
+        .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
+        .stat-card { background: linear-gradient(135deg, #1e293b 0%, #334155 100%); padding: 25px; border-radius: 16px; text-align: center; }
+        .stat-card.success { border: 2px solid #22c55e; }
+        .stat-card.warning { border: 2px solid #f59e0b; }
+        .stat-card.error { border: 2px solid #ef4444; }
+        .stat-value { font-size: 3em; font-weight: bold; }
+        .stat-value.green { color: #22c55e; }
+        .stat-value.yellow { color: #f59e0b; }
+        .stat-value.red { color: #ef4444; }
+        .stat-label { color: #94a3b8; margin-top: 5px; }
+        
+        .section { background: #1e293b; border-radius: 16px; padding: 25px; margin-bottom: 30px; }
+        .section h2 { color: #60a5fa; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        
+        .confusion-list { list-style: none; }
+        .confusion-list li { padding: 12px; background: rgba(239, 68, 68, 0.1); margin-bottom: 8px; border-radius: 8px; display: flex; justify-content: space-between; }
+        .confusion-list .count { background: #ef4444; color: white; padding: 4px 12px; border-radius: 20px; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #334155; }
+        th { background: #334155; color: #60a5fa; }
+        tr:hover { background: rgba(59, 130, 246, 0.1); }
+        .correct { color: #22c55e; }
+        .incorrect { color: #ef4444; }
+        .confidence { background: #334155; padding: 4px 8px; border-radius: 4px; font-size: 0.9em; }
+        
+        .filter-bar { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .filter-btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.2s; }
+        .filter-btn.all { background: #3b82f6; color: white; }
+        .filter-btn.correct { background: #22c55e; color: white; }
+        .filter-btn.incorrect { background: #ef4444; color: white; }
+        .filter-btn:hover { transform: translateY(-2px); }
+        
+        .meta { color: #64748b; font-size: 0.9em; margin-top: 30px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐦 BirdSense <span>Benchmark Report</span></h1>
+        
+        <div class="summary">
+            <div class="stat-card success">
+                <div class="stat-value green">72.13%</div>
+                <div class="stat-label">Accuracy</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">88/122</div>
+                <div class="stat-label">Correct / Total</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">122</div>
+                <div class="stat-label">Audio Files</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value yellow">0</div>
+                <div class="stat-label">Errors</div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>⚙️ Configuration</h2>
+            <p><strong>BirdNET:</strong> ✅ Available</p>
+            <p><strong>LLM Backend:</strong> cloud</p>
+            <p><strong>Timestamp:</strong> 2025-12-23T18:03:14.869228</p>
+        </div>
+        
+        <div class="section">
+            <h2>🔄 Top Confusions</h2>
+            <ul class="confusion-list">
+                <li><span>Black-winged Kite → Black Woodpecker</span><span class="count">1</span></li><li><span>Greylag geese → Graylag Goose</span><span class="count">1</span></li><li><span>Red-Wattled Lapwing → Little Grass Frog</span><span class="count">1</span></li><li><span>Common Kingfisher → Oriental Magpie-Robin</span><span class="count">1</span></li><li><span>Palla's Fish Eagle → Red-and-yellow Barbet</span><span class="count">1</span></li><li><span>Ashy-crowned Sparrow-Lark → Gray Francolin</span><span class="count">1</span></li><li><span>Blue-whistling Thrush → Rufous Treepie</span><span class="count">1</span></li><li><span>White-rumped Shama → Spotted Laughingthrush</span><span class="count">1</span></li><li><span>Shikra → Eurasian Kestrel</span><span class="count">1</span></li><li><span>Coppersmith Barbet → Gray Treepie</span><span class="count">1</span></li>
+            </ul>
+        </div>
+        
+        <div class="section">
+            <h2>📋 Detailed Results</h2>
+            <div class="filter-bar">
+                <button class="filter-btn all" onclick="filterResults('all')">All (122)</button>
+                <button class="filter-btn correct" onclick="filterResults('correct')">Correct (88)</button>
+                <button class="filter-btn incorrect" onclick="filterResults('incorrect')">Incorrect (34)</button>
+            </div>
+            <table id="results-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Expected</th>
+                        <th>Prediction</th>
+                        <th>Confidence</th>
+                        <th>Source</th>
+                        <th>Result</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>1</td>
+                        <td>Ashy Drongo</td>
+                        <td>Ashy Drongo</td>
+                        <td><span class="confidence">92%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>2</td>
+                        <td>Common myna</td>
+                        <td>Common Myna</td>
+                        <td><span class="confidence">94%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>3</td>
+                        <td>Coppersmith Barbet</td>
+                        <td>Coppersmith Barbet</td>
+                        <td><span class="confidence">75%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>4</td>
+                        <td>24-35-27.0132-N 72-43-21.288-N</td>
+                        <td>Common Tailorbird</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>5</td>
+                        <td>Common Cuckoo</td>
+                        <td>Common Cuckoo</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>6</td>
+                        <td>Black-winged Kite</td>
+                        <td>Black Woodpecker</td>
+                        <td><span class="confidence">79%</span></td>
+                        <td>BirdNET</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>7</td>
+                        <td>Red Avadavat</td>
+                        <td>Red Avadavat</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>8</td>
+                        <td>Common Crane</td>
+                        <td>Common Crane</td>
+                        <td><span class="confidence">96%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>9</td>
+                        <td>Bank Myna</td>
+                        <td>Bank Myna</td>
+                        <td><span class="confidence">54%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>10</td>
+                        <td>House Sparrow</td>
+                        <td>House Sparrow</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>11</td>
+                        <td>Brown Wood Owl</td>
+                        <td>Brown Wood-Owl</td>
+                        <td><span class="confidence">55%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>12</td>
+                        <td>Jungle Prinia</td>
+                        <td>Asian Koel</td>
+                        <td><span class="confidence">91%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>13</td>
+                        <td>Baya Weaver</td>
+                        <td>Baya Weaver</td>
+                        <td><span class="confidence">79%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>14</td>
+                        <td>Greylag geese</td>
+                        <td>Graylag Goose</td>
+                        <td><span class="confidence">98%</span></td>
+                        <td>BirdNET</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>15</td>
+                        <td>Asian Green Bee-eater</td>
+                        <td>Yellow-backed Oriole</td>
+                        <td><span class="confidence">82%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>16</td>
+                        <td>Rose-ringed Parakeet</td>
+                        <td>Rose-ringed Parakeet</td>
+                        <td><span class="confidence">95%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>17</td>
+                        <td>Small Minivet</td>
+                        <td>Small Minivet</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>18</td>
+                        <td>Red-Wattled Lapwing</td>
+                        <td>Little Grass Frog</td>
+                        <td><span class="confidence">76%</span></td>
+                        <td>BirdNET</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>19</td>
+                        <td>Common Kingfisher</td>
+                        <td>Oriental Magpie-Robin</td>
+                        <td><span class="confidence">75%</span></td>
+                        <td></td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>20</td>
+                        <td>Palla's Fish Eagle</td>
+                        <td>Red-and-yellow Barbet</td>
+                        <td><span class="confidence">85%</span></td>
+                        <td>BirdNET</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>21</td>
+                        <td>Rufous Treepie</td>
+                        <td>Rufous Treepie</td>
+                        <td><span class="confidence">96%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>22</td>
+                        <td>Brown-headed Barbet</td>
+                        <td>Brown-headed Barbet</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>23</td>
+                        <td>Common Babbler</td>
+                        <td>Common Redshank</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>24</td>
+                        <td>19-5-10.5144-N 73-0-24.39-N</td>
+                        <td>House Crow</td>
+                        <td><span class="confidence">71%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>25</td>
+                        <td>Ashy-crowned Sparrow-Lark</td>
+                        <td>Gray Francolin</td>
+                        <td><span class="confidence">76%</span></td>
+                        <td>BirdNET</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>26</td>
+                        <td>26-29-53.8008-N 74-35-6.144-N</td>
+                        <td>Rufous-fronted Prinia</td>
+                        <td><span class="confidence">74%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>27</td>
+                        <td>Indian Silverbill</td>
+                        <td>Common Kingfisher</td>
+                        <td><span class="confidence">84%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>28</td>
+                        <td>Baya Weaver</td>
+                        <td>Baya Weaver</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>29</td>
+                        <td>Jerdon's Leafbird</td>
+                        <td>Golden-fronted Leafbird</td>
+                        <td><span class="confidence">54%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>30</td>
+                        <td>coppersmith barbet</td>
+                        <td>Coppersmith Barbet</td>
+                        <td><span class="confidence">82%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>31</td>
+                        <td>Red-vented Bulbul</td>
+                        <td>Red-vented Bulbul</td>
+                        <td><span class="confidence">76%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>32</td>
+                        <td>Green Warbler</td>
+                        <td>Green Warbler</td>
+                        <td><span class="confidence">80%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>33</td>
+                        <td>Indian Pitta</td>
+                        <td>Indian Pitta</td>
+                        <td><span class="confidence">81%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>34</td>
+                        <td>Jungle Myna</td>
+                        <td>Common Myna</td>
+                        <td><span class="confidence">84%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>35</td>
+                        <td>Indian Peafowl</td>
+                        <td>Indian Peafowl</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>36</td>
+                        <td>Blue-whistling Thrush</td>
+                        <td>Rufous Treepie</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>37</td>
+                        <td>Ashy Prinia</td>
+                        <td>Graceful Prinia</td>
+                        <td><span class="confidence">85%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>38</td>
+                        <td>White-rumped Shama</td>
+                        <td>Spotted Laughingthrush</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>39</td>
+                        <td>Shikra</td>
+                        <td>Eurasian Kestrel</td>
+                        <td><span class="confidence">74%</span></td>
+                        <td>BirdNET</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>40</td>
+                        <td>Coppersmith Barbet</td>
+                        <td>Gray Treepie</td>
+                        <td><span class="confidence">62%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>41</td>
+                        <td>Black Kite</td>
+                        <td>Black Kite</td>
+                        <td><span class="confidence">95%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>42</td>
+                        <td>Jungle Babbler</td>
+                        <td>Jungle Babbler</td>
+                        <td><span class="confidence">89%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>43</td>
+                        <td>12-45-7.0884-N 77-35-59.244-N</td>
+                        <td>Large-billed Crow</td>
+                        <td><span class="confidence">91%</span></td>
+                        <td>BirdNET</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>44</td>
+                        <td>Red-whiskered Bulbul</td>
+                        <td>Red-whiskered Bulbul</td>
+                        <td><span class="confidence">94%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>45</td>
+                        <td>Little Swift</td>
+                        <td>Little Swift</td>
+                        <td><span class="confidence">96%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>46</td>
+                        <td>Eurasian Collared Dove</td>
+                        <td>Eurasian Collared-Dove</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>47</td>
+                        <td>Grey-headed Canary-flycatcher</td>
+                        <td>Gray-headed Canary-Flycatcher</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>48</td>
+                        <td>16-51-3.186-N 74-33-20.34-N</td>
+                        <td>Black-tailed Trogon</td>
+                        <td><span class="confidence">61%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>49</td>
+                        <td>Puff-throated Babbler</td>
+                        <td>Puff-throated Babbler</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>50</td>
+                        <td>Indian Golden Oriole</td>
+                        <td>Barn Owl</td>
+                        <td><span class="confidence">56%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>51</td>
+                        <td>River Lapwing</td>
+                        <td>River Lapwing</td>
+                        <td><span class="confidence">82%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>52</td>
+                        <td>Indian Robin</td>
+                        <td>Indian Robin</td>
+                        <td><span class="confidence">96%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>53</td>
+                        <td>Asian Koel</td>
+                        <td>Asian Koel</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>54</td>
+                        <td>12-59-13.3008-N 77-30-9.288-N</td>
+                        <td>Black Kite</td>
+                        <td><span class="confidence">87%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>55</td>
+                        <td>Black-shouldered Kite</td>
+                        <td>Black-crowned Night-Heron</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>56</td>
+                        <td>Black-hooded Oriole</td>
+                        <td>Black-hooded Oriole</td>
+                        <td><span class="confidence">84%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>57</td>
+                        <td>Tickell's Blue Flycatcher</td>
+                        <td>Tickell's Blue Flycatcher</td>
+                        <td><span class="confidence">98%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>58</td>
+                        <td>Black-rumped Flameback</td>
+                        <td>Ruddy Crake</td>
+                        <td><span class="confidence">83%</span></td>
+                        <td>BirdNET</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>59</td>
+                        <td>Painted Stork</td>
+                        <td>Carrion Crow</td>
+                        <td><span class="confidence">70%</span></td>
+                        <td>BirdNET</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>60</td>
+                        <td>Indian Grey Hornbill</td>
+                        <td>Purple Sunbird</td>
+                        <td><span class="confidence">75%</span></td>
+                        <td></td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>61</td>
+                        <td>Verditer Flycatcher</td>
+                        <td>Verditer Flycatcher</td>
+                        <td><span class="confidence">96%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>62</td>
+                        <td>Rufous Treepie</td>
+                        <td>Greater Racket-tailed Drongo</td>
+                        <td><span class="confidence">90%</span></td>
+                        <td>BirdNET</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>63</td>
+                        <td>Indian Paradise Flycatcher</td>
+                        <td>Indian Paradise-Flycatcher</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>64</td>
+                        <td>Red-wattled Lapwing</td>
+                        <td>Red-wattled Lapwing</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>65</td>
+                        <td>Cinereous Tit</td>
+                        <td>Cinereous Tit</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>66</td>
+                        <td>Intermediate Egret</td>
+                        <td>Great Egret</td>
+                        <td><span class="confidence">67%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>67</td>
+                        <td>Lineated Barbet</td>
+                        <td>Lineated Barbet</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>68</td>
+                        <td>malabar barbet</td>
+                        <td>White-throated Kingfisher</td>
+                        <td><span class="confidence">97%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>69</td>
+                        <td>10-4-53.0832-N 77-3-56.34-N</td>
+                        <td>Zitting Cisticola</td>
+                        <td><span class="confidence">97%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>70</td>
+                        <td>Brown-fronted Woodpecker</td>
+                        <td>Common Snipe</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>71</td>
+                        <td>Jungle Babbler</td>
+                        <td>Jungle Babbler</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>72</td>
+                        <td>Barn Swallow</td>
+                        <td>Barn Swallow</td>
+                        <td><span class="confidence">70%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>73</td>
+                        <td>Purple Heron</td>
+                        <td>Greater Coucal</td>
+                        <td><span class="confidence">75%</span></td>
+                        <td></td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>74</td>
+                        <td>Eastern Cattle Egret</td>
+                        <td>Cattle Egret</td>
+                        <td><span class="confidence">41%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>75</td>
+                        <td>Greater Racket-tailed Drongo</td>
+                        <td>Ashy Drongo</td>
+                        <td><span class="confidence">56%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>76</td>
+                        <td>Yellow-fronted Woodpecker</td>
+                        <td>Yellow-fronted Woodpecker</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>77</td>
+                        <td>common hawk cuckoo</td>
+                        <td>Savanna Nightjar</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>78</td>
+                        <td>River Tern</td>
+                        <td>River Tern</td>
+                        <td><span class="confidence">92%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>79</td>
+                        <td>Jungle Owlet</td>
+                        <td>Jungle Owlet</td>
+                        <td><span class="confidence">95%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>80</td>
+                        <td>Yellow-throated Bulbul</td>
+                        <td>Brant</td>
+                        <td><span class="confidence">74%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>81</td>
+                        <td>22-17-43.62-N 80-35-44.52-N</td>
+                        <td>Pale-billed Flowerpecker</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>82</td>
+                        <td>Indian Scops Owl</td>
+                        <td>Indian Scops-Owl</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>83</td>
+                        <td>Yellow-footed Green Pigeon</td>
+                        <td>Spotted Dove</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>84</td>
+                        <td>Sirkeer Malkoha</td>
+                        <td>Barn Owl</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>85</td>
+                        <td>Indian Paradise Flycatcher</td>
+                        <td>Crimson Sunbird</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>86</td>
+                        <td>Common buttonquail</td>
+                        <td>Common Merganser</td>
+                        <td><span class="confidence">76%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>87</td>
+                        <td>Painted Spurfowl</td>
+                        <td>White-breasted Waterhen</td>
+                        <td><span class="confidence">78%</span></td>
+                        <td>BirdNET</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>88</td>
+                        <td>Black Drongo</td>
+                        <td>Black Drongo</td>
+                        <td><span class="confidence">94%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>89</td>
+                        <td>Slaty-headed Parakeet</td>
+                        <td>Slaty-headed Parakeet</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>90</td>
+                        <td>Great Slaty Woodpecker</td>
+                        <td>Great Slaty Woodpecker</td>
+                        <td><span class="confidence">74%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>91</td>
+                        <td>Brown-cheeked Fulvetta</td>
+                        <td>Brown-cheeked Fulvetta</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>92</td>
+                        <td>Spotted Owlet</td>
+                        <td>Yellow-throated Toucan</td>
+                        <td><span class="confidence">82%</span></td>
+                        <td>BirdNET</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>93</td>
+                        <td>Asian Palm Swift</td>
+                        <td>Asian Palm-Swift</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>94</td>
+                        <td>Nilgiri Imperial Pigeon</td>
+                        <td>Pale-legged Leaf Warbler</td>
+                        <td><span class="confidence">94%</span></td>
+                        <td>BirdNET</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>95</td>
+                        <td>Greater Spotted Eagle</td>
+                        <td>Eurasian Curlew</td>
+                        <td><span class="confidence">97%</span></td>
+                        <td>BirdNET</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>96</td>
+                        <td>Indian Scops Owl</td>
+                        <td>Indian Scops-Owl</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>97</td>
+                        <td>Oriental Pied Hornbill</td>
+                        <td>Oriental Pied-Hornbill</td>
+                        <td><span class="confidence">90%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>98</td>
+                        <td>Indian Cuckoo</td>
+                        <td>Indian Cuckoo</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>99</td>
+                        <td>Cinerous Tit</td>
+                        <td>European Serin</td>
+                        <td><span class="confidence">70%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>100</td>
+                        <td>Grey-headed Canary Flycatcher</td>
+                        <td>Gray-headed Canary-Flycatcher</td>
+                        <td><span class="confidence">98%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>101</td>
+                        <td>Greater Flameback</td>
+                        <td>Ryukyu Scops-Owl</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>102</td>
+                        <td>Malabar Trogon</td>
+                        <td>Malabar Trogon</td>
+                        <td><span class="confidence">95%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>103</td>
+                        <td>Indian Nightjar</td>
+                        <td>Indian Nightjar</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>104</td>
+                        <td>House Sparrow</td>
+                        <td>House Sparrow</td>
+                        <td><span class="confidence">78%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>105</td>
+                        <td>White-throated Kingfisher</td>
+                        <td>White-throated Kingfisher</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>106</td>
+                        <td>Greenish Warbler</td>
+                        <td>Greenish Warbler</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>107</td>
+                        <td>Orange-headed Thrush</td>
+                        <td>Orange-headed Thrush</td>
+                        <td><span class="confidence">98%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>108</td>
+                        <td>Yellow-footed Green Pigeon</td>
+                        <td>Red-vented Bulbul</td>
+                        <td><span class="confidence">86%</span></td>
+                        <td>BirdNET</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>109</td>
+                        <td>Black-winged Stilt</td>
+                        <td>Black-winged Stilt</td>
+                        <td><span class="confidence">94%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>110</td>
+                        <td>Great Barbet</td>
+                        <td>Great Barbet</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>111</td>
+                        <td>Indian Cuckoo</td>
+                        <td>Indian Cuckoo</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>112</td>
+                        <td>Malabar Grey Hornbill</td>
+                        <td>Malabar Gray Hornbill</td>
+                        <td><span class="confidence">86%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>113</td>
+                        <td>Black-hooded Oriole</td>
+                        <td>Black-hooded Oriole</td>
+                        <td><span class="confidence">95%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>114</td>
+                        <td>Indian Roller</td>
+                        <td>Jungle Babbler</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>115</td>
+                        <td>Large billed crow</td>
+                        <td>Large-billed Crow</td>
+                        <td><span class="confidence">98%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>116</td>
+                        <td>Blyth's Reed Warbler</td>
+                        <td>Clamorous Reed Warbler</td>
+                        <td><span class="confidence">68%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>117</td>
+                        <td>Indian Roller</td>
+                        <td>Indian Roller</td>
+                        <td><span class="confidence">97%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>118</td>
+                        <td>Pied Kingfisher</td>
+                        <td>White-spotted Flufftail</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>119</td>
+                        <td>Indian Pitta</td>
+                        <td>Indian Pitta</td>
+                        <td><span class="confidence">99%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>120</td>
+                        <td>Grey-headed Swamphen</td>
+                        <td>Gray-headed Swamphen</td>
+                        <td><span class="confidence">60%</span></td>
+                        <td>BirdNET+LLM</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                    <tr class="result-row incorrect" data-status="incorrect">
+                        <td>121</td>
+                        <td>Rosy Starling</td>
+                        <td>Bushtit</td>
+                        <td><span class="confidence">73%</span></td>
+                        <td>BirdNET</td>
+                        <td class="incorrect">❌</td>
+                    </tr>
+
+                    <tr class="result-row correct" data-status="correct">
+                        <td>122</td>
+                        <td>Laughing Dove</td>
+                        <td>Laughing Dove</td>
+                        <td><span class="confidence">98%</span></td>
+                        <td>BirdNET</td>
+                        <td class="correct">✅</td>
+                    </tr>
+
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="meta">
+            Generated by BirdSense Benchmark | Developed by Soham | 2025-12-23 18:03:14
+        </div>
+    </div>
+    
+    <script>
+        function filterResults(type) {
+            const rows = document.querySelectorAll('.result-row');
+            rows.forEach(row => {
+                if (type === 'all') {
+                    row.style.display = '';
+                } else {
+                    row.style.display = row.dataset.status === type ? '' : 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>

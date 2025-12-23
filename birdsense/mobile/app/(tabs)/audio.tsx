@@ -23,8 +23,9 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Audio } from 'expo-av';
 import * as DocumentPicker from 'expo-document-picker';
 import { Ionicons } from '@expo/vector-icons';
-import api, { BirdResult } from '../../src/services/api';
+import api, { BirdResult, AnalysisTrail as AnalysisTrailData } from '../../src/services/api';
 import BirdCard from '../../src/components/BirdCard';
+import AnalysisTrail from '../../src/components/AnalysisTrail';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
@@ -157,6 +158,7 @@ export default function AudioScreen() {
   const [birds, setBirds] = useState<BirdResult[]>([]);
   const [processingTime, setProcessingTime] = useState(0);
   const [modelUsed, setModelUsed] = useState('');
+  const [analysisTrail, setAnalysisTrail] = useState<AnalysisTrailData | null>(null);
   const [recordingDuration, setRecordingDuration] = useState(0);
   const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -286,6 +288,7 @@ export default function AudioScreen() {
     setIsAnalyzing(true);
     setAnalysisStage('uploading');
     setError(null);
+    setAnalysisTrail(null);
 
     try {
       console.log('Analyzing audio:', uri);
@@ -298,6 +301,11 @@ export default function AudioScreen() {
       
       if (result.success === false) {
         throw new Error(result.error || 'Identification failed');
+      }
+      
+      // Save analysis trail
+      if (result.analysis_trail) {
+        setAnalysisTrail(result.analysis_trail);
       }
       
       // Stream results with animation
@@ -538,7 +546,15 @@ export default function AudioScreen() {
                   <Text style={styles.resultsBadgeText}>{processingTime}ms</Text>
                 </View>
               </View>
-              <Text style={styles.resultsModel}>{modelUsed}</Text>
+              
+              {/* Analysis Trail */}
+              {analysisTrail && (
+                <AnalysisTrail
+                  trail={analysisTrail}
+                  processingTimeMs={processingTime}
+                  modelUsed={modelUsed}
+                />
+              )}
               
               {birds.map((bird, index) => (
                 <BirdCard

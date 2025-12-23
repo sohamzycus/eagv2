@@ -17,6 +17,9 @@ librosa
 soundfile
 pydub  # Audio format conversion (requires ffmpeg)
 
+# Audio-Vision (Spectrogram analysis)
+matplotlib
+
 # REST API (FastAPI)
 fastapi>=0.104.0
 uvicorn[standard]>=0.24.0

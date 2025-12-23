@@ -60,6 +60,52 @@ export interface BirdResult {
     best_season?: string;
     notable_locations?: string;
   };
+  confidence_factors?: {
+    acoustic_match?: string;
+    visual_match?: string;
+    pattern_match?: string;
+    sources?: string;
+    enhancement?: string;
+    image_quality?: string;
+  };
+}
+
+// Analysis Trail types
+export interface AnalysisStep {
+  step: string;
+  status: string;
+  details?: string;
+  duration_ms?: number;
+}
+
+export interface AudioFeatures {
+  duration: number;
+  min_freq: number;
+  max_freq: number;
+  peak_freq: number;
+  freq_range: number;
+  pattern: string;
+  complexity: string;
+  syllables: number;
+  rhythm: string;
+  quality: string;
+}
+
+export interface ImageFeatures {
+  size_estimate?: string;
+  primary_colors?: string[];
+  beak_description?: string;
+  distinctive_features?: string[];
+  pose?: string;
+}
+
+export interface AnalysisTrail {
+  pipeline: string;
+  steps: AnalysisStep[];
+  audio_features?: AudioFeatures;
+  image_features?: ImageFeatures;
+  sources_used: string[];
+  enhancement_applied: boolean;
 }
 
 export interface IdentificationResponse {
@@ -69,6 +115,7 @@ export interface IdentificationResponse {
   processing_time_ms: number;
   model_used: string;
   timestamp: string;
+  analysis_trail?: AnalysisTrail;
 }
 
 export interface HealthStatus {
