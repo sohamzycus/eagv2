@@ -1,0 +1,64 @@
+# 🐦 BirdSense - AWS App Runner Configuration
+# Developed by Soham
+#
+# Simpler alternative to ECS Fargate - fully managed container hosting
+# 
+# Deploy:
+#   aws apprunner create-service --cli-input-yaml file://apprunner.yaml
+#
+# Note: First push image to ECR, then deploy this
+
+version: "1.0"
+
+# Service configuration
+ServiceName: birdsense
+SourceConfiguration:
+  AuthenticationConfiguration:
+    # Access role ARN for ECR access
+    # Create this role first: aws iam create-role --role-name AppRunnerECRAccessRole ...
+    AccessRoleArn: !Sub "arn:aws:iam::${AWS::AccountId}:role/AppRunnerECRAccessRole"
+  
+  ImageRepository:
+    ImageIdentifier: !Sub "${AWS::AccountId}.dkr.ecr.ap-south-1.amazonaws.com/birdsense:latest"
+    ImageRepositoryType: ECR
+    ImageConfiguration:
+      Port: "7860"
+      RuntimeEnvironmentVariables:
+        - Name: RUN_MODE
+          Value: gradio
+        - Name: PYTHONUNBUFFERED
+          Value: "1"
+        - Name: IS_AZURE
+          Value: "true"
+        - Name: LITELLM_API_BASE
+          Value: "https://zycus-ptu.azure-api.net/ptu-intakemanagement"
+        - Name: AZURE_DEPLOYMENT
+          Value: "gpt4o-130524"
+        - Name: AZURE_API_VERSION
+          Value: "2024-02-15-preview"
+      # RuntimeEnvironmentSecrets - for API key
+      # Set via: aws apprunner update-service --service-arn ... 
+
+InstanceConfiguration:
+  Cpu: "1 vCPU"
+  Memory: "2 GB"
+
+AutoScalingConfigurationArn: !Sub "arn:aws:apprunner:ap-south-1:${AWS::AccountId}:autoscalingconfiguration/DefaultConfiguration/1/00000000000000000000000000000001"
+
+HealthCheckConfiguration:
+  Protocol: HTTP
+  Path: "/"
+  Interval: 10
+  Timeout: 5
+  HealthyThreshold: 1
+  UnhealthyThreshold: 5
+
+# Tags
+Tags:
+  - Key: Project
+    Value: BirdSense
+  - Key: Developer
+    Value: Soham
+  - Key: Environment
+    Value: Production
+
