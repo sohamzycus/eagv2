@@ -1,0 +1,688 @@
+[
+  {
+    "tool_name": "past_purchase_search",
+    "description": "Search historical purchases based on filters such as date, supplier, or item.",
+    "type": "internal",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "start_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "end_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "supplier_id": {
+          "type": "string"
+        },
+        "item_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "start_date",
+        "end_date"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "purchases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "purchase_id": {
+                "type": "string"
+              },
+              "date": {
+                "type": "string",
+                "format": "date"
+              },
+              "supplier_id": {
+                "type": "string"
+              },
+              "item_id": {
+                "type": "string"
+              },
+              "quantity": {
+                "type": "number"
+              },
+              "total_cost": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "purchase_id",
+              "date",
+              "supplier_id",
+              "item_id",
+              "quantity",
+              "total_cost"
+            ]
+          }
+        }
+      }
+    },
+    "mcp_zero": {
+      "endpoint": "/api/purchases/search",
+      "method": "GET",
+      "auth_required": true,
+      "timeout_ms": 5000
+    }
+  },
+  {
+    "tool_name": "request_submit",
+    "description": "Submit a purchase request for approval.",
+    "type": "internal",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "item_id": {
+          "type": "string"
+        },
+        "quantity": {
+          "type": "number"
+        },
+        "supplier_id": {
+          "type": "string"
+        },
+        "requested_by": {
+          "type": "string"
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        }
+      },
+      "required": [
+        "item_id",
+        "quantity",
+        "supplier_id",
+        "requested_by"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "submitted",
+            "pending",
+            "approved",
+            "rejected"
+          ]
+        }
+      }
+    },
+    "mcp_zero": {
+      "endpoint": "/api/requests/submit",
+      "method": "POST",
+      "auth_required": true,
+      "timeout_ms": 5000
+    }
+  },
+  {
+    "tool_name": "catalog_search",
+    "description": "Search the product catalog for items based on keywords or filters.",
+    "type": "internal",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "keywords": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "price_range": {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "number"
+            },
+            "max": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "min",
+            "max"
+          ]
+        }
+      },
+      "required": [
+        "keywords"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "item_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "category": {
+                "type": "string"
+              },
+              "price": {
+                "type": "number"
+              },
+              "availability": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "item_id",
+              "name",
+              "category",
+              "price",
+              "availability"
+            ]
+          }
+        }
+      }
+    },
+    "mcp_zero": {
+      "endpoint": "/api/catalog/search",
+      "method": "GET",
+      "auth_required": true,
+      "timeout_ms": 5000
+    }
+  },
+  {
+    "tool_name": "catalog_item_details",
+    "description": "Retrieve detailed information about a specific catalog item.",
+    "type": "internal",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "item_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "item_id"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "item_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        },
+        "price": {
+          "type": "number"
+        },
+        "availability": {
+          "type": "boolean"
+        },
+        "supplier_id": {
+          "type": "string"
+        }
+      }
+    },
+    "mcp_zero": {
+      "endpoint": "/api/catalog/item/details",
+      "method": "GET",
+      "auth_required": true,
+      "timeout_ms": 5000
+    }
+  },
+  {
+    "tool_name": "quote_upload",
+    "description": "Upload vendor quotes for comparison or approval.",
+    "type": "internal",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "supplier_id": {
+          "type": "string"
+        },
+        "quote_file": {
+          "type": "string",
+          "format": "binary"
+        },
+        "uploaded_by": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "supplier_id",
+        "quote_file",
+        "uploaded_by"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "upload_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "success",
+            "failure"
+          ]
+        }
+      }
+    },
+    "mcp_zero": {
+      "endpoint": "/api/quotes/upload",
+      "method": "POST",
+      "auth_required": true,
+      "timeout_ms": 5000
+    }
+  },
+  {
+    "tool_name": "quote_compare",
+    "description": "Compare multiple vendor quotes to identify the best option.",
+    "type": "internal",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "quote_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "quote_ids"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "comparison_result": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "quote_id": {
+                "type": "string"
+              },
+              "supplier_id": {
+                "type": "string"
+              },
+              "total_cost": {
+                "type": "number"
+              },
+              "rank": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "quote_id",
+              "supplier_id",
+              "total_cost",
+              "rank"
+            ]
+          }
+        }
+      }
+    },
+    "mcp_zero": {
+      "endpoint": "/api/quotes/compare",
+      "method": "POST",
+      "auth_required": true,
+      "timeout_ms": 5000
+    }
+  },
+  {
+    "tool_name": "supplier_status",
+    "description": "Check the status of a supplier, including reliability and availability.",
+    "type": "internal",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "supplier_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "supplier_id"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "supplier_id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "inactive",
+            "pending"
+          ]
+        },
+        "rating": {
+          "type": "number"
+        }
+      }
+    },
+    "mcp_zero": {
+      "endpoint": "/api/suppliers/status",
+      "method": "GET",
+      "auth_required": true,
+      "timeout_ms": 5000
+    }
+  },
+  {
+    "tool_name": "supplier_search",
+    "description": "Find alternative suppliers based on criteria such as location or category.",
+    "type": "internal",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "string"
+        },
+        "category": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "category"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "suppliers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "supplier_id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "location": {
+                "type": "string"
+              },
+              "rating": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "supplier_id",
+              "name",
+              "location",
+              "rating"
+            ]
+          }
+        }
+      }
+    },
+    "mcp_zero": {
+      "endpoint": "/api/suppliers/search",
+      "method": "GET",
+      "auth_required": true,
+      "timeout_ms": 5000
+    }
+  },
+  {
+    "tool_name": "currency_conversion",
+    "description": "Convert an amount from one currency to another.",
+    "type": "external",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "amount": {
+          "type": "number"
+        },
+        "from_currency": {
+          "type": "string"
+        },
+        "to_currency": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "amount",
+        "from_currency",
+        "to_currency"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "converted_amount": {
+          "type": "number"
+        },
+        "exchange_rate": {
+          "type": "number"
+        }
+      }
+    },
+    "mcp_zero": {
+      "endpoint": "/api/currency/convert",
+      "method": "POST",
+      "auth_required": false,
+      "timeout_ms": 5000
+    }
+  },
+  {
+    "tool_name": "currency_rates",
+    "description": "Retrieve current exchange rates for specified currencies.",
+    "type": "external",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "base_currency": {
+          "type": "string"
+        },
+        "target_currencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "base_currency",
+        "target_currencies"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "rates": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "mcp_zero": {
+      "endpoint": "/api/currency/rates",
+      "method": "GET",
+      "auth_required": false,
+      "timeout_ms": 5000
+    }
+  },
+  {
+    "tool_name": "value_routing",
+    "description": "Route purchase requests based on their value thresholds.",
+    "type": "internal",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number"
+        },
+        "thresholds": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "min": {
+                "type": "number"
+              },
+              "max": {
+                "type": "number"
+              },
+              "route": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "min",
+              "max",
+              "route"
+            ]
+          }
+        }
+      },
+      "required": [
+        "value",
+        "thresholds"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "route": {
+          "type": "string"
+        }
+      }
+    },
+    "mcp_zero": {
+      "endpoint": "/api/routing/value",
+      "method": "POST",
+      "auth_required": true,
+      "timeout_ms": 5000
+    }
+  },
+  {
+    "tool_name": "approval_workflow",
+    "description": "Retrieve the approval workflow for a purchase request.",
+    "type": "internal",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "workflow": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "step": {
+                "type": "string"
+              },
+              "approver": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "approved",
+                  "rejected"
+                ]
+              }
+            },
+            "required": [
+              "step",
+              "approver",
+              "status"
+            ]
+          }
+        }
+      }
+    },
+    "mcp_zero": {
+      "endpoint": "/api/approval/workflow",
+      "method": "GET",
+      "auth_required": true,
+      "timeout_ms": 5000
+    }
+  },
+  {
+    "tool_name": "approval_submit",
+    "description": "Submit a purchase request for approval.",
+    "type": "internal",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "type": "string"
+        },
+        "approver_id": {
+          "type": "string"
+        },
+        "comments": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "request_id",
+        "approver_id"
+      ]
+    },
+    "output_schema": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "submitted",
+            "pending",
+            "approved",
+            "rejected"
+          ]
+        }
+      }
+    },
+    "mcp_zero": {
+      "endpoint": "/api/approval/submit",
+      "method": "POST",
+      "auth_required": true,
+      "timeout_ms": 5000
+    }
+  }
+]

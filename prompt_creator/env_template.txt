@@ -1,0 +1,33 @@
+# Azure OpenAI Configuration for Prompt Creator
+# Copy this file to .env and fill in your API key
+
+# ============================================
+# ZYCUS AZURE OPENAI PTU CONFIGURATION
+# ============================================
+
+# Azure OpenAI Settings (Zycus PTU)
+AZURE_OPENAI_API_KEY=your-api-key-here
+AZURE_OPENAI_ENDPOINT=https://zycus-ptu.azure-api.net/ptu-intakemanagement
+AZURE_OPENAI_DEPLOYMENT=gpt4o-130524
+AZURE_OPENAI_API_VERSION=2024-02-15-preview
+
+# SSL Verification (set to false for corporate APIM endpoints)
+AZURE_OPENAI_VERIFY_SSL=false
+
+# Model Configuration
+LLM_PROVIDER=azure_openai
+LLM_MODEL=gpt-4o
+LLM_TEMPERATURE=0.0
+
+# ============================================
+# ALTERNATIVE CONFIGURATIONS
+# ============================================
+
+# Standard OpenAI (uncomment if using)
+# OPENAI_API_KEY=sk-your-key-here
+# LLM_PROVIDER=openai
+
+# Standard Azure OpenAI (uncomment if using)
+# AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com
+# AZURE_OPENAI_VERIFY_SSL=true
+
