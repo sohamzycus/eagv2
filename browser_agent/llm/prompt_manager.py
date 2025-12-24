@@ -78,3 +78,4 @@ class PromptManager:
         """Clear the prompt cache."""
         self._cache.clear()
 
+

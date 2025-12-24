@@ -114,3 +114,4 @@ class EventDispatcher:
         """Reset the singleton instance (useful for testing)."""
         cls._instance = None
 
+

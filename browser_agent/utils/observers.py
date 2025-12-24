@@ -156,3 +156,4 @@ class ScreenshotObserver(Observer):
             except:
                 pass
 
+

@@ -373,3 +373,4 @@ class BrowserController:
         except:
             return False
 
+

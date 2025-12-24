@@ -317,3 +317,4 @@ class ScreenshotAction(BrowserAction):
                 message=f"Screenshot failed: {str(e)}"
             )
 
+

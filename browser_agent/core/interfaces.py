@@ -179,3 +179,4 @@ class Observer(ABC):
         """Return the observer's name for identification."""
         pass
 
+
