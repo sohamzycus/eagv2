@@ -7,7 +7,7 @@
 cd "$(dirname "$0")"
 
 # Zycus Azure OpenAI Configuration
-export AZURE_OPENAI_API_KEY="0e5f4d0225d54bd398f76692027b2b55"
+export AZURE_OPENAI_API_KEY="********"
 export AZURE_OPENAI_ENDPOINT="https://zycus-ptu.azure-api.net/ptu-intakemanagement"
 export AZURE_OPENAI_DEPLOYMENT="gpt4o-130524"
 export AZURE_OPENAI_API_VERSION="2024-02-15-preview"
