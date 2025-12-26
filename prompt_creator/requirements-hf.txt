@@ -1,0 +1,11 @@
+# Requirements for Hugging Face Spaces
+# Minimal dependencies for production deployment
+
+# Core
+gradio>=4.0.0
+openai>=1.0.0
+python-dotenv>=1.0.0
+
+# Data handling
+pyyaml>=6.0
+

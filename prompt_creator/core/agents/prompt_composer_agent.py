@@ -24,26 +24,35 @@ if TYPE_CHECKING:
 
 
 # System prompt for the Prompt Composer
-COMPOSER_SYSTEM_PROMPT = """You are an expert System Prompt Architect specializing in enterprise AI agents.
+COMPOSER_SYSTEM_PROMPT = """You are an expert System Prompt Architect specializing in enterprise procurement AI agents.
 
-Your task is to generate production-ready system prompts for procurement AI assistants.
+Your task is to generate production-ready system prompts for procurement workflow assistants.
 
 The generated prompt MUST include:
-1. **System Identity** - Clear role definition
+1. **System Identity** - Clear role definition for the specific procurement workflow
 2. **Core Rules** - Deterministic behavior rules
-3. **Guardrails** - What the agent must/must not do
-4. **Workflow Steps** - Ordered STEP_XX definitions
+3. **Guardrails** - What the agent must/must not do (NEVER/ALWAYS)
+4. **Workflow Steps** - Ordered STEP_XX definitions with clear routing
 5. **COVE Rules** - Chain of Validation Enforcement
-6. **Tool Discipline** - When and how to use tools
-7. **Message Formatting** - How to format responses
-8. **Error Handling** - How to handle failures
+6. **Available Tools** - List of tools with WHEN and HOW to use each
+7. **Tool Discipline** - Rules for tool usage (ALWAYS call tool before responding)
+8. **Message Formatting** - How to format responses
+9. **Error Handling** - How to handle failures
 
 CRITICAL REQUIREMENTS:
 - Steps must be numbered (STEP_01, STEP_02, etc.)
-- Each step must have: Purpose, Inputs, Outputs, Routing
+- Each step must have: Purpose, Inputs, Outputs, Tool(s) to use, Routing
 - Guardrails must use NEVER/ALWAYS language
 - Internal reasoning must be hidden from users
 - Tool calls must happen BEFORE responding with data
+- Each step should reference which tool to call
+- Include a "Tool Reference" section listing all available tools
+
+TOOL INTEGRATION RULES:
+- NEVER respond with data without calling the appropriate tool first
+- ALWAYS validate tool responses before presenting to user
+- Each step should specify which tool(s) are required
+- Handle tool errors gracefully
 
 Output the complete system prompt in Markdown format."""
 
@@ -145,22 +154,33 @@ class PromptComposerAgent(LLMEnabledAgent):
 
         # Build specification for LLM
         spec = self._build_specification(intent)
+        
+        # Format tools for the prompt
+        tools_section = self._format_tools_for_prompt(spec.get("required_tools", []))
 
         # Generate initial prompt
-        initial_prompt = f"""Generate a complete system prompt for this procurement assistant:
+        initial_prompt = f"""Generate a complete system prompt for this procurement workflow assistant:
 
 **Specification:**
 ```json
 {json.dumps(spec, indent=2)}
 ```
 
-Requirements:
-- The prompt should be 10,000+ characters
-- Include at least 12 workflow steps (STEP_01 to STEP_12)
-- Include at least 8 guardrails
-- Include COVE validation rules
-- Include tool usage patterns for each enabled capability
-- Make it production-ready
+**Available Tools (MUST be included in the prompt):**
+{tools_section}
+
+CRITICAL REQUIREMENTS:
+1. The prompt MUST include an "Available Tools" section listing ALL tools above
+2. Each workflow STEP must specify which tool(s) to call
+3. Include a "Tool Discipline" section with rules like:
+   - NEVER respond with data without calling the appropriate tool first
+   - ALWAYS validate tool responses before presenting to user
+4. Include at least 10-15 workflow steps (STEP_01 to STEP_15)
+5. Include at least 8 guardrails using NEVER/ALWAYS language
+6. Include COVE validation rules
+7. Make it production-ready (10,000+ characters)
+
+The generated prompt must make clear WHEN and HOW to use each tool.
 
 Generate the complete system prompt now."""
 
@@ -180,6 +200,18 @@ Generate the complete system prompt now."""
         except Exception as e:
             # Fallback to builder
             return self._generate_with_builder(intent)
+
+    def _format_tools_for_prompt(self, tools: list[dict]) -> str:
+        """Format tools list for inclusion in prompt generation request."""
+        if not tools:
+            return "No specific tools defined - generate appropriate tools based on workflow."
+        
+        lines = []
+        for tool in tools:
+            lines.append(f"- **{tool['name']}**: {tool['purpose']}")
+            lines.append(f"  - When to use: {tool['when_to_use']}")
+        
+        return "\n".join(lines)
 
     def _enhance_prompt(
         self,
@@ -218,6 +250,9 @@ The enhanced prompt should be at least 10,000 characters."""
 
     def _build_specification(self, intent: BusinessIntent) -> dict:
         """Build specification dict for LLM."""
+        # Determine required tools based on workflow type
+        required_tools = self._get_required_tools_for_intent(intent)
+        
         return {
             "use_case_name": intent.use_case_name,
             "description": intent.description,
@@ -245,7 +280,104 @@ The enhanced prompt should be at least 10,000 characters."""
                 "message_prefix": intent.message_prefix_enforcement,
                 "generate_summary": intent.summary_generation,
             },
+            "custom_guardrails": intent.custom_guardrails,
+            "custom_steps": intent.custom_steps,
+            "required_tools": required_tools,
         }
+
+    def _get_required_tools_for_intent(self, intent: BusinessIntent) -> list[dict]:
+        """Determine required tools based on the workflow type."""
+        tools = []
+        description_lower = intent.description.lower()
+        name_lower = intent.use_case_name.lower()
+        
+        # Invoice Processing Tools
+        if any(term in description_lower or term in name_lower for term in ['invoice', 'ap ', 'accounts payable', 'billing']):
+            tools.extend([
+                {"name": "invoice_ocr_extract", "purpose": "Extract data from invoice documents using OCR", "when_to_use": "When user uploads an invoice or invoice image"},
+                {"name": "invoice_validate", "purpose": "Validate invoice data against PO and GRN", "when_to_use": "After extraction, before processing"},
+                {"name": "invoice_match", "purpose": "Perform 2-way or 3-way matching", "when_to_use": "To match invoice with PO and/or GRN"},
+                {"name": "invoice_exception_check", "purpose": "Check for pricing, quantity, or tax discrepancies", "when_to_use": "During validation to identify exceptions"},
+                {"name": "invoice_approve", "purpose": "Submit invoice for approval workflow", "when_to_use": "After successful validation"},
+                {"name": "invoice_search", "purpose": "Search historical invoices", "when_to_use": "When user queries invoice history"},
+                {"name": "payment_status", "purpose": "Check payment status for an invoice", "when_to_use": "When user asks about payment"},
+            ])
+        
+        # Purchase Requisition Tools
+        if any(term in description_lower or term in name_lower for term in ['requisition', 'pr ', 'purchase request', 'buy', 'procurement']):
+            tools.extend([
+                {"name": "catalog_search", "purpose": "Search product catalog", "when_to_use": "When user looks for items to purchase"},
+                {"name": "catalog_item_details", "purpose": "Get detailed item information", "when_to_use": "When user selects a catalog item"},
+                {"name": "budget_check", "purpose": "Verify budget availability", "when_to_use": "Before submitting requisition"},
+                {"name": "approval_workflow", "purpose": "Get approval chain for requisition", "when_to_use": "To determine required approvals"},
+                {"name": "requisition_submit", "purpose": "Submit purchase requisition", "when_to_use": "After all validations pass"},
+                {"name": "requisition_status", "purpose": "Check requisition status", "when_to_use": "When user queries requisition progress"},
+            ])
+        
+        # Purchase Order Tools
+        if any(term in description_lower or term in name_lower for term in ['purchase order', 'po ', 'order']):
+            tools.extend([
+                {"name": "po_create", "purpose": "Create purchase order from requisition", "when_to_use": "After requisition approval"},
+                {"name": "po_search", "purpose": "Search existing purchase orders", "when_to_use": "When user queries PO history"},
+                {"name": "po_status", "purpose": "Check PO status and delivery", "when_to_use": "When user asks about order status"},
+                {"name": "po_amendment", "purpose": "Modify existing purchase order", "when_to_use": "When user needs to change PO"},
+            ])
+        
+        # Supplier Tools
+        if intent.supplier_validation_required or any(term in description_lower for term in ['supplier', 'vendor']):
+            tools.extend([
+                {"name": "supplier_search", "purpose": "Search supplier database", "when_to_use": "When looking for suppliers"},
+                {"name": "supplier_validate", "purpose": "Check supplier status and compliance", "when_to_use": "Before creating order with supplier"},
+                {"name": "supplier_performance", "purpose": "Get supplier performance metrics", "when_to_use": "When evaluating suppliers"},
+            ])
+        
+        # Quote Tools
+        if intent.quote_upload_enabled or any(term in description_lower for term in ['quote', 'rfq', 'rfp', 'sourcing']):
+            tools.extend([
+                {"name": "quote_upload", "purpose": "Upload vendor quote document", "when_to_use": "When user submits a quote"},
+                {"name": "quote_extract", "purpose": "Extract data from quote document", "when_to_use": "After quote upload"},
+                {"name": "quote_compare", "purpose": "Compare multiple quotes", "when_to_use": "When user has multiple quotes"},
+                {"name": "rfx_create", "purpose": "Create RFP/RFQ/RFI", "when_to_use": "When initiating sourcing event"},
+            ])
+        
+        # Contract Tools
+        if any(term in description_lower or term in name_lower for term in ['contract', 'agreement', 'renewal']):
+            tools.extend([
+                {"name": "contract_search", "purpose": "Search contract repository", "when_to_use": "When user looks for contracts"},
+                {"name": "contract_validate", "purpose": "Check contract terms and compliance", "when_to_use": "Before using contract for procurement"},
+                {"name": "contract_expiry_check", "purpose": "Check contract expiration and renewals", "when_to_use": "When validating contract validity"},
+            ])
+        
+        # Currency Tools
+        if intent.requires_currency_service():
+            tools.extend([
+                {"name": "currency_convert", "purpose": "Convert between currencies", "when_to_use": "When dealing with foreign currency amounts"},
+                {"name": "currency_rates", "purpose": "Get current exchange rates", "when_to_use": "When user asks about exchange rates"},
+            ])
+        
+        # Goods Receipt Tools
+        if any(term in description_lower or term in name_lower for term in ['goods receipt', 'grn', 'receiving', 'delivery']):
+            tools.extend([
+                {"name": "grn_create", "purpose": "Create goods receipt note", "when_to_use": "When goods are received"},
+                {"name": "grn_search", "purpose": "Search goods receipts", "when_to_use": "When user queries receipts"},
+                {"name": "delivery_track", "purpose": "Track delivery status", "when_to_use": "When user asks about delivery"},
+            ])
+        
+        # Always include common tools
+        tools.extend([
+            {"name": "user_info", "purpose": "Get current user details and permissions", "when_to_use": "At session start"},
+            {"name": "audit_log", "purpose": "Log actions for audit trail", "when_to_use": "After every significant action"},
+        ])
+        
+        # Remove duplicates
+        seen = set()
+        unique_tools = []
+        for tool in tools:
+            if tool["name"] not in seen:
+                seen.add(tool["name"])
+                unique_tools.append(tool)
+        
+        return unique_tools
 
     def _generate_with_builder(self, intent: BusinessIntent) -> str:
         """Fallback: Generate prompt using builder pattern."""

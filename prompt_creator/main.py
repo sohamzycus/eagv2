@@ -34,6 +34,20 @@ import os
 import sys
 from pathlib import Path
 
+# Load environment variables from .env file
+try:
+    from dotenv import load_dotenv
+    # Load .env from the same directory as main.py
+    env_path = Path(__file__).parent / ".env"
+    if env_path.exists():
+        load_dotenv(env_path)
+        print(f"✅ Loaded environment from .env")
+    else:
+        # Try loading from current working directory
+        load_dotenv()
+except ImportError:
+    pass  # python-dotenv not installed, rely on system env vars
+
 # Add parent to path for imports
 sys.path.insert(0, str(Path(__file__).parent.parent))
 

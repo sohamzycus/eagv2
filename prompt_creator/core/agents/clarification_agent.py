@@ -38,49 +38,110 @@ if TYPE_CHECKING:
     from prompt_creator.core.llm.llm_client import LLMClient
 
 
-# System prompt for clarification - business language only
-CLARIFICATION_SYSTEM_PROMPT = """You are a Business Requirements Analyst for a procurement system.
+# System prompt for clarification - PROCUREMENT DOMAIN SPECIALIST
+CLARIFICATION_SYSTEM_PROMPT = """You are a Procurement Domain Expert helping users define AI assistant requirements.
 
-Your role is to understand what kind of AI procurement assistant the user wants to create.
+Your role is to understand what kind of PROCUREMENT workflow assistant the user needs. The procurement domain includes:
 
-RULES:
-1. Ask ONLY business-level questions - never technical ones
-2. Use simple, clear language that any business user can understand
-3. Ask at most 5 questions total
-4. Focus on understanding:
-   - What employees will purchase (goods, services, or both)
-   - How they will purchase (catalog, quotes, direct requests)
-   - What approval rules are needed
-   - Whether multi-currency support is needed
-   - What supplier validation is required
+**Source-to-Pay (S2P) Workflows:**
+- Sourcing & RFx (RFP, RFQ, RFI)
+- Supplier Discovery & Qualification
+- Contract Management & Negotiation
+- Catalog Management
+
+**Procure-to-Pay (P2P) Workflows:**
+- Purchase Requisition (PR) Creation
+- Purchase Order (PO) Management
+- Goods Receipt & Services Entry
+- Invoice Processing & Matching (2-way, 3-way)
+- Payment Processing
+
+**Supplier Management:**
+- Supplier Onboarding
+- Supplier Performance Management
+- Supplier Risk Assessment
+
+**Spend Management:**
+- Spend Analysis
+- Budget Tracking
+- Approval Workflows
+
+CRITICAL RULES:
+1. Identify WHICH procurement workflow they need (Invoice? PR? PO? Sourcing? Contract?)
+2. Ask questions SPECIFIC to that workflow
+3. Use procurement terminology they understand
+4. Ask at most 3-4 focused questions
+5. Understand integrations needed (ERP, AP system, email)
+
+WHAT TO CLARIFY FOR EACH WORKFLOW:
+
+For INVOICE workflows:
+- Invoice types (PO-based, non-PO, credit notes)
+- Matching requirements (2-way, 3-way)
+- Exception handling
+- Approval thresholds
+- ERP integration
+
+For PURCHASE REQUISITION workflows:
+- Goods vs Services
+- Catalog vs Non-catalog
+- Approval hierarchy
+- Budget checks
+
+For SOURCING workflows:
+- RFx types needed
+- Supplier evaluation criteria
+- Award process
+
+For CONTRACT workflows:
+- Contract types
+- Renewal tracking
+- Compliance requirements
 
 FORBIDDEN:
 - Technical terms like "API", "JSON", "schema", "endpoint"
-- Implementation details
-- Asking about system architecture
-- Mentioning steps, workflows, or COVE
+- Asking about unrelated workflows
+- Mentioning steps, COVE, or internal logic
 
-When responding to answers, be brief and move to the next question.
+When responding, be brief and ask RELEVANT questions about THEIR specific procurement workflow.
 When you have enough information, summarize what you understood."""
 
 
-INTENT_EXTRACTION_PROMPT = """You are a Business Intent Extractor.
+INTENT_EXTRACTION_PROMPT = """You are a Procurement Domain Intent Extractor.
 
-Given the conversation about a procurement assistant, extract the requirements as JSON.
+Given the conversation about a procurement workflow assistant, extract the requirements as JSON.
 
-Output ONLY valid JSON matching this structure:
+FIRST identify the WORKFLOW TYPE from these categories:
+- INVOICE: Invoice processing, AP, 2-way/3-way matching, payment
+- REQUISITION: Purchase requisition (PR), buying, purchase requests
+- PO: Purchase order management
+- SOURCING: RFP, RFQ, RFI, supplier discovery
+- CONTRACT: Contract management, renewals
+- SUPPLIER: Supplier management, onboarding, performance
+- RECEIVING: Goods receipt, GRN, delivery
+- SPEND: Spend analysis, budget tracking
+
+Output ONLY valid JSON:
 {
-  "use_case_name": "short name for this use case",
+  "use_case_name": "descriptive name (e.g., 'Invoice Processing Assistant')",
+  "workflow_type": "INVOICE|REQUISITION|PO|SOURCING|CONTRACT|SUPPLIER|RECEIVING|SPEND",
+  "description": "detailed description of the workflow",
+  "primary_users": "who will use this",
+  "key_workflows": ["specific workflow steps mentioned"],
+  "validations_needed": ["specific validations required"],
+  "approvals_needed": true/false,
+  "value_routing_enabled": true/false,
+  "integrations_suggested": ["ERP", "AP System", "etc."],
+  "compliance_level": "strict/moderate/flexible",
   "supports_goods": true/false,
   "supports_services": true/false,
-  "channels": ["catalog", "non_catalog", "quote", "punchout"],
+  "channels": ["catalog", "non_catalog", "quote"],
   "quote_upload_enabled": true/false,
-  "value_routing_enabled": true/false,
   "supplier_validation_required": true/false,
-  "multi_currency": true/false
+  "matching_type": "none|2-way|3-way" (for invoice workflows)
 }
 
-Be conservative - if something wasn't explicitly discussed, use sensible defaults."""
+Be specific about the workflow type based on the conversation."""
 
 
 class ClarificationAgent(LLMEnabledAgent):
@@ -245,17 +306,27 @@ class ClarificationAgent(LLMEnabledAgent):
             for h in history
         ])
 
-        prompt = f"""Based on this conversation about creating a procurement assistant:
+        # Get the original request to understand the domain
+        original_request = history[0]["content"] if history else user_input
 
+        prompt = f"""The user wants to create an AI assistant. Their original request was:
+"{original_request}"
+
+Here's the conversation so far:
 {conversation}
 
-What should you ask next to understand the requirements better?
-Remember: 
-- Only ask 1-2 questions at a time
-- Use simple business language
-- Focus on what hasn't been clarified yet
+CRITICAL: Ask questions that are RELEVANT to what the user asked for!
+- If they asked about "invoice flow" - ask about invoices, approval, validation
+- If they asked about "procurement" - ask about purchasing, catalogs, suppliers
+- If they asked about "HR" - ask about employees, onboarding, policies
+- DO NOT ask generic procurement questions if they asked about something else!
 
-If you have enough information to understand the requirements, say so and summarize."""
+What should you ask next to understand their specific requirements?
+- Ask 1-2 focused questions
+- Use simple business language
+- Stay on topic with THEIR domain
+
+If you have enough information, say so and summarize what you understood."""
 
         try:
             llm = self._llm or context.llm_client
@@ -268,6 +339,7 @@ If you have enough information to understand the requirements, say so and summar
                 return response
         except Exception as e:
             # Log error but continue with fallback
+            print(f"LLM clarification error: {e}")
             pass
 
         # Fallback
@@ -335,40 +407,93 @@ If you have enough information to understand the requirements, say so and summar
         data: dict,
         original_input: str,
     ) -> BusinessIntent:
-        """Build BusinessIntent from extracted JSON."""
-        # Parse channels
+        """Build BusinessIntent from extracted JSON - handles any domain."""
+        # Determine domain from extracted data
+        domain = data.get("domain", "general").lower()
+        
+        # For procurement-specific use cases, parse channels
         channels = []
-        channel_map = {
-            "catalog": ProcurementChannel.CATALOG,
-            "non_catalog": ProcurementChannel.NON_CATALOG,
-            "quote": ProcurementChannel.QUOTE,
-            "punchout": ProcurementChannel.PUNCHOUT,
-            "contract": ProcurementChannel.CONTRACT,
+        if domain in ["procurement", "purchasing", "buy"]:
+            channel_map = {
+                "catalog": ProcurementChannel.CATALOG,
+                "non_catalog": ProcurementChannel.NON_CATALOG,
+                "quote": ProcurementChannel.QUOTE,
+                "punchout": ProcurementChannel.PUNCHOUT,
+                "contract": ProcurementChannel.CONTRACT,
+            }
+
+            for ch in data.get("channels", ["catalog", "non_catalog"]):
+                if ch.lower() in channel_map:
+                    channels.append(channel_map[ch.lower()])
+
+            routing = (
+                RoutingStrategy.THRESHOLD_BASED
+                if data.get("value_routing_enabled", True)
+                else RoutingStrategy.NONE
+            )
+            
+            supports_goods = data.get("supports_goods", True)
+            supports_services = data.get("supports_services", True)
+            quote_enabled = data.get("quote_upload_enabled", False)
+            supplier_validation = data.get("supplier_validation_required", True)
+        else:
+            # For non-procurement domains (invoice, hr, support, etc.)
+            # Use sensible defaults
+            channels = [ProcurementChannel.NON_CATALOG]  # Generic workflow
+            routing = (
+                RoutingStrategy.THRESHOLD_BASED
+                if data.get("approvals_needed", True)
+                else RoutingStrategy.NONE
+            )
+            supports_goods = False
+            supports_services = True  # Most workflows are service-like
+            quote_enabled = False
+            supplier_validation = False
+
+        # Parse compliance level
+        compliance_str = data.get("compliance_level", "strict").lower()
+        compliance_map = {
+            "strict": ComplianceLevel.STRICT,
+            "moderate": ComplianceLevel.STANDARD,
+            "standard": ComplianceLevel.STANDARD,
+            "flexible": ComplianceLevel.RELAXED,
+            "relaxed": ComplianceLevel.RELAXED,
         }
+        compliance = compliance_map.get(compliance_str, ComplianceLevel.STRICT)
 
-        for ch in data.get("channels", ["catalog", "non_catalog"]):
-            if ch.lower() in channel_map:
-                channels.append(channel_map[ch.lower()])
-
-        routing = (
-            RoutingStrategy.THRESHOLD_BASED
-            if data.get("value_routing_enabled", True)
-            else RoutingStrategy.NONE
-        )
+        # Build description from extracted data
+        description = data.get("description", original_input)
+        
+        # Store additional domain-specific data in custom_guardrails and custom_steps
+        custom_guardrails = []
+        custom_steps = []
+        
+        if data.get("key_workflows"):
+            custom_steps.extend(data['key_workflows'])
+        if data.get("validations_needed"):
+            for validation in data['validations_needed']:
+                custom_guardrails.append(f"ALWAYS validate: {validation}")
+        if data.get("integrations_suggested"):
+            for integration in data['integrations_suggested']:
+                custom_steps.append(f"Integration with {integration}")
+        if data.get("primary_users"):
+            custom_guardrails.append(f"Primary users: {data['primary_users']}")
 
         return BusinessIntent(
-            use_case_name=data.get("use_case_name", "Procurement Assistant"),
-            description=original_input,
-            supports_goods=data.get("supports_goods", True),
-            supports_services=data.get("supports_services", True),
-            enabled_channels=channels or [ProcurementChannel.CATALOG],
-            quote_upload_enabled=data.get("quote_upload_enabled", False),
+            use_case_name=data.get("use_case_name", f"{domain.title()} Assistant"),
+            description=description,
+            supports_goods=supports_goods,
+            supports_services=supports_services,
+            enabled_channels=channels or [ProcurementChannel.NON_CATALOG],
+            quote_upload_enabled=quote_enabled,
             routing_strategy=routing,
-            supplier_validation_required=data.get("supplier_validation_required", True),
-            compliance_level=ComplianceLevel.STRICT,
+            supplier_validation_required=supplier_validation,
+            compliance_level=compliance,
             ui_silence_required=True,
             message_prefix_enforcement=True,
             summary_generation=True,
+            custom_guardrails=custom_guardrails,
+            custom_steps=custom_steps,
         )
 
     def _build_intent_from_conversation(
@@ -437,29 +562,29 @@ If you have enough information to understand the requirements, say so and summar
     def _get_fallback_question(self, index: int) -> str:
         """Get fallback question when LLM is not available."""
         questions = [
-            """Thanks for sharing your idea! Let me understand it better.
+            """Thank you for sharing! To clarify the requirements further:
 
-**A few quick questions:**
+1. **Who will use this assistant?** (e.g., employees, managers, customers, vendors)
 
-1️⃣ Will employees be purchasing **physical goods** (like equipment or supplies), **services** (like consulting), or **both**?
+2. **What are the main tasks or workflows it should handle?**
 
-2️⃣ Should they be able to browse a **company catalog**, or will they mainly describe what they need?""",
+Let me know so I can better understand your needs!""",
 
-            """Got it! One more thing:
+            """Got it! A couple more questions:
 
-3️⃣ Do employees need to upload **vendor quotes** for comparison?
+3. **What validations or checks should the system perform?**
 
-4️⃣ Should higher-value purchases require **additional approval** (like from a manager or director)?""",
+4. **Are there any approval workflows needed?** (e.g., manager approval for certain actions)""",
 
-            """Almost done!
+            """Almost there!
 
-5️⃣ Should the system check if a **supplier is approved** before allowing purchases from them?
+5. **What other systems might this need to connect with?** (e.g., ERP, email, document storage)
 
-That's all I need to know!""",
+That's all I need!""",
 
             """Thanks! I have enough information now.
 
-Let me create your procurement assistant based on what you've told me...""",
+Let me create your AI assistant based on what you've told me...""",
         ]
 
         return questions[min(index, len(questions) - 1)]
