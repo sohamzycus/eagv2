@@ -1,5 +1,5 @@
-# Dockerfile for Prompt Creator
-# Optimized for Hugging Face Spaces
+# Dockerfile for Procurement Workflow Agent Creator
+# Optimized for Hugging Face Spaces (free tier)
 
 FROM python:3.11-slim
 
@@ -7,7 +7,7 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV GRADIO_SERVER_NAME=0.0.0.0
-ENV GRADIO_SERVER_PORT=7861
+ENV GRADIO_SERVER_PORT=7860
 ENV PYTHONPATH=/app
 
 # Create app directory
@@ -25,30 +25,25 @@ COPY requirements.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the prompt_creator package
-COPY core/ /app/prompt_creator/core/
-COPY domain/ /app/prompt_creator/domain/
-COPY ui/ /app/prompt_creator/ui/
-COPY __init__.py /app/prompt_creator/
+# Copy the application code
+COPY core/ /app/core/
+COPY domain/ /app/domain/
+COPY ui/ /app/ui/
+COPY __init__.py /app/
 
-# Copy entry points
+# Copy entry point
 COPY app.py /app/
-COPY main.py /app/
 
-# Create __init__.py files to ensure proper package structure
-RUN touch /app/__init__.py
+# Create non-root user for security (required by HF Spaces)
+RUN useradd -m -u 1000 user && chown -R user:user /app
+USER user
 
-# Create non-root user for security
-RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
-USER appuser
-
-# Expose Gradio port
+# Expose port (HF Spaces uses 7860)
 EXPOSE 7860
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:7861/ || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD curl -f http://localhost:7860/ || exit 1
 
 # Run the application
 CMD ["python", "app.py"]
-

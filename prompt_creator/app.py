@@ -1,104 +1,85 @@
-#!/usr/bin/env python3
 """
-Prompt Creator - Hugging Face Spaces Entry Point
+Procurement Workflow Agent Creator - Entry Point
 
-This is the main entry point for Hugging Face Spaces deployment.
-Credentials are loaded from HuggingFace Secrets.
-
-Environment Variables (set as HuggingFace Secrets):
-- AZURE_OPENAI_API_KEY: Your Azure OpenAI API key
-- AZURE_OPENAI_ENDPOINT: Azure endpoint URL
-- AZURE_OPENAI_DEPLOYMENT: Deployment name
-- AZURE_OPENAI_API_VERSION: API version (optional)
-- AZURE_OPENAI_VERIFY_SSL: Set to "false" for corporate endpoints
+LLM is CORE to this system - not optional.
+The LLM is used to:
+1. Understand business intent
+2. Design workflows intelligently
+3. Identify required tools
+4. Generate production-ready prompts
 """
 
 import os
 import sys
-from pathlib import Path
 
-# Setup Python path for package imports
-# This ensures prompt_creator package can be found
-APP_DIR = Path(__file__).parent.resolve()
-sys.path.insert(0, str(APP_DIR))
-
-# Also add parent if running from within prompt_creator directory
-if APP_DIR.name == "prompt_creator":
-    sys.path.insert(0, str(APP_DIR.parent))
-
-# Load environment from .env if exists (for local development)
-try:
-    from dotenv import load_dotenv
-    env_file = APP_DIR / ".env"
-    if env_file.exists():
-        load_dotenv(env_file)
-    else:
-        load_dotenv()
-except ImportError:
-    pass
-
-# Set default values for Zycus endpoint if not provided
-os.environ.setdefault("AZURE_OPENAI_ENDPOINT", "https://zycus-ptu.azure-api.net/ptu-intakemanagement")
-os.environ.setdefault("AZURE_OPENAI_DEPLOYMENT", "gpt4o-130524")
-os.environ.setdefault("AZURE_OPENAI_API_VERSION", "2024-02-15-preview")
-os.environ.setdefault("AZURE_OPENAI_VERIFY_SSL", "false")
+# Ensure proper imports
+current_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, current_dir)
 
 
-def create_llm_client():
-    """Create LLM client from environment."""
-    # Import with fallback for different module structures
-    try:
-        from prompt_creator.core.llm.llm_factory import LLMFactory
-        from prompt_creator.core.llm.azure_openai_client import MockLLMClient
-    except ImportError:
-        # Try relative import if prompt_creator is the current package
-        from core.llm.llm_factory import LLMFactory
-        from core.llm.azure_openai_client import MockLLMClient
-    
+def get_llm_client():
+    """Initialize LLM client - REQUIRED."""
     api_key = os.getenv("AZURE_OPENAI_API_KEY")
     
-    if api_key:
-        try:
-            client = LLMFactory.create_zycus_gpt4o(api_key=api_key)
-            print(f"✅ Connected to Azure OpenAI GPT-4o")
-            return client
-        except Exception as e:
-            print(f"⚠️ Could not create Azure client: {e}")
+    if not api_key:
+        print("\n" + "="*60)
+        print("❌ ERROR: LLM Configuration Required")
+        print("="*60)
+        print("\nThe Workflow Creator REQUIRES an LLM to function.")
+        print("\nSet these environment variables:")
+        print("  export AZURE_OPENAI_API_KEY='your-key'")
+        print("  export AZURE_OPENAI_ENDPOINT='your-endpoint'")
+        print("  export AZURE_OPENAI_DEPLOYMENT='your-deployment'")
+        print("\nOr create a .env file with these values.")
+        print("="*60 + "\n")
+        return None
     
-    print("⚠️ No API key found - using demo mode")
-    print("   Set AZURE_OPENAI_API_KEY in HuggingFace Secrets for live LLM")
-    return MockLLMClient()
+    try:
+        from core.llm.llm_factory import LLMFactory
+        client = LLMFactory.create_zycus_gpt4o(api_key=api_key)
+        print("✅ Connected to Azure OpenAI GPT-4o")
+        return client
+    except Exception as e:
+        print(f"\n❌ Failed to connect to LLM: {e}")
+        print("Please check your configuration.")
+        return None
 
 
 def main():
-    """Main entry point for HuggingFace Spaces."""
-    # Import with fallback for different module structures
+    """Main entry point."""
+    # Load environment variables
     try:
-        from prompt_creator.ui.gradio_app import create_app
+        from dotenv import load_dotenv
+        load_dotenv()
     except ImportError:
-        from ui.gradio_app import create_app
+        pass
     
-    # Create LLM client
-    llm_client = create_llm_client()
+    # Initialize LLM client (REQUIRED)
+    llm_client = get_llm_client()
     
-    # Create Gradio app
-    app = create_app(llm_client=llm_client)
+    # Import and create the app
+    from ui.workflow_creator_app import create_workflow_creator_app
+    app = create_workflow_creator_app(llm_client=llm_client)
     
-    # Get port from environment (HuggingFace uses 7860)
+    # Get port
     port = int(os.getenv("GRADIO_SERVER_PORT", "7860"))
     
-    print(f"🚀 Starting Prompt Creator on port {port}")
-    print(f"   LLM: {llm_client.provider_name} / {llm_client.model_name}")
+    if llm_client:
+        print(f"\n🚀 Procurement Workflow Agent Creator")
+        print(f"   Powered by: Azure OpenAI GPT-4o")
+        print(f"   URL: http://localhost:{port}")
+    else:
+        print(f"\n⚠️  Starting in configuration mode...")
+        print(f"   URL: http://localhost:{port}")
+        print("   Configure LLM to enable full functionality.\n")
     
-    # Launch with HuggingFace-compatible settings
+    # Launch
     app.launch(
         server_name="0.0.0.0",
         server_port=port,
-        share=False,
-        show_error=True,
+        share=False
     )
 
 
 if __name__ == "__main__":
     main()
-

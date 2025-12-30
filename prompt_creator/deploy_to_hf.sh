@@ -1,88 +1,81 @@
 #!/bin/bash
-# ============================================
 # Deploy to Hugging Face Spaces
-# ============================================
+# Usage: ./deploy_to_hf.sh <username> <space_name>
 
 set -e
 
-# Configuration
-HF_SPACE_NAME="${HF_SPACE_NAME:-prompt-creator}"
-HF_USERNAME="${HF_USERNAME:-your-username}"
+USERNAME=${1:-"your-username"}
+SPACE_NAME=${2:-"workflow-agent-creator"}
+SPACE_URL="https://huggingface.co/spaces/${USERNAME}/${SPACE_NAME}"
 
-echo "============================================"
-echo "Deploying Prompt Creator to HuggingFace Spaces"
-echo "============================================"
+echo "🚀 Deploying to Hugging Face Spaces"
+echo "   Space: ${SPACE_URL}"
 echo ""
 
-# Check if huggingface-cli is installed
-if ! command -v huggingface-cli &> /dev/null; then
-    echo "Installing huggingface_hub..."
-    pip install huggingface_hub
+# Check if git-lfs is installed
+if ! command -v git-lfs &> /dev/null; then
+    echo "Installing git-lfs..."
+    git lfs install
 fi
 
-# Check if logged in
-if ! huggingface-cli whoami &> /dev/null; then
-    echo "Please login to HuggingFace:"
-    huggingface-cli login
-fi
-
-# Get username
-HF_USERNAME=$(huggingface-cli whoami | head -1)
-echo "Logged in as: $HF_USERNAME"
-
-# Create Space if it doesn't exist
-SPACE_REPO="$HF_USERNAME/$HF_SPACE_NAME"
-echo ""
-echo "Creating/updating Space: $SPACE_REPO"
+# Create temp directory
+TEMP_DIR=$(mktemp -d)
+echo "📁 Working in: ${TEMP_DIR}"
 
 # Clone or create the space
-if [ -d "hf_space" ]; then
-    rm -rf hf_space
-fi
-
-# Try to clone existing space, or create new one
-if huggingface-cli repo info "$SPACE_REPO" --repo-type space &> /dev/null; then
-    echo "Space exists, cloning..."
-    git clone "https://huggingface.co/spaces/$SPACE_REPO" hf_space
+if git clone "https://huggingface.co/spaces/${USERNAME}/${SPACE_NAME}" "${TEMP_DIR}/space" 2>/dev/null; then
+    echo "✅ Cloned existing space"
 else
-    echo "Creating new Space..."
-    huggingface-cli repo create "$HF_SPACE_NAME" --type space --space-sdk gradio
-    git clone "https://huggingface.co/spaces/$SPACE_REPO" hf_space
+    echo "📝 Creating new space directory"
+    mkdir -p "${TEMP_DIR}/space"
+    cd "${TEMP_DIR}/space"
+    git init
+    git remote add origin "https://huggingface.co/spaces/${USERNAME}/${SPACE_NAME}"
 fi
 
-# Copy files to space
-echo "Copying files..."
-cp -r prompt_creator hf_space/
-cp app.py hf_space/
-cp requirements.txt hf_space/
-cp README_HF.md hf_space/README.md
+cd "${TEMP_DIR}/space"
+
+# Get source directory
+SOURCE_DIR="$(dirname "$0")"
+if [ "$SOURCE_DIR" = "." ]; then
+    SOURCE_DIR="$(pwd)"
+fi
+
+# Copy files
+echo "📋 Copying files..."
+
+# Core application files
+cp -r "${SOURCE_DIR}/core" .
+cp -r "${SOURCE_DIR}/domain" .
+cp -r "${SOURCE_DIR}/ui" .
+cp "${SOURCE_DIR}/app.py" .
+cp "${SOURCE_DIR}/__init__.py" . 2>/dev/null || touch __init__.py
+cp "${SOURCE_DIR}/requirements.txt" .
+
+# Use HF-specific README
+cp "${SOURCE_DIR}/README_HF.md" README.md
 
 # Create .gitattributes for LFS
-cat > hf_space/.gitattributes << 'EOF'
-*.bin filter=lfs diff=lfs merge=lfs -text
+cat > .gitattributes << 'EOF'
+*.png filter=lfs diff=lfs merge=lfs -text
+*.jpg filter=lfs diff=lfs merge=lfs -text
+*.gif filter=lfs diff=lfs merge=lfs -text
 *.pkl filter=lfs diff=lfs merge=lfs -text
-*.h5 filter=lfs diff=lfs merge=lfs -text
+*.bin filter=lfs diff=lfs merge=lfs -text
 EOF
 
-# Push to HuggingFace
-cd hf_space
+# Commit and push
+echo "📤 Pushing to Hugging Face..."
 git add .
-git commit -m "Deploy Prompt Creator" || true
-git push
+git commit -m "Deploy: $(date '+%Y-%m-%d %H:%M:%S')" || echo "No changes to commit"
 
 echo ""
-echo "============================================"
-echo "✅ Deployment Complete!"
-echo "============================================"
+echo "Ready to push. Run the following commands:"
 echo ""
-echo "Your Space is available at:"
-echo "https://huggingface.co/spaces/$SPACE_REPO"
+echo "  cd ${TEMP_DIR}/space"
+echo "  git push origin main"
 echo ""
-echo "To add your Azure OpenAI credentials:"
-echo "1. Go to: https://huggingface.co/spaces/$SPACE_REPO/settings"
-echo "2. Add these secrets:"
-echo "   - AZURE_OPENAI_API_KEY"
-echo "   - AZURE_OPENAI_ENDPOINT"
-echo "   - AZURE_OPENAI_DEPLOYMENT"
+echo "Or push with credentials:"
+echo "  git push https://USER:TOKEN@huggingface.co/spaces/${USERNAME}/${SPACE_NAME} main"
 echo ""
-
+echo "🌐 Your space will be available at: ${SPACE_URL}"

@@ -1,24 +1,21 @@
 version: '3.8'
 
 services:
-  prompt-creator:
+  workflow-creator:
     build: .
     ports:
       - "7860:7860"
     environment:
-      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY}
+      - AZURE_OPENAI_API_KEY=${AZURE_OPENAI_API_KEY:-}
       - AZURE_OPENAI_ENDPOINT=${AZURE_OPENAI_ENDPOINT:-https://zycus-ptu.azure-api.net/ptu-intakemanagement}
       - AZURE_OPENAI_DEPLOYMENT=${AZURE_OPENAI_DEPLOYMENT:-gpt4o-130524}
       - AZURE_OPENAI_API_VERSION=${AZURE_OPENAI_API_VERSION:-2024-02-15-preview}
       - AZURE_OPENAI_VERIFY_SSL=${AZURE_OPENAI_VERIFY_SSL:-false}
       - GRADIO_SERVER_PORT=7860
-    volumes:
-      - ./demo_output:/app/demo_output
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:7860/"]
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 10s
-
+      start_period: 15s

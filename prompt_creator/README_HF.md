@@ -1,63 +1,73 @@
 ---
-title: Prompt Creator - Procurement AI Assistant Generator
+title: Procurement Workflow Agent Creator
 emoji: 🤖
 colorFrom: blue
 colorTo: purple
 sdk: gradio
-sdk_version: 4.44.0
+sdk_version: 5.9.1
 app_file: app.py
 pinned: false
 license: mit
 ---
 
-# 🤖 Prompt Creator
+# 🤖 Procurement Workflow Agent Creator
 
-**Generate production-ready AI procurement assistant prompts with minimal input.**
+**LLM-Powered** AI agent designer for enterprise procurement workflows.
 
-## What It Does
+## How It Works
 
-This tool helps you create complete system prompts for procurement AI assistants:
+This tool uses **GPT-4o** as its core engine to:
 
-- **Invoice Processing** - 2-way/3-way matching, exceptions, AP integration
-- **Purchase Requisitions** - Catalog/non-catalog, approvals, budget checks
-- **Sourcing** - RFP/RFQ/RFI, supplier evaluation
-- **Contract Management** - Renewals, compliance
-- **And more...**
-
-## How to Use
-
-1. **Describe your use case** in plain language
-   - Example: "I want to create an invoice processing assistant"
-   
-2. **Answer a few clarifying questions**
-   - The AI asks relevant questions about your specific workflow
-   
-3. **Get your production-ready prompt**
-   - Complete system prompt with steps, guardrails, and tool references
-   - MCP-Zero tool specifications
+1. **Understand** your business requirements through natural conversation
+2. **Design** intelligent workflow stages with proper sequencing
+3. **Identify** required tools and APIs for each stage
+4. **Generate** production-ready system prompts
 
 ## Features
 
-✅ **LLM-Powered** - Uses Azure OpenAI GPT-4o for intelligent prompt generation  
-✅ **Tool-Aware** - Generated prompts include tool references and discipline  
-✅ **Domain Expert** - Understands full Source-to-Pay and Procure-to-Pay workflows  
-✅ **Production Ready** - Output prompts include STEP ordering, COVE rules, guardrails  
+- 💬 **Conversational Design** - Describe what you need in plain English
+- 🔧 **Tool-Aware Prompts** - Every stage maps to specific tools
+- 🔄 **Orchestration Agnostic** - Works with AutoGen, CrewAI, LangGraph
+- 🤖 **Model Agnostic** - Generated prompts work with any LLM
 
-## Configuration
+## Requirements
 
-To use with your own Azure OpenAI:
+**LLM is REQUIRED** - This is not a template tool. The AI actively:
+- Understands your unique requirements
+- Designs custom workflows
+- Generates intelligent prompts
 
-1. Go to **Settings** → **Repository secrets**
-2. Add the following secrets:
-   - `AZURE_OPENAI_API_KEY`: Your API key
-   - `AZURE_OPENAI_ENDPOINT`: Your endpoint URL
-   - `AZURE_OPENAI_DEPLOYMENT`: Your deployment name
+### Environment Variables (Required)
 
-## Demo Mode
+```
+AZURE_OPENAI_API_KEY=your_api_key
+AZURE_OPENAI_ENDPOINT=your_endpoint
+AZURE_OPENAI_DEPLOYMENT=your_deployment
+AZURE_OPENAI_VERIFY_SSL=false
+```
 
-Without API keys, the app runs in demo mode with mock responses.
+Add these in Space Settings > Repository secrets
 
----
+## Quick Start
 
-Built with ❤️ using Gradio and Azure OpenAI
+1. Describe your workflow: *"I need an agent that helps employees buy items and routes approvals based on value"*
+2. Refine through conversation
+3. Click "Generate Prompt"
+4. Export to your preferred format
 
+## Output Formats
+
+- **System Prompt** - Copy to any LLM
+- **MCP Tools** - For MCP-compatible servers
+- **AutoGen Config** - Direct import format
+
+## Local Development
+
+```bash
+# Set environment variables
+export AZURE_OPENAI_API_KEY="your-key"
+
+# Install and run
+pip install -r requirements.txt
+python app.py
+```

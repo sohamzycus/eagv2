@@ -306,3 +306,5 @@ class ProgressView:
         html.append('</div>')
         return "".join(html)
 
+
+

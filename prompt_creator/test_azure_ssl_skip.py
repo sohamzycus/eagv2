@@ -149,3 +149,5 @@ if __name__ == "__main__":
         print("\n❌ All methods failed. Check API key and endpoint.")
         sys.exit(1)
 
+
+
