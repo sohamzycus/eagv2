@@ -86,13 +86,27 @@ def create_image_trail(steps: list, features: dict, sources: list) -> AnalysisTr
 router = APIRouter(prefix="/identify", tags=["Bird Identification"])
 
 
-def format_bird_result(bird: dict, location: str = "") -> BirdResult:
+def format_bird_result(bird: dict, location: str = "", use_cache: bool = True) -> BirdResult:
     """Convert internal bird dict to API response model."""
     name = bird.get("name", "Unknown")
     scientific = bird.get("scientific_name", "")
     
-    # Get enriched info
-    enriched = get_enriched_bird_info(name, scientific, location)
+    # Get enriched info - with caching for speed
+    if use_cache:
+        from api.bird_cache import get_cached_enrichment
+        enriched = get_cached_enrichment(
+            bird_name=name,
+            scientific_name=scientific,
+            location=location,
+            enrichment_func=lambda: get_enriched_bird_info(name, scientific, location)
+        )
+    else:
+        enriched = get_enriched_bird_info(name, scientific, location)
+    
+    # Ensure we have an image - fetch if missing from enrichment
+    image_url = enriched.get("image_url")
+    if not image_url:
+        image_url = fetch_bird_image(name, scientific)
     
     return BirdResult(
         name=name,
@@ -100,7 +114,7 @@ def format_bird_result(bird: dict, location: str = "") -> BirdResult:
         confidence=bird.get("confidence", 50),
         reason=bird.get("reason", ""),
         source=bird.get("source", "LLM"),
-        image_url=enriched.get("image_url") or fetch_bird_image(name, scientific),
+        image_url=image_url,
         summary=enriched.get("summary"),
         habitat=enriched.get("habitat"),
         diet=enriched.get("diet"),
@@ -664,3 +678,31 @@ async def identify_description(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Identification error: {str(e)}")
 
+
+# ============ CACHE MANAGEMENT ============
+
+@router.get(
+    "/cache/stats",
+    summary="Get cache statistics",
+    description="View bird enrichment cache statistics including hit rate."
+)
+async def get_cache_stats(
+    current_user: dict = Depends(get_current_user)
+):
+    """Get cache statistics for monitoring performance."""
+    from api.bird_cache import bird_cache
+    return bird_cache.get_stats()
+
+
+@router.post(
+    "/cache/clear",
+    summary="Clear cache",
+    description="Clear all cached bird enrichment data."
+)
+async def clear_cache(
+    current_user: dict = Depends(get_current_user)
+):
+    """Clear the bird enrichment cache."""
+    from api.bird_cache import bird_cache
+    bird_cache.clear()
+    return {"status": "cleared", "message": "Cache cleared successfully"}
