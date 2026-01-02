@@ -11,16 +11,26 @@ import * as SecureStore from 'expo-secure-store';
 
 // API Configuration
 const API_CONFIG = {
-  // Default API URL - will be overridden by settings
-  BASE_URL: 'https://birdsense-api-1021486398038.us-central1.run.app',
+  // AWS App Runner - primary
+  BASE_URL: 'https://cqxapziyi2.ap-south-1.awsapprunner.com',
   TIMEOUT: 60000, // 60 seconds for identification
 };
+
+// For testing on local network (when API is running locally)
+// Change this if testing locally: 'http://YOUR_COMPUTER_IP:8000'
+const LOCAL_API_URL = null; // Set to 'http://192.168.x.x:8000' for local testing
 
 // Mode type
 export type ApiMode = 'online' | 'offline';
 
 // Token storage key
 const TOKEN_KEY = 'birdsense_token';
+
+// Default credentials for auto-login
+const DEFAULT_CREDENTIALS = {
+  username: 'demo',
+  password: 'demo123'
+};
 
 // Types
 export interface LoginCredentials {
@@ -137,17 +147,21 @@ class BirdSenseAPI {
   private baseUrl: string = API_CONFIG.BASE_URL;
 
   constructor() {
+    const baseURL = LOCAL_API_URL || API_CONFIG.BASE_URL;
+    console.log('🔗 API Base URL:', baseURL);
+    
     this.client = axios.create({
-      baseURL: API_CONFIG.BASE_URL,
+      baseURL: baseURL,
       timeout: API_CONFIG.TIMEOUT,
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
-    // Add auth interceptor
+    // Add auth interceptor (optional - API works without auth too)
     this.client.interceptors.request.use(
       async (config) => {
+        // Only add token if we have one, but don't require it
         if (this.token) {
           config.headers.Authorization = `Bearer ${this.token}`;
         }
@@ -156,8 +170,49 @@ class BirdSenseAPI {
       (error) => Promise.reject(error)
     );
 
-    // Load stored token
-    this.loadToken();
+    // Handle auth errors gracefully
+    this.client.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        // If 401/403, just continue without auth - API should work for identify endpoints
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          console.log('Auth error, continuing without auth');
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    // Load stored token and auto-login
+    this.initializeAuth();
+  }
+
+  private async initializeAuth() {
+    await this.loadToken();
+    
+    // If no token, auto-login with default credentials
+    if (!this.token) {
+      try {
+        console.log('🔐 Auto-logging in to API...');
+        await this.login(DEFAULT_CREDENTIALS);
+        console.log('✅ API auto-login successful');
+      } catch (error) {
+        console.log('⚠️ API auto-login failed, will retry on first request');
+      }
+    }
+  }
+
+  // Ensure we have a token before making requests
+  private async ensureAuthenticated() {
+    if (!this.token) {
+      try {
+        console.log('🔐 Authenticating with API...');
+        await this.login(DEFAULT_CREDENTIALS);
+        console.log('✅ API authentication successful');
+      } catch (error: any) {
+        console.log('❌ Auth failed:', error.message);
+        // Continue anyway - API might allow unauthenticated access
+      }
+    }
   }
 
   // Mode management
@@ -273,6 +328,9 @@ class BirdSenseAPI {
       return offlineService.identifyAudio(audioUri, location, month);
     }
 
+    // Ensure we have auth token
+    await this.ensureAuthenticated();
+
     // Detect file type from URI
     const uriLower = audioUri.toLowerCase();
     let mimeType = 'audio/wav';
@@ -340,6 +398,9 @@ class BirdSenseAPI {
       return offlineService.identifyImage(imageUri, location);
     }
 
+    // Ensure we have auth token
+    await this.ensureAuthenticated();
+
     const formData = new FormData();
     formData.append('image_file', {
       uri: imageUri,
@@ -366,9 +427,59 @@ class BirdSenseAPI {
       return offlineService.identifyDescription(description, location);
     }
 
+    // Ensure we have auth token
+    await this.ensureAuthenticated();
+
     const response = await this.client.post<IdentificationResponse>('/identify/description', {
       description,
       location,
+    });
+    return response.data;
+  }
+
+  // Live Audio Streaming - Send 3-second chunks
+  async identifyLiveAudioChunk(
+    audioUri: string,
+    chunkIndex: number,
+    location?: string,
+    month?: string
+  ): Promise<IdentificationResponse> {
+    if (this.mode === 'offline') {
+      return offlineService.identifyAudio(audioUri, location, month);
+    }
+
+    // Ensure we have auth token
+    await this.ensureAuthenticated();
+
+    // Detect file type from URI
+    const uriLower = audioUri.toLowerCase();
+    let mimeType = 'audio/wav';
+    let fileName = `chunk_${chunkIndex}.wav`;
+    
+    if (uriLower.includes('.m4a') || uriLower.includes('.aac')) {
+      mimeType = 'audio/m4a';
+      fileName = `chunk_${chunkIndex}.m4a`;
+    } else if (uriLower.includes('.mp3')) {
+      mimeType = 'audio/mpeg';
+      fileName = `chunk_${chunkIndex}.mp3`;
+    }
+
+    console.log(`🎵 Live chunk #${chunkIndex}: ${mimeType}`);
+
+    const formData = new FormData();
+    formData.append('audio_file', {
+      uri: audioUri,
+      type: mimeType,
+      name: fileName,
+    } as any);
+    if (location) formData.append('location', location);
+    if (month) formData.append('month', month);
+
+    const response = await this.client.post<IdentificationResponse>('/identify/audio', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      timeout: 30000, // 30 seconds for quick chunks
     });
     return response.data;
   }

@@ -25,6 +25,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import api, { BirdResult } from '../../src/services/api';
 import BirdCard from '../../src/components/BirdCard';
+import { useHistory } from '../../src/context/HistoryContext';
 
 const EXAMPLE_DESCRIPTIONS = [
   "Small yellow bird with black wings, seen near sunflowers",
@@ -36,6 +37,7 @@ const EXAMPLE_DESCRIPTIONS = [
 export default function DescribeScreen() {
   const insets = useSafeAreaInsets();
   const scrollViewRef = useRef<ScrollView>(null);
+  const { addSession } = useHistory();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [description, setDescription] = useState('');
   const [location, setLocation] = useState('');
@@ -95,6 +97,18 @@ export default function DescribeScreen() {
       setTimeout(() => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
       }, 500);
+      
+      // Save to shared history
+      if (allBirds.length > 0) {
+        await addSession({
+          duration: 0,
+          location: location || 'Unknown',
+          birds: allBirds,
+          chunksProcessed: 1,
+          mode: 'description',
+          source: description.substring(0, 100),
+        });
+      }
     } catch (err: any) {
       const errorMsg = err.response?.data?.detail || err.message || 'Failed to analyze description';
       setError(errorMsg);

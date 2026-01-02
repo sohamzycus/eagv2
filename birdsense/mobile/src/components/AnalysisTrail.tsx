@@ -66,6 +66,11 @@ interface AnalysisTrailProps {
 
 export default function AnalysisTrail({ trail, processingTimeMs, modelUsed }: AnalysisTrailProps) {
   const [expanded, setExpanded] = useState(true);
+  
+  // Safety check - don't render if trail is invalid
+  if (!trail || typeof trail !== 'object') {
+    return null;
+  }
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -94,37 +99,37 @@ export default function AnalysisTrail({ trail, processingTimeMs, modelUsed }: An
         <View style={styles.featureGrid}>
           <View style={styles.featureItem}>
             <Text style={styles.featureLabel}>Frequency</Text>
-            <Text style={styles.featureValue}>{f.min_freq}-{f.max_freq} Hz</Text>
+            <Text style={styles.featureValue}>{f.min_freq ?? '-'}-{f.max_freq ?? '-'} Hz</Text>
           </View>
           <View style={styles.featureItem}>
             <Text style={styles.featureLabel}>Peak</Text>
-            <Text style={styles.featureValue}>{f.peak_freq} Hz</Text>
+            <Text style={styles.featureValue}>{f.peak_freq ?? '-'} Hz</Text>
           </View>
           <View style={styles.featureItem}>
             <Text style={styles.featureLabel}>Pattern</Text>
-            <Text style={styles.featureValue}>{f.pattern}</Text>
+            <Text style={styles.featureValue}>{String(f.pattern ?? '-')}</Text>
           </View>
           <View style={styles.featureItem}>
             <Text style={styles.featureLabel}>Complexity</Text>
-            <Text style={styles.featureValue}>{f.complexity}</Text>
+            <Text style={styles.featureValue}>{String(f.complexity ?? '-')}</Text>
           </View>
           <View style={styles.featureItem}>
             <Text style={styles.featureLabel}>Syllables</Text>
-            <Text style={styles.featureValue}>{f.syllables}</Text>
+            <Text style={styles.featureValue}>{f.syllables ?? '-'}</Text>
           </View>
           <View style={styles.featureItem}>
             <Text style={styles.featureLabel}>Rhythm</Text>
-            <Text style={styles.featureValue}>{f.rhythm}</Text>
+            <Text style={styles.featureValue}>{String(f.rhythm ?? '-')}</Text>
           </View>
         </View>
 
         <View style={styles.featureRow}>
           <Ionicons name="time" size={14} color="#64748b" />
-          <Text style={styles.featureText}>Duration: {f.duration.toFixed(2)}s</Text>
+          <Text style={styles.featureText}>Duration: {f.duration?.toFixed(2) ?? '0'}s</Text>
         </View>
         <View style={styles.featureRow}>
           <Ionicons name="cellular" size={14} color="#64748b" />
-          <Text style={styles.featureText}>Signal Quality: {f.quality}</Text>
+          <Text style={styles.featureText}>Signal Quality: {String(f.quality ?? 'Unknown')}</Text>
         </View>
       </View>
     );
@@ -141,25 +146,25 @@ export default function AnalysisTrail({ trail, processingTimeMs, modelUsed }: An
           <Text style={styles.featuresTitle}>Visual Features</Text>
         </View>
         
-        {f.size_estimate && (
+        {f.size_estimate && typeof f.size_estimate === 'string' && (
           <View style={styles.featureRow}>
             <Ionicons name="resize" size={14} color="#64748b" />
             <Text style={styles.featureText}>Size: {f.size_estimate}</Text>
           </View>
         )}
-        {f.beak_description && (
+        {f.beak_description && typeof f.beak_description === 'string' && (
           <View style={styles.featureRow}>
             <Ionicons name="eye" size={14} color="#64748b" />
             <Text style={styles.featureText}>Beak: {f.beak_description}</Text>
           </View>
         )}
-        {f.primary_colors && f.primary_colors.length > 0 && (
+        {f.primary_colors && Array.isArray(f.primary_colors) && f.primary_colors.length > 0 && (
           <View style={styles.featureRow}>
             <Ionicons name="color-palette" size={14} color="#64748b" />
             <Text style={styles.featureText}>Colors: {f.primary_colors.join(', ')}</Text>
           </View>
         )}
-        {f.pose && (
+        {f.pose && typeof f.pose === 'string' && (
           <View style={styles.featureRow}>
             <Ionicons name="body" size={14} color="#64748b" />
             <Text style={styles.featureText}>Pose: {f.pose}</Text>
@@ -201,9 +206,9 @@ export default function AnalysisTrail({ trail, processingTimeMs, modelUsed }: An
           <View style={styles.modelInfo}>
             <View style={styles.modelBadge}>
               <Ionicons name="hardware-chip" size={14} color="#60a5fa" />
-              <Text style={styles.modelText}>{modelUsed}</Text>
+              <Text style={styles.modelText}>{String(modelUsed || 'AI')}</Text>
             </View>
-            <Text style={styles.timeText}>{processingTimeMs}ms</Text>
+            <Text style={styles.timeText}>{processingTimeMs ?? 0}ms</Text>
           </View>
 
           {/* SAM-Audio Enhancement Badge */}
@@ -217,20 +222,20 @@ export default function AnalysisTrail({ trail, processingTimeMs, modelUsed }: An
           {/* Analysis Steps */}
           <View style={styles.stepsContainer}>
             <Text style={styles.sectionTitle}>Analysis Pipeline</Text>
-            {trail.steps.map((step, index) => {
-              const icon = getStatusIcon(step.status);
+            {trail.steps && trail.steps.map((step, index) => {
+              const icon = getStatusIcon(step?.status || 'pending');
               return (
                 <View key={index} style={styles.stepRow}>
                   <View style={styles.stepLeft}>
                     <Ionicons name={icon.name as any} size={16} color={icon.color} />
                     <View style={styles.stepContent}>
-                      <Text style={styles.stepName}>{step.step}</Text>
-                      {step.details && (
+                      <Text style={styles.stepName}>{String(step?.step || 'Step')}</Text>
+                      {step?.details && typeof step.details === 'string' && (
                         <Text style={styles.stepDetails}>{step.details}</Text>
                       )}
                     </View>
                   </View>
-                  {step.duration_ms && (
+                  {step?.duration_ms != null && (
                     <Text style={styles.stepDuration}>{step.duration_ms}ms</Text>
                   )}
                 </View>
@@ -243,13 +248,13 @@ export default function AnalysisTrail({ trail, processingTimeMs, modelUsed }: An
           {renderImageFeatures()}
 
           {/* Sources Used */}
-          {trail.sources_used.length > 0 && (
+          {trail.sources_used && trail.sources_used.length > 0 && (
             <View style={styles.sourcesContainer}>
               <Text style={styles.sourcesLabel}>Sources:</Text>
               <View style={styles.sourcesList}>
                 {trail.sources_used.map((source, index) => (
                   <View key={index} style={styles.sourceBadge}>
-                    <Text style={styles.sourceText}>{source}</Text>
+                    <Text style={styles.sourceText}>{String(source)}</Text>
                   </View>
                 ))}
               </View>

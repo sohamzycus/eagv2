@@ -26,16 +26,19 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import api, { BirdResult, AnalysisTrail as AnalysisTrailData } from '../../src/services/api';
 import BirdCard from '../../src/components/BirdCard';
 import AnalysisTrail from '../../src/components/AnalysisTrail';
+import { useHistory } from '../../src/context/HistoryContext';
 
 export default function ImageScreen() {
   const insets = useSafeAreaInsets();
   const scrollViewRef = useRef<ScrollView>(null);
+  const { addSession } = useHistory();
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [location, setLocation] = useState('');
   const [birds, setBirds] = useState<BirdResult[]>([]);
   const [processingTime, setProcessingTime] = useState(0);
   const [modelUsed, setModelUsed] = useState('');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImageName, setSelectedImageName] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [analysisTrail, setAnalysisTrail] = useState<AnalysisTrailData | null>(null);
   
@@ -74,6 +77,7 @@ export default function ImageScreen() {
     });
 
     if (!result.canceled && result.assets[0]) {
+      setSelectedImageName(result.assets[0].fileName || 'Gallery Image');
       processImage(result.assets[0].uri);
     }
   };
@@ -91,6 +95,7 @@ export default function ImageScreen() {
     });
 
     if (!result.canceled && result.assets[0]) {
+      setSelectedImageName('Camera Photo');
       processImage(result.assets[0].uri);
     }
   };
@@ -128,6 +133,18 @@ export default function ImageScreen() {
       setTimeout(() => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
       }, 500);
+      
+      // Save to shared history
+      if (allBirds.length > 0) {
+        await addSession({
+          duration: 0,
+          location: location || 'Unknown',
+          birds: allBirds,
+          chunksProcessed: 1,
+          mode: 'image',
+          source: selectedImageName || 'Image',
+        });
+      }
     } catch (err: any) {
       const errorMsg = err.response?.data?.detail || err.message || 'Failed to analyze image';
       setError(errorMsg);

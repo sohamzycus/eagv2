@@ -7,11 +7,13 @@ import { Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Platform, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { HistoryProvider } from '../../src/context/HistoryContext';
 
 export default function TabsLayout() {
   const insets = useSafeAreaInsets();
   
   return (
+    <HistoryProvider>
     <Tabs
       screenOptions={{
         tabBarActiveTintColor: '#22c55e',
@@ -75,6 +77,16 @@ export default function TabsLayout() {
         }}
       />
       <Tabs.Screen
+        name="history"
+        options={{
+          title: 'History',
+          headerTitle: '📚 History',
+          tabBarIcon: ({ color, focused }) => (
+            <Ionicons name={focused ? 'time' : 'time-outline'} size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{
           title: 'Profile',
@@ -85,5 +97,6 @@ export default function TabsLayout() {
         }}
       />
     </Tabs>
+    </HistoryProvider>
   );
 }

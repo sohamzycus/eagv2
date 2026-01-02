@@ -27,10 +27,12 @@ import api, { BirdResult, AnalysisTrail as AnalysisTrailData } from '../../src/s
 import BirdCard from '../../src/components/BirdCard';
 import AnalysisTrail from '../../src/components/AnalysisTrail';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useHistory } from '../../src/context/HistoryContext';
 
 const { width } = Dimensions.get('window');
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 const NUM_BARS = 24;
+const LIVE_CHUNK_INTERVAL = 3000; // 3 seconds per chunk
 
 // Animated Waveform Component
 function Waveform({ isActive }: { isActive: boolean }) {
@@ -149,7 +151,8 @@ function AnalysisProgress({ stage }: { stage: string }) {
 export default function AudioScreen() {
   const insets = useSafeAreaInsets();
   const scrollViewRef = useRef<ScrollView>(null);
-  const [mode, setMode] = useState<'record' | 'upload'>('record');
+  const { addSession } = useHistory();
+  const [mode, setMode] = useState<'record' | 'upload' | 'live'>('record');
   const [isRecording, setIsRecording] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisStage, setAnalysisStage] = useState('');
@@ -164,6 +167,14 @@ export default function AudioScreen() {
   const [error, setError] = useState<string | null>(null);
   const recordingRef = useRef<Audio.Recording | null>(null);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Live streaming state
+  const [isLiveStreaming, setIsLiveStreaming] = useState(false);
+  const [liveChunkCount, setLiveChunkCount] = useState(0);
+  const [liveStatus, setLiveStatus] = useState('');
+  const [pendingApiCalls, setPendingApiCalls] = useState(0);
+  const liveIntervalRef = useRef<NodeJS.Timeout | null>(null);
+  const detectedBirdsRef = useRef<Set<string>>(new Set());
   
   // Animations
   const fadeAnim = useRef(new Animated.Value(0)).current;
@@ -265,6 +276,165 @@ export default function AudioScreen() {
     }
   };
 
+  // ========== LIVE STREAMING ==========
+  const isStreamingRef = useRef(false);
+  const chunkCountRef = useRef(0);
+
+  const startLiveStreaming = async () => {
+    try {
+      setBirds([]);
+      setError(null);
+      setLiveChunkCount(0);
+      chunkCountRef.current = 0;
+      setRecordingDuration(0);
+      detectedBirdsRef.current = new Set();
+      setLiveStatus('🎤 Starting live detection...');
+
+      isStreamingRef.current = true;
+      setIsLiveStreaming(true);
+
+      // Start timer for duration display
+      timerRef.current = setInterval(() => {
+        setRecordingDuration(prev => prev + 1);
+      }, 1000);
+
+      // Start the continuous recording loop
+      runLiveLoop();
+
+    } catch (err: any) {
+      console.error('Live streaming error:', err);
+      setError('Failed to start live streaming');
+      setIsLiveStreaming(false);
+      isStreamingRef.current = false;
+    }
+  };
+
+  const runLiveLoop = async () => {
+    while (isStreamingRef.current) {
+      chunkCountRef.current += 1;
+      const chunkNum = chunkCountRef.current;
+      setLiveChunkCount(chunkNum);
+
+      try {
+        setLiveStatus(`🎵 Recording chunk #${chunkNum}...`);
+
+        // Create and start recording
+        const recording = new Audio.Recording();
+        await recording.prepareToRecordAsync({
+          android: {
+            extension: '.m4a',
+            outputFormat: Audio.AndroidOutputFormat.MPEG_4,
+            audioEncoder: Audio.AndroidAudioEncoder.AAC,
+            sampleRate: 44100,
+            numberOfChannels: 1,
+            bitRate: 128000,
+          },
+          ios: {
+            extension: '.m4a',
+            outputFormat: Audio.IOSOutputFormat.MPEG4AAC,
+            audioQuality: Audio.IOSAudioQuality.HIGH,
+            sampleRate: 44100,
+            numberOfChannels: 1,
+            bitRate: 128000,
+          },
+          web: {},
+        });
+
+        await recording.startAsync();
+
+        // Record for exactly 3 seconds
+        await new Promise(resolve => setTimeout(resolve, 3000));
+
+        // Check if still streaming before processing
+        if (!isStreamingRef.current) {
+          await recording.stopAndUnloadAsync();
+          break;
+        }
+
+        await recording.stopAndUnloadAsync();
+        const uri = recording.getURI();
+
+        if (!uri) {
+          console.log(`Chunk #${chunkNum}: No audio URI`);
+          continue;
+        }
+
+        setLiveStatus(`🔍 Analyzing chunk #${chunkNum}...`);
+
+        // Track pending API call
+        setPendingApiCalls(prev => prev + 1);
+
+        // Send to API (don't block - run in background)
+        api.identifyLiveAudioChunk(uri, chunkNum, location || undefined, month || undefined)
+          .then(result => {
+            setPendingApiCalls(prev => Math.max(0, prev - 1));
+            
+            if (result.success && result.birds && result.birds.length > 0) {
+              const newBirds = result.birds.filter(bird => !detectedBirdsRef.current.has(bird.name));
+
+              if (newBirds.length > 0) {
+                newBirds.forEach(bird => detectedBirdsRef.current.add(bird.name));
+                // Add birds to list with streaming effect
+                newBirds.forEach((bird, i) => {
+                  setTimeout(() => {
+                    setBirds(prev => [...prev, bird]);
+                    setLiveStatus(`✅ Found: ${bird.name}`);
+                    scrollViewRef.current?.scrollToEnd({ animated: true });
+                  }, i * 200);
+                });
+              } else {
+                setLiveStatus(`🎵 Listening... (${detectedBirdsRef.current.size} species found)`);
+              }
+            } else {
+              setLiveStatus(`🎵 Listening... (chunk #${chunkNum})`);
+            }
+          })
+          .catch(err => {
+            setPendingApiCalls(prev => Math.max(0, prev - 1));
+            console.log(`Chunk #${chunkNum} API error:`, err.message);
+            setLiveStatus(`⚠️ Network issue, retrying...`);
+          });
+
+      } catch (err: any) {
+        console.error(`Chunk #${chunkNum} error:`, err.message);
+        setLiveStatus(`⚠️ Chunk error, continuing...`);
+        // Small delay before retry
+        await new Promise(resolve => setTimeout(resolve, 500));
+      }
+    }
+  };
+
+  const stopLiveStreaming = async () => {
+    isStreamingRef.current = false;
+    setIsLiveStreaming(false);
+
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
+
+    const speciesCount = detectedBirdsRef.current.size;
+    const chunksProcessed = chunkCountRef.current;
+    
+    // If we still have pending API calls, show processing indicator
+    if (pendingApiCalls > 0) {
+      setLiveStatus(`⏳ Processing ${pendingApiCalls} remaining chunk(s)...`);
+    } else {
+      setLiveStatus(`✅ Complete! Found ${speciesCount} species in ${chunksProcessed} chunks.`);
+    }
+    
+    // Save session to shared history
+    if (birds.length > 0 || detectedBirdsRef.current.size > 0) {
+      await addSession({
+        duration: recordingDuration,
+        location: location || 'Unknown',
+        birds: [...birds],
+        chunksProcessed: chunksProcessed,
+        mode: 'audio-live',
+      });
+    }
+  };
+
   const pickAudioFile = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
@@ -322,6 +492,18 @@ export default function AudioScreen() {
       setModelUsed(result.model_used || 'Unknown');
       
       setTimeout(() => scrollViewRef.current?.scrollToEnd({ animated: true }), 500);
+      
+      // Save to shared history
+      if (allBirds.length > 0) {
+        await addSession({
+          duration: recordingDuration,
+          location: location || 'Unknown',
+          birds: allBirds,
+          chunksProcessed: 1,
+          mode: mode === 'upload' ? 'audio-upload' : 'audio-record',
+          source: selectedFileName || undefined,
+        });
+      }
     } catch (err: any) {
       console.error('Analysis error:', err);
       let errorMsg = 'Failed to analyze audio';
@@ -371,18 +553,27 @@ export default function AudioScreen() {
               style={[styles.modeTab, mode === 'record' && styles.modeTabActive]}
               onPress={() => setMode('record')}
             >
-              <Ionicons name="mic" size={20} color={mode === 'record' ? '#fff' : '#64748b'} />
+              <Ionicons name="mic" size={18} color={mode === 'record' ? '#fff' : '#64748b'} />
               <Text style={[styles.modeTabText, mode === 'record' && styles.modeTabTextActive]}>
                 Record
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.modeTab, mode === 'live' && styles.modeTabActiveLive]}
+              onPress={() => setMode('live')}
+            >
+              <Ionicons name="radio" size={18} color={mode === 'live' ? '#fff' : '#64748b'} />
+              <Text style={[styles.modeTabText, mode === 'live' && styles.modeTabTextActive]}>
+                Live
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.modeTab, mode === 'upload' && styles.modeTabActive]}
               onPress={() => setMode('upload')}
             >
-              <Ionicons name="cloud-upload" size={20} color={mode === 'upload' ? '#fff' : '#64748b'} />
+              <Ionicons name="cloud-upload" size={18} color={mode === 'upload' ? '#fff' : '#64748b'} />
               <Text style={[styles.modeTabText, mode === 'upload' && styles.modeTabTextActive]}>
-                Upload File
+                Upload
               </Text>
             </TouchableOpacity>
           </View>
@@ -394,6 +585,8 @@ export default function AudioScreen() {
               <Text style={styles.tipText}>
                 {mode === 'record' 
                   ? 'Best results with 5-15 seconds of clear audio'
+                  : mode === 'live'
+                  ? '🔴 Continuous detection - identifies birds every 3 seconds'
                   : 'Supports M4A, MP3, WAV, MP4 audio files'}
               </Text>
             </View>
@@ -521,6 +714,79 @@ export default function AudioScreen() {
             </View>
           )}
 
+          {/* Live Streaming Mode */}
+          {mode === 'live' && (
+            <View style={styles.liveSection}>
+              {/* Live Status */}
+              {isLiveStreaming && (
+                <View style={styles.liveStatusCard}>
+                  <View style={styles.liveIndicator}>
+                    <View style={[styles.liveDot, { backgroundColor: '#ef4444' }]} />
+                    <Text style={styles.liveText}>LIVE</Text>
+                  </View>
+                  <Text style={styles.liveStatusText}>{liveStatus}</Text>
+                  <View style={styles.liveStats}>
+                    <View style={styles.liveStat}>
+                      <Ionicons name="time" size={16} color="#94a3b8" />
+                      <Text style={styles.liveStatText}>{formatDuration(recordingDuration)}</Text>
+                    </View>
+                    <View style={styles.liveStat}>
+                      <Ionicons name="layers" size={16} color="#94a3b8" />
+                      <Text style={styles.liveStatText}>{liveChunkCount} chunks</Text>
+                    </View>
+                    <View style={styles.liveStat}>
+                      <Ionicons name="paw" size={16} color="#22c55e" />
+                      <Text style={styles.liveStatText}>{birds.length} species</Text>
+                    </View>
+                  </View>
+                </View>
+              )}
+
+              {/* Waveform for Live */}
+              {isLiveStreaming && (
+                <View style={styles.waveformSection}>
+                  <LinearGradient
+                    colors={['rgba(239, 68, 68, 0.1)', 'rgba(239, 68, 68, 0.05)']}
+                    style={styles.waveformGradient}
+                  >
+                    <Waveform isActive={isLiveStreaming} />
+                  </LinearGradient>
+                </View>
+              )}
+
+              {/* Live Control Button */}
+              <TouchableOpacity
+                style={[
+                  styles.recordButton,
+                  isLiveStreaming && styles.liveStreamingButton,
+                ]}
+                onPress={isLiveStreaming ? stopLiveStreaming : startLiveStreaming}
+                activeOpacity={0.8}
+              >
+                <LinearGradient
+                  colors={isLiveStreaming ? ['#ef4444', '#dc2626'] : ['#f97316', '#ea580c']}
+                  style={styles.recordButtonGradient}
+                >
+                  <Ionicons name={isLiveStreaming ? 'stop' : 'radio'} size={40} color="#fff" />
+                </LinearGradient>
+              </TouchableOpacity>
+              <Text style={styles.recordLabel}>
+                {isLiveStreaming ? 'Tap to Stop' : 'Start Live Detection'}
+              </Text>
+
+              {/* Live Mode Description */}
+              {!isLiveStreaming && birds.length === 0 && (
+                <View style={styles.liveDescription}>
+                  <Ionicons name="information-circle" size={20} color="#f97316" />
+                  <Text style={styles.liveDescText}>
+                    Live mode continuously listens and identifies birds every 3 seconds. 
+                    New species are added to the list in real-time.
+                  </Text>
+                </View>
+              )}
+            </View>
+          )}
+
           {/* Error */}
           {error && (
             <View style={styles.errorCard}>
@@ -542,13 +808,30 @@ export default function AudioScreen() {
                     {birds.length} Bird{birds.length > 1 ? 's' : ''} Found
                   </Text>
                 </View>
-                <View style={styles.resultsBadge}>
-                  <Text style={styles.resultsBadgeText}>{processingTime}ms</Text>
-                </View>
+                {mode === 'live' ? (
+                  <View style={[styles.resultsBadge, { backgroundColor: 'rgba(239, 68, 68, 0.2)' }]}>
+                    <Text style={[styles.resultsBadgeText, { color: '#ef4444' }]}>LIVE</Text>
+                  </View>
+                ) : (
+                  <View style={styles.resultsBadge}>
+                    <Text style={styles.resultsBadgeText}>{processingTime}ms</Text>
+                  </View>
+                )}
               </View>
               
-              {/* Analysis Trail */}
-              {analysisTrail && (
+              {/* Pending API calls indicator */}
+              {pendingApiCalls > 0 && !isLiveStreaming && (
+                <View style={styles.pendingIndicator}>
+                  <ActivityIndicator size="small" color="#10b981" />
+                  <Text style={styles.pendingText}>
+                    Processing {pendingApiCalls} remaining chunk{pendingApiCalls > 1 ? 's' : ''}...
+                  </Text>
+                  <Text style={styles.pendingSubtext}>More birds may appear</Text>
+                </View>
+              )}
+              
+              {/* Analysis Trail - only for non-live modes */}
+              {mode !== 'live' && analysisTrail && (
                 <AnalysisTrail
                   trail={analysisTrail}
                   processingTimeMs={processingTime}
@@ -567,8 +850,8 @@ export default function AudioScreen() {
             </View>
           )}
 
-          {/* Empty State */}
-          {!isRecording && !isAnalyzing && birds.length === 0 && !error && (
+          {/* Empty State - only for record and upload modes */}
+          {mode !== 'live' && !isRecording && !isAnalyzing && birds.length === 0 && !error && (
             <View style={styles.emptyState}>
               <Text style={styles.emptyEmoji}>{mode === 'record' ? '🎤' : '📁'}</Text>
               <Text style={styles.emptyTitle}>
@@ -613,6 +896,9 @@ const styles = StyleSheet.create({
   },
   modeTabActive: {
     backgroundColor: 'rgba(34, 197, 94, 0.2)',
+  },
+  modeTabActiveLive: {
+    backgroundColor: 'rgba(249, 115, 22, 0.2)',
   },
   modeTabText: { fontSize: 14, color: '#64748b', fontWeight: '600' },
   modeTabTextActive: { color: '#fff' },
@@ -762,8 +1048,100 @@ const styles = StyleSheet.create({
   },
   resultsBadgeText: { color: '#22c55e', fontSize: 12, fontWeight: '600' },
   resultsModel: { color: '#64748b', fontSize: 12, paddingHorizontal: 16, marginBottom: 12 },
+  pendingIndicator: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(16, 185, 129, 0.15)',
+    marginHorizontal: 16,
+    marginBottom: 16,
+    padding: 14,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(16, 185, 129, 0.3)',
+    flexWrap: 'wrap',
+    gap: 8,
+  },
+  pendingText: {
+    color: '#10b981',
+    fontSize: 14,
+    fontWeight: '600',
+    marginLeft: 8,
+  },
+  pendingSubtext: {
+    color: '#6ee7b7',
+    fontSize: 12,
+    marginLeft: 4,
+  },
   emptyState: { alignItems: 'center', paddingVertical: 50, paddingHorizontal: 40 },
   emptyEmoji: { fontSize: 64, marginBottom: 16 },
   emptyTitle: { fontSize: 20, fontWeight: '700', color: '#fff', marginBottom: 8 },
   emptyText: { fontSize: 15, color: '#64748b', textAlign: 'center', lineHeight: 22 },
+  
+  // Live Streaming Styles
+  liveSection: { alignItems: 'center', marginVertical: 20 },
+  liveStatusCard: {
+    width: '90%',
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(239, 68, 68, 0.3)',
+  },
+  liveIndicator: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  liveDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    marginRight: 8,
+  },
+  liveText: {
+    color: '#ef4444',
+    fontSize: 14,
+    fontWeight: '800',
+    letterSpacing: 2,
+  },
+  liveStatusText: {
+    color: '#fff',
+    fontSize: 15,
+    marginBottom: 12,
+  },
+  liveStats: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  liveStat: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  liveStatText: {
+    color: '#94a3b8',
+    fontSize: 13,
+  },
+  liveStreamingButton: {
+    shadowColor: '#ef4444',
+  },
+  liveDescription: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: 'rgba(249, 115, 22, 0.1)',
+    marginHorizontal: 16,
+    marginTop: 20,
+    padding: 14,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(249, 115, 22, 0.3)',
+    gap: 10,
+  },
+  liveDescText: {
+    flex: 1,
+    color: '#fdba74',
+    fontSize: 14,
+    lineHeight: 20,
+  },
 });

@@ -158,9 +158,33 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Security(
     return user
 
 
-# Optional auth - allows unauthenticated access but provides user if token present
-# Note: This function is not used in current API - keeping for future use
-def get_current_user_optional():
-    """Optional authentication - returns None if no token."""
-    return None  # Placeholder - implement if needed
+# Optional security - doesn't require token
+security_optional = HTTPBearer(auto_error=False)
+
+
+async def get_current_user_optional(
+    credentials: Optional[HTTPAuthorizationCredentials] = Security(security_optional)
+) -> Optional[dict]:
+    """
+    Optional authentication - allows unauthenticated access.
+    Returns user if valid token present, None otherwise.
+    """
+    if credentials is None:
+        return None  # No token provided - allow anonymous access
+    
+    try:
+        token = credentials.credentials
+        payload = decode_token(token)
+        username: str = payload.get("sub")
+        
+        if username is None:
+            return None
+        
+        user = get_user(username)
+        if user and user.get("is_active", False):
+            return user
+        return None
+        
+    except Exception:
+        return None  # Invalid token - allow anonymous access anyway
 

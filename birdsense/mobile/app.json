@@ -32,15 +32,17 @@
         "backgroundColor": "#1a472a"
       },
       "package": "com.zycus.birdsense",
+      "versionCode": 1,
       "permissions": [
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO",
         "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE",
-        "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO",
-        "android.permission.MODIFY_AUDIO_SETTINGS"
+        "android.permission.MODIFY_AUDIO_SETTINGS",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT"
       ],
       "usesCleartextTraffic": true
     },
@@ -68,7 +70,14 @@
         {
           "photosPermission": "Allow BirdSense to access your photos to identify birds"
         }
-      ]
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow BirdSense to use Face ID for authentication"
+        }
+      ],
+      "expo-secure-store"
     ],
     "owner": "mazycus",
     "extra": {
