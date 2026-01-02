@@ -10,7 +10,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '../src/context/AuthContext';
 
 export default function Index() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isApiAuthenticated, isLoading } = useAuth();
   const fadeAnim = new Animated.Value(0);
   const scaleAnim = new Animated.Value(0.8);
 
@@ -26,14 +26,15 @@ export default function Index() {
     if (!isLoading) {
       // Navigate after a brief moment to show splash
       setTimeout(() => {
-        if (isAuthenticated) {
+        // Require both local auth and API auth
+        if (isAuthenticated && isApiAuthenticated) {
           router.replace('/(tabs)/audio');
         } else {
           router.replace('/login');
         }
       }, 500);
     }
-  }, [isLoading, isAuthenticated]);
+  }, [isLoading, isAuthenticated, isApiAuthenticated]);
 
   return (
     <LinearGradient colors={['#0f172a', '#1e293b', '#0f172a']} style={styles.container}>

@@ -24,8 +24,19 @@ const SETTINGS_KEYS = {
   API_URL: 'birdsense_api_url',
 };
 
-// Default API URL - Update this to your deployed API
-const DEFAULT_API_URL = 'https://birdsense-api-1021486398038.us-central1.run.app';
+// Available API endpoints
+export const API_ENDPOINTS = {
+  AWS_APP_RUNNER: 'https://cqxapziyi2.ap-south-1.awsapprunner.com',
+  GCP_CLOUD_RUN: 'https://birdsense-api-790428686498.asia-south1.run.app',
+  LOCAL: 'http://localhost:8000',
+  // Special IP for Android Emulator to access host machine
+  EMULATOR_LOCAL: 'http://10.0.2.2:8000',
+  // For testing on local network, set your computer's IP here
+  LOCAL_NETWORK: 'http://192.168.1.21:8000',
+};
+
+// Default API URL - Use AWS App Runner for production
+const DEFAULT_API_URL = API_ENDPOINTS.AWS_APP_RUNNER;
 
 const SettingsContext = createContext<SettingsContextType | undefined>(undefined);
 

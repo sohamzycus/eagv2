@@ -2,7 +2,9 @@
  * 🐦 BirdSense Mobile - Login Screen
  * Developed by Soham
  * 
- * Simple LOCAL authentication - no network required
+ * Authentication flow:
+ * 1. Biometric/PIN verification on device
+ * 2. Auto-authenticate with backend API
  */
 
 import React, { useState, useEffect } from 'react';
@@ -28,7 +30,8 @@ export default function LoginScreen() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showForm, setShowForm] = useState(false);
-  const { login, loginAsGuest, isAuthenticated } = useAuth();
+  const [connectionStatus, setConnectionStatus] = useState<'checking' | 'online' | 'offline'>('checking');
+  const { login, loginWithBiometric, loginAsDemo, isAuthenticated, isApiAuthenticated, biometricType, error } = useAuth();
 
   // Animation
   const fadeAnim = React.useRef(new Animated.Value(0)).current;
@@ -39,21 +42,34 @@ export default function LoginScreen() {
       Animated.timing(fadeAnim, { toValue: 1, duration: 600, useNativeDriver: true }),
       Animated.timing(slideAnim, { toValue: 0, duration: 600, useNativeDriver: true }),
     ]).start();
+
+    // Check API connectivity
+    checkConnection();
   }, []);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && isApiAuthenticated) {
       router.replace('/(tabs)/audio');
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isApiAuthenticated]);
 
-  const handleGuestLogin = async () => {
+  const checkConnection = async () => {
+    try {
+      const { api } = await import('../src/services/api');
+      await api.getHealth();
+      setConnectionStatus('online');
+    } catch {
+      setConnectionStatus('offline');
+    }
+  };
+
+  const handleBiometricLogin = async () => {
     setIsLoading(true);
     try {
-      await loginAsGuest();
+      await loginWithBiometric();
       router.replace('/(tabs)/audio');
     } catch (error: any) {
-      Alert.alert('Error', 'Could not login');
+      Alert.alert('Authentication Failed', error.message || 'Could not authenticate');
     } finally {
       setIsLoading(false);
     }
@@ -62,10 +78,10 @@ export default function LoginScreen() {
   const handleDemoLogin = async () => {
     setIsLoading(true);
     try {
-      await login({ username: 'demo', password: 'demo123' });
+      await loginAsDemo();
       router.replace('/(tabs)/audio');
     } catch (error: any) {
-      Alert.alert('Error', error.message);
+      Alert.alert('Login Failed', error.message || 'Could not connect to server');
     } finally {
       setIsLoading(false);
     }
@@ -82,10 +98,16 @@ export default function LoginScreen() {
       await login({ username, password });
       router.replace('/(tabs)/audio');
     } catch (error: any) {
-      Alert.alert('Login Failed', error.message);
+      Alert.alert('Login Failed', error.message || 'Invalid credentials');
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const getBiometricIcon = () => {
+    if (biometricType === 'Face ID') return 'scan';
+    if (biometricType === 'Fingerprint') return 'finger-print';
+    return 'keypad';
   };
 
   return (
@@ -107,46 +129,78 @@ export default function LoginScreen() {
             <Text style={styles.tagline}>AI Bird Identification</Text>
           </View>
 
+          {/* Connection Status */}
+          <View style={styles.statusBar}>
+            <View style={[
+              styles.statusDot, 
+              { backgroundColor: connectionStatus === 'online' ? '#22c55e' : connectionStatus === 'offline' ? '#ef4444' : '#f59e0b' }
+            ]} />
+            <Text style={styles.statusText}>
+              {connectionStatus === 'online' ? 'Connected to API' : connectionStatus === 'offline' ? 'API Unavailable' : 'Checking...'}
+            </Text>
+          </View>
+
           {/* Quick Access Buttons */}
           <View style={styles.quickButtons}>
-            {/* Continue as Guest - Primary */}
+            {/* Biometric Login - Primary */}
+            {biometricType && (
+              <TouchableOpacity
+                style={styles.biometricButton}
+                onPress={handleBiometricLogin}
+                disabled={isLoading || connectionStatus === 'offline'}
+                activeOpacity={0.8}
+              >
+                <LinearGradient
+                  colors={connectionStatus === 'offline' ? ['#475569', '#334155'] : ['#22c55e', '#16a34a']}
+                  style={styles.buttonGradient}
+                >
+                  {isLoading ? (
+                    <ActivityIndicator color="#fff" size="small" />
+                  ) : (
+                    <>
+                      <Ionicons name={getBiometricIcon()} size={32} color="#fff" />
+                      <Text style={styles.biometricButtonText}>
+                        {biometricType === 'Face ID' ? 'Face ID' : biometricType === 'Fingerprint' ? 'Fingerprint' : 'PIN Login'}
+                      </Text>
+                      <Text style={styles.biometricSubtext}>Quick & secure access</Text>
+                    </>
+                  )}
+                </LinearGradient>
+              </TouchableOpacity>
+            )}
+
+            {/* Demo Account */}
             <TouchableOpacity
-              style={styles.guestButton}
-              onPress={handleGuestLogin}
-              disabled={isLoading}
+              style={styles.demoButton}
+              onPress={handleDemoLogin}
+              disabled={isLoading || connectionStatus === 'offline'}
               activeOpacity={0.8}
             >
               <LinearGradient
-                colors={['#22c55e', '#16a34a']}
+                colors={connectionStatus === 'offline' ? ['#475569', '#334155'] : ['#8b5cf6', '#6d28d9']}
                 style={styles.buttonGradient}
               >
                 {isLoading ? (
                   <ActivityIndicator color="#fff" size="small" />
                 ) : (
                   <>
-                    <Ionicons name="arrow-forward-circle" size={28} color="#fff" />
-                    <Text style={styles.guestButtonText}>Continue as Guest</Text>
+                    <Ionicons name="flash" size={24} color="#fff" />
+                    <Text style={styles.demoButtonText}>Demo Account</Text>
                   </>
                 )}
               </LinearGradient>
             </TouchableOpacity>
-
-            {/* Demo Account */}
-            <TouchableOpacity
-              style={styles.demoButton}
-              onPress={handleDemoLogin}
-              disabled={isLoading}
-              activeOpacity={0.8}
-            >
-              <LinearGradient
-                colors={['#8b5cf6', '#6d28d9']}
-                style={styles.buttonGradient}
-              >
-                <Ionicons name="flash" size={22} color="#fff" />
-                <Text style={styles.demoButtonText}>Demo Account</Text>
-              </LinearGradient>
-            </TouchableOpacity>
           </View>
+
+          {connectionStatus === 'offline' && (
+            <View style={styles.offlineWarning}>
+              <Ionicons name="cloud-offline" size={20} color="#ef4444" />
+              <Text style={styles.offlineText}>Cannot connect to API. Check network.</Text>
+              <TouchableOpacity onPress={checkConnection}>
+                <Text style={styles.retryText}>Retry</Text>
+              </TouchableOpacity>
+            </View>
+          )}
 
           {/* Divider */}
           <View style={styles.divider}>
@@ -197,9 +251,9 @@ export default function LoginScreen() {
                 />
               </View>
               <TouchableOpacity
-                style={styles.loginButton}
+                style={[styles.loginButton, connectionStatus === 'offline' && styles.disabledButton]}
                 onPress={handleLogin}
-                disabled={isLoading}
+                disabled={isLoading || connectionStatus === 'offline'}
               >
                 {isLoading ? (
                   <ActivityIndicator color="#fff" />
@@ -210,10 +264,10 @@ export default function LoginScreen() {
 
               {/* Credentials Hint */}
               <View style={styles.hint}>
-                <Text style={styles.hintTitle}>Available accounts:</Text>
+                <Text style={styles.hintTitle}>API Accounts:</Text>
                 <Text style={styles.hintText}>• demo / demo123</Text>
                 <Text style={styles.hintText}>• soham / birdsense2024</Text>
-                <Text style={styles.hintText}>• guest / guest</Text>
+                <Text style={styles.hintText}>• mazycus / ZycusMerlinAssist@2024</Text>
               </View>
             </View>
           )}
@@ -240,7 +294,7 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     alignItems: 'center',
-    marginBottom: 48,
+    marginBottom: 32,
   },
   logoEmoji: {
     fontSize: 80,
@@ -258,10 +312,26 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontWeight: '500',
   },
+  statusBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 24,
+    gap: 8,
+  },
+  statusDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
+  statusText: {
+    color: '#94a3b8',
+    fontSize: 14,
+  },
   quickButtons: {
     gap: 12,
   },
-  guestButton: {
+  biometricButton: {
     borderRadius: 16,
     overflow: 'hidden',
     shadowColor: '#22c55e',
@@ -280,21 +350,45 @@ const styles = StyleSheet.create({
     elevation: 6,
   },
   buttonGradient: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 18,
-    gap: 12,
+    paddingVertical: 20,
+    gap: 6,
   },
-  guestButtonText: {
+  biometricButtonText: {
     color: '#fff',
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '700',
+  },
+  biometricSubtext: {
+    color: 'rgba(255,255,255,0.8)',
+    fontSize: 13,
   },
   demoButtonText: {
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  offlineWarning: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 16,
+    padding: 12,
+    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+    borderRadius: 8,
+    gap: 8,
+  },
+  offlineText: {
+    color: '#ef4444',
+    fontSize: 14,
+  },
+  retryText: {
+    color: '#3b82f6',
+    fontSize: 14,
+    fontWeight: '600',
+    marginLeft: 8,
   },
   divider: {
     flexDirection: 'row',
@@ -355,6 +449,9 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     alignItems: 'center',
     marginTop: 4,
+  },
+  disabledButton: {
+    backgroundColor: '#475569',
   },
   loginButtonText: {
     color: '#fff',

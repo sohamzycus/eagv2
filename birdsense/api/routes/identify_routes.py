@@ -19,7 +19,7 @@ from api.models import (
     ErrorResponse,
     AudioFeatures, ImageFeatures, AnalysisStep, AnalysisTrail
 )
-from api.auth import get_current_user_optional
+from api.auth import get_current_user
 
 # Import analysis functions from main codebase
 import sys
@@ -122,7 +122,7 @@ async def identify_audio(
     audio_file: Optional[UploadFile] = File(None, description="Audio file (WAV, MP3, etc.)"),
     location: Optional[str] = Form(None, description="Location (e.g., Mumbai, India)"),
     month: Optional[str] = Form(None, description="Month (e.g., December)"),
-    current_user: dict = Depends(get_current_user_optional)
+    current_user: dict = Depends(get_current_user)
 ):
     """
     Identify birds from audio using the BirdSense hybrid pipeline:
@@ -383,7 +383,7 @@ async def identify_audio(
 )
 async def identify_audio_base64(
     request: AudioIdentifyRequest,
-    current_user: dict = Depends(get_current_user_optional)
+    current_user: dict = Depends(get_current_user)
 ):
     """Identify birds from base64-encoded audio data."""
     start_time = time.time()
@@ -457,7 +457,7 @@ async def identify_audio_base64(
 async def identify_image(
     image_file: UploadFile = File(..., description="Image file (JPEG, PNG, etc.)"),
     location: Optional[str] = Form(None, description="Location for India-specific info"),
-    current_user: dict = Depends(get_current_user_optional)
+    current_user: dict = Depends(get_current_user)
 ):
     """
     Identify birds from an image using Vision AI (LLaVA or GPT-4o).
@@ -575,7 +575,7 @@ async def identify_image(
 )
 async def identify_image_base64(
     request: ImageIdentifyRequest,
-    current_user: dict = Depends(get_current_user_optional)
+    current_user: dict = Depends(get_current_user)
 ):
     """Identify birds from base64-encoded image data."""
     start_time = time.time()
@@ -621,7 +621,7 @@ async def identify_image_base64(
 )
 async def identify_description(
     request: DescriptionIdentifyRequest,
-    current_user: dict = Depends(get_current_user_optional)
+    current_user: dict = Depends(get_current_user)
 ):
     """
     Identify birds from a text description.

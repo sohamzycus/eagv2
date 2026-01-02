@@ -3,34 +3,27 @@
  * Developed by Soham
  * 
  * Handles all API communication with the BirdSense backend.
- * Supports both online (API) and offline (on-device) modes.
+ * Requires authentication via JWT token.
  */
 
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 import * as SecureStore from 'expo-secure-store';
+
+// Import API endpoints from settings
+import { API_ENDPOINTS } from '../context/SettingsContext';
 
 // API Configuration
 const API_CONFIG = {
-  // AWS App Runner - primary
-  BASE_URL: 'https://cqxapziyi2.ap-south-1.awsapprunner.com',
+  // AWS App Runner - production (synced with SettingsContext)
+  BASE_URL: API_ENDPOINTS.AWS_APP_RUNNER,
   TIMEOUT: 60000, // 60 seconds for identification
 };
-
-// For testing on local network (when API is running locally)
-// Change this if testing locally: 'http://YOUR_COMPUTER_IP:8000'
-const LOCAL_API_URL = null; // Set to 'http://192.168.x.x:8000' for local testing
 
 // Mode type
 export type ApiMode = 'online' | 'offline';
 
 // Token storage key
-const TOKEN_KEY = 'birdsense_token';
-
-// Default credentials for auto-login
-const DEFAULT_CREDENTIALS = {
-  username: 'demo',
-  password: 'demo123'
-};
+const TOKEN_KEY = 'birdsense_api_token';
 
 // Types
 export interface LoginCredentials {
@@ -139,6 +132,12 @@ export interface HealthStatus {
 // Import offline service
 import { offlineService } from './offline';
 
+// Extend AxiosRequestConfig to include retry flags
+interface ExtendedAxiosRequestConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean;
+  _networkRetry?: boolean;
+}
+
 // Create API client
 class BirdSenseAPI {
   private client: AxiosInstance;
@@ -147,7 +146,7 @@ class BirdSenseAPI {
   private baseUrl: string = API_CONFIG.BASE_URL;
 
   constructor() {
-    const baseURL = LOCAL_API_URL || API_CONFIG.BASE_URL;
+    const baseURL = API_CONFIG.BASE_URL;
     console.log('🔗 API Base URL:', baseURL);
     
     this.client = axios.create({
@@ -158,61 +157,57 @@ class BirdSenseAPI {
       },
     });
 
-    // Add auth interceptor (optional - API works without auth too)
+    // Add auth interceptor - always include token if available
     this.client.interceptors.request.use(
       async (config) => {
-        // Only add token if we have one, but don't require it
         if (this.token) {
           config.headers.Authorization = `Bearer ${this.token}`;
+          console.log('🔑 Request with auth token');
+        } else {
+          console.log('⚠️ Request without auth token');
         }
         return config;
       },
       (error) => Promise.reject(error)
     );
 
-    // Handle auth errors gracefully
+    // Handle auth and network errors
     this.client.interceptors.response.use(
       (response) => response,
-      (error) => {
-        // If 401/403, just continue without auth - API should work for identify endpoints
-        if (error.response?.status === 401 || error.response?.status === 403) {
-          console.log('Auth error, continuing without auth');
+      async (error) => {
+        const originalRequest = error.config as ExtendedAxiosRequestConfig;
+        
+        // Log detailed error
+        if (error.response) {
+          console.log('❌ API Error:', error.response.status, error.response.data?.detail || error.response.statusText);
+        } else if (error.request) {
+          // Network error - could be emulator issue, timeout, etc.
+          console.log('❌ Network Error: No response received');
+          console.log('💡 If on emulator, check: 1) Internet permission 2) WiFi enabled 3) Try "Cold Boot" emulator');
+          
+          // Retry once on network error
+          if (!originalRequest._networkRetry) {
+            console.log('🔄 Retrying request...');
+            originalRequest._networkRetry = true;
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            return this.client(originalRequest);
+          }
+        } else {
+          console.log('❌ Request Error:', error.message);
         }
+
+        // If 401, token is invalid/expired
+        if (error.response?.status === 401 && !originalRequest._retry) {
+          console.log('🔄 Token invalid, clearing...');
+          await this.clearToken();
+        }
+        
         return Promise.reject(error);
       }
     );
 
-    // Load stored token and auto-login
-    this.initializeAuth();
-  }
-
-  private async initializeAuth() {
-    await this.loadToken();
-    
-    // If no token, auto-login with default credentials
-    if (!this.token) {
-      try {
-        console.log('🔐 Auto-logging in to API...');
-        await this.login(DEFAULT_CREDENTIALS);
-        console.log('✅ API auto-login successful');
-      } catch (error) {
-        console.log('⚠️ API auto-login failed, will retry on first request');
-      }
-    }
-  }
-
-  // Ensure we have a token before making requests
-  private async ensureAuthenticated() {
-    if (!this.token) {
-      try {
-        console.log('🔐 Authenticating with API...');
-        await this.login(DEFAULT_CREDENTIALS);
-        console.log('✅ API authentication successful');
-      } catch (error: any) {
-        console.log('❌ Auth failed:', error.message);
-        // Continue anyway - API might allow unauthenticated access
-      }
-    }
+    // Load any existing token
+    this.loadToken();
   }
 
   // Mode management
@@ -241,6 +236,7 @@ class BirdSenseAPI {
       const token = await SecureStore.getItemAsync(TOKEN_KEY);
       if (token) {
         this.token = token;
+        console.log('✅ Loaded stored token');
       }
     } catch (error) {
       console.log('Error loading token:', error);
@@ -251,6 +247,7 @@ class BirdSenseAPI {
     try {
       await SecureStore.setItemAsync(TOKEN_KEY, token);
       this.token = token;
+      console.log('✅ Token saved');
     } catch (error) {
       console.log('Error saving token:', error);
     }
@@ -260,6 +257,7 @@ class BirdSenseAPI {
     try {
       await SecureStore.deleteItemAsync(TOKEN_KEY);
       this.token = null;
+      console.log('🗑️ Token cleared');
     } catch (error) {
       console.log('Error clearing token:', error);
     }
@@ -269,7 +267,11 @@ class BirdSenseAPI {
     return this.token !== null;
   }
 
-  // Health check
+  getToken(): string | null {
+    return this.token;
+  }
+
+  // Health check (no auth required)
   async getHealth(): Promise<HealthStatus> {
     const response = await this.client.get<HealthStatus>('/health');
     return response.data;
@@ -277,6 +279,7 @@ class BirdSenseAPI {
 
   // Authentication
   async login(credentials: LoginCredentials): Promise<AuthToken> {
+    console.log('🔐 Logging in as:', credentials.username);
     const response = await this.client.post<AuthToken>('/auth/login', credentials);
     await this.saveToken(response.data.access_token);
     return response.data;
@@ -297,6 +300,13 @@ class BirdSenseAPI {
     return response.data;
   }
 
+  // Check if we're authenticated before API calls
+  private checkAuth() {
+    if (!this.token) {
+      throw new Error('Not authenticated. Please login first.');
+    }
+  }
+
   // Bird Identification - Audio
   async identifyAudio(
     audioBase64: string,
@@ -304,10 +314,11 @@ class BirdSenseAPI {
     location?: string,
     month?: string
   ): Promise<IdentificationResponse> {
-    // Offline mode not supported for base64 audio
     if (this.mode === 'offline') {
-      throw new Error('Base64 audio not supported in offline mode. Use identifyAudioFile instead.');
+      throw new Error('Base64 audio not supported in offline mode.');
     }
+
+    this.checkAuth();
 
     const response = await this.client.post<IdentificationResponse>('/identify/audio/base64', {
       audio_base64: audioBase64,
@@ -323,13 +334,11 @@ class BirdSenseAPI {
     location?: string,
     month?: string
   ): Promise<IdentificationResponse> {
-    // Use offline service if in offline mode
     if (this.mode === 'offline') {
       return offlineService.identifyAudio(audioUri, location, month);
     }
 
-    // Ensure we have auth token
-    await this.ensureAuthenticated();
+    this.checkAuth();
 
     // Detect file type from URI
     const uriLower = audioUri.toLowerCase();
@@ -353,7 +362,7 @@ class BirdSenseAPI {
       fileName = 'recording.flac';
     }
 
-    console.log(`Audio upload: ${mimeType}, file: ${fileName}, uri: ${audioUri.substring(0, 50)}...`);
+    console.log(`📤 Audio upload: ${mimeType}, file: ${fileName}`);
 
     const formData = new FormData();
     formData.append('audio_file', {
@@ -379,8 +388,10 @@ class BirdSenseAPI {
     location?: string
   ): Promise<IdentificationResponse> {
     if (this.mode === 'offline') {
-      throw new Error('Base64 image not supported in offline mode. Use identifyImageFile instead.');
+      throw new Error('Base64 image not supported in offline mode.');
     }
+
+    this.checkAuth();
 
     const response = await this.client.post<IdentificationResponse>('/identify/image/base64', {
       image_base64: imageBase64,
@@ -393,13 +404,11 @@ class BirdSenseAPI {
     imageUri: string,
     location?: string
   ): Promise<IdentificationResponse> {
-    // Use offline service if in offline mode
     if (this.mode === 'offline') {
       return offlineService.identifyImage(imageUri, location);
     }
 
-    // Ensure we have auth token
-    await this.ensureAuthenticated();
+    this.checkAuth();
 
     const formData = new FormData();
     formData.append('image_file', {
@@ -422,13 +431,11 @@ class BirdSenseAPI {
     description: string,
     location?: string
   ): Promise<IdentificationResponse> {
-    // Use offline service if in offline mode
     if (this.mode === 'offline') {
       return offlineService.identifyDescription(description, location);
     }
 
-    // Ensure we have auth token
-    await this.ensureAuthenticated();
+    this.checkAuth();
 
     const response = await this.client.post<IdentificationResponse>('/identify/description', {
       description,
@@ -448,8 +455,7 @@ class BirdSenseAPI {
       return offlineService.identifyAudio(audioUri, location, month);
     }
 
-    // Ensure we have auth token
-    await this.ensureAuthenticated();
+    this.checkAuth();
 
     // Detect file type from URI
     const uriLower = audioUri.toLowerCase();
@@ -488,4 +494,3 @@ class BirdSenseAPI {
 // Export singleton instance
 export const api = new BirdSenseAPI();
 export default api;
-
