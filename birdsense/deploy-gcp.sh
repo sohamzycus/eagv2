@@ -68,11 +68,11 @@ check_prerequisites() {
     fi
     
     # Check API key
+    # API Key - MUST be set as environment variable (never commit to git!)
     if [ -z "$LITELLM_API_KEY" ]; then
-        echo -e "${YELLOW}⚠️  LITELLM_API_KEY not set.${NC}"
-        read -sp "Enter LITELLM_API_KEY: " LITELLM_API_KEY
-        echo ""
-        export LITELLM_API_KEY
+        echo -e "${RED}❌ LITELLM_API_KEY not set.${NC}"
+        echo "Export it first: export LITELLM_API_KEY='your-api-key'"
+        exit 1
     fi
     
     echo -e "${GREEN}✓${NC} Prerequisites OK"
