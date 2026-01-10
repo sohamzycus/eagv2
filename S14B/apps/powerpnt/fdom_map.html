@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Powerpnt State Map</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'JetBrains Mono', 'SF Mono', monospace;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f23 100%);
+            min-height: 100vh;
+            color: #e0e0e0;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(90deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+            border-bottom: 1px solid rgba(139, 92, 246, 0.3);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            background: linear-gradient(120deg, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #818cf8;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #6b7280;
+        }
+        
+        .container {
+            display: flex;
+            height: calc(100vh - 80px);
+        }
+        
+        .sidebar {
+            width: 320px;
+            background: rgba(15, 15, 30, 0.8);
+            border-right: 1px solid rgba(139, 92, 246, 0.2);
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .sidebar h2 {
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #818cf8;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+        }
+        
+        .state-list {
+            list-style: none;
+        }
+        
+        .state-item {
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: rgba(99, 102, 241, 0.05);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .state-item:hover {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateX(4px);
+        }
+        
+        .state-item.active {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: #8b5cf6;
+        }
+        
+        .state-name {
+            font-weight: 600;
+            color: #e0e0e0;
+            margin-bottom: 4px;
+        }
+        
+        .state-meta {
+            font-size: 11px;
+            color: #6b7280;
+        }
+        
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        #mapCanvas {
+            width: 100%;
+            height: 100%;
+            cursor: grab;
+        }
+        
+        #mapCanvas:active {
+            cursor: grabbing;
+        }
+        
+        .tooltip {
+            position: absolute;
+            background: rgba(20, 20, 40, 0.95);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            border-radius: 10px;
+            padding: 15px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            max-width: 300px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+        
+        .tooltip.visible {
+            opacity: 1;
+        }
+        
+        .tooltip h3 {
+            color: #818cf8;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .tooltip p {
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 4px;
+        }
+        
+        .controls {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .control-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            background: rgba(20, 20, 40, 0.8);
+            color: #818cf8;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .control-btn:hover {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: #8b5cf6;
+            transform: scale(1.05);
+        }
+        
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(20, 20, 40, 0.9);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        
+        .legend h4 {
+            font-size: 12px;
+            color: #818cf8;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: #9ca3af;
+            margin-bottom: 6px;
+        }
+        
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .legend-dot.root {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+        }
+        
+        .legend-dot.state {
+            background: linear-gradient(135deg, #06b6d4, #3b82f6);
+        }
+        
+        .legend-line {
+            width: 20px;
+            height: 2px;
+            background: linear-gradient(90deg, #8b5cf6, #06b6d4);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+        
+        @keyframes dash {
+            to { stroke-dashoffset: -20; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🗺️ Powerpnt - fDOM State Map</h1>
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value">20</div>
+                <div class="stat-label">States</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">19</div>
+                <div class="stat-label">Transitions</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">1025</div>
+                <div class="stat-label">Elements</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">1168</div>
+                <div class="stat-label">Pending</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="sidebar">
+            <h2>📍 States</h2>
+            <ul class="state-list" id="stateList">
+            </ul>
+        </div>
+        
+        <div class="canvas-container">
+            <canvas id="mapCanvas"></canvas>
+            
+            <div class="tooltip" id="tooltip">
+                <h3 id="tooltipTitle"></h3>
+                <p id="tooltipContent"></p>
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn" id="zoomIn" title="Zoom In">+</button>
+                <button class="control-btn" id="zoomOut" title="Zoom Out">−</button>
+                <button class="control-btn" id="resetView" title="Reset View">⟲</button>
+            </div>
+            
+            <div class="legend">
+                <h4>Legend</h4>
+                <div class="legend-item">
+                    <div class="legend-dot root"></div>
+                    <span>Root State</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-dot state"></div>
+                    <span>Child State</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-line"></div>
+                    <span>Navigation Edge</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Data from Python
+        const nodes = [{"id": "root", "label": "root", "x": 500, "y": 400, "elements": 163, "isRoot": true, "parent": null}, {"id": "root_file", "label": "file", "x": 341.4487159027299, "y": 566.6177971019504, "elements": 117, "isRoot": false, "parent": "root"}, {"id": "root_insert", "label": "insert", "x": 303.397676105326, "y": 519.3630019696795, "elements": 64, "isRoot": false, "parent": "root"}, {"id": "root_draw", "label": "draw", "x": 279.0266544885249, "y": 463.8026690152242, "elements": 162, "isRoot": false, "parent": "root"}, {"id": "root_design", "label": "design", "x": 270.0314398517321, "y": 403.8028072962624, "elements": 37, "isRoot": false, "parent": "root"}, {"id": "root_transitions", "label": "transitions", "x": 277.037938833954, "y": 343.5383379576162, "elements": 52, "isRoot": false, "parent": "root"}, {"id": "root_animations", "label": "animations", "x": 299.5586239657262, "y": 287.20259411898314, "elements": 53, "isRoot": false, "parent": "root"}, {"id": "root_slide_show", "label": "show", "x": 336.0264568929787, "y": 238.7155396173276, "elements": 152, "isRoot": false, "parent": "root"}, {"id": "root_record", "label": "record", "x": 383.90392632098593, "y": 201.45100937975803, "elements": 41, "isRoot": false, "parent": "root"}, {"id": "root_review", "label": "review", "x": 439.85961358062144, "y": 178.0019506362098, "elements": 47, "isRoot": false, "parent": "root"}, {"id": "root_view", "label": "view", "x": 500.0, "y": 170.0, "elements": 48, "isRoot": false, "parent": "root"}, {"id": "root_help", "label": "help", "x": 560.1403864193786, "y": 178.0019506362098, "elements": 24, "isRoot": false, "parent": "root"}, {"id": "root_paste", "label": "paste", "x": 616.0960736790141, "y": 201.45100937975803, "elements": 163, "isRoot": false, "parent": "root"}, {"id": "root_layout", "label": "layout", "x": 663.9735431070213, "y": 238.71553961732764, "elements": 221, "isRoot": false, "parent": "root"}, {"id": "root_justify", "label": "justify", "x": 700.4413760342738, "y": 287.20259411898314, "elements": 19, "isRoot": false, "parent": "root"}, {"id": "root_a", "label": "a", "x": 722.9620611660459, "y": 343.53833795761625, "elements": 19, "isRoot": false, "parent": "root"}, {"id": "root_bracket_with_lines", "label": "lines", "x": 729.9685601482679, "y": 403.8028072962625, "elements": 14, "isRoot": false, "parent": "root"}, {"id": "root_editing", "label": "editing", "x": 720.973345511475, "y": 463.80266901522424, "elements": 8, "isRoot": false, "parent": "root"}, {"id": "root_lightbulb_icon", "label": "icon", "x": 696.602323894674, "y": 519.3630019696795, "elements": 205, "isRoot": false, "parent": "root"}, {"id": "root_monitor_icon", "label": "icon", "x": 658.5512840972701, "y": 566.6177971019505, "elements": 151, "isRoot": false, "parent": "root"}];
+        const edges = [{"from": "root", "to": "root_file", "trigger": "File", "action": "click:H2_1"}, {"from": "root", "to": "root_insert", "trigger": "Insert", "action": "click:H2_3"}, {"from": "root", "to": "root_draw", "trigger": "Draw", "action": "click:H2_4"}, {"from": "root", "to": "root_design", "trigger": "Design", "action": "click:H2_5"}, {"from": "root", "to": "root_transitions", "trigger": "Transitions", "action": "click:H2_6"}, {"from": "root", "to": "root_animations", "trigger": "Animations", "action": "click:H2_7"}, {"from": "root", "to": "root_slide_show", "trigger": "Slide Show", "action": "click:H2_8"}, {"from": "root", "to": "root_record", "trigger": "Record", "action": "click:H2_9"}, {"from": "root", "to": "root_review", "trigger": "Review", "action": "click:H2_10"}, {"from": "root", "to": "root_view", "trigger": "View", "action": "click:H2_11"}, {"from": "root", "to": "root_help", "trigger": "Help", "action": "click:H2_12"}, {"from": "root", "to": "root_paste", "trigger": "Paste", "action": "click:H3_1"}, {"from": "root", "to": "root_layout", "trigger": "Layout", "action": "click:H16_1"}, {"from": "root", "to": "root_justify", "trigger": "Justify", "action": "click:H19_9"}, {"from": "root", "to": "root_a", "trigger": "A", "action": "click:H22_1"}, {"from": "root", "to": "root_bracket_with_lines", "trigger": "Bracket with lines", "action": "click:H37_2"}, {"from": "root", "to": "root_editing", "trigger": "Editing", "action": "click:H44_2"}, {"from": "root", "to": "root_lightbulb_icon", "trigger": "Lightbulb Icon", "action": "click:H48_2"}, {"from": "root", "to": "root_monitor_icon", "trigger": "Monitor icon", "action": "click:H48_4"}];
+        
+        // Canvas setup
+        const canvas = document.getElementById('mapCanvas');
+        const ctx = canvas.getContext('2d');
+        const tooltip = document.getElementById('tooltip');
+        const tooltipTitle = document.getElementById('tooltipTitle');
+        const tooltipContent = document.getElementById('tooltipContent');
+        
+        // View state
+        let scale = 1;
+        let offsetX = 0;
+        let offsetY = 0;
+        let isDragging = false;
+        let lastMouseX = 0;
+        let lastMouseY = 0;
+        let selectedNode = null;
+        let hoveredNode = null;
+        let animationFrame = 0;
+        
+        // Resize canvas
+        function resizeCanvas() {
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight;
+            draw();
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+        
+        // Center view on initial load
+        function centerView() {
+            if (nodes.length > 0) {
+                let minX = Infinity, maxX = -Infinity;
+                let minY = Infinity, maxY = -Infinity;
+                
+                nodes.forEach(node => {
+                    minX = Math.min(minX, node.x);
+                    maxX = Math.max(maxX, node.x);
+                    minY = Math.min(minY, node.y);
+                    maxY = Math.max(maxY, node.y);
+                });
+                
+                const graphWidth = maxX - minX + 200;
+                const graphHeight = maxY - minY + 200;
+                const centerX = (minX + maxX) / 2;
+                const centerY = (minY + maxY) / 2;
+                
+                scale = Math.min(
+                    canvas.width / graphWidth,
+                    canvas.height / graphHeight,
+                    1.5
+                ) * 0.8;
+                
+                offsetX = canvas.width / 2 - centerX * scale;
+                offsetY = canvas.height / 2 - centerY * scale;
+                
+                draw();
+            }
+        }
+        setTimeout(centerView, 100);
+        
+        // Transform functions
+        function toCanvasX(x) { return x * scale + offsetX; }
+        function toCanvasY(y) { return y * scale + offsetY; }
+        function fromCanvasX(x) { return (x - offsetX) / scale; }
+        function fromCanvasY(y) { return (y - offsetY) / scale; }
+        
+        // Draw function
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw grid
+            ctx.strokeStyle = 'rgba(99, 102, 241, 0.05)';
+            ctx.lineWidth = 1;
+            const gridSize = 50 * scale;
+            const startX = offsetX % gridSize;
+            const startY = offsetY % gridSize;
+            
+            for (let x = startX; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = startY; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+            
+            // Draw edges
+            edges.forEach(edge => {
+                const fromNode = nodes.find(n => n.id === edge.from);
+                const toNode = nodes.find(n => n.id === edge.to);
+                
+                if (fromNode && toNode) {
+                    const x1 = toCanvasX(fromNode.x);
+                    const y1 = toCanvasY(fromNode.y);
+                    const x2 = toCanvasX(toNode.x);
+                    const y2 = toCanvasY(toNode.y);
+                    
+                    // Draw curved line
+                    const midX = (x1 + x2) / 2;
+                    const midY = (y1 + y2) / 2;
+                    const dx = x2 - x1;
+                    const dy = y2 - y1;
+                    const cx = midX - dy * 0.2;
+                    const cy = midY + dx * 0.2;
+                    
+                    // Gradient
+                    const gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+                    gradient.addColorStop(0, 'rgba(139, 92, 246, 0.6)');
+                    gradient.addColorStop(1, 'rgba(6, 182, 212, 0.6)');
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.quadraticCurveTo(cx, cy, x2, y2);
+                    ctx.strokeStyle = gradient;
+                    ctx.lineWidth = 2 * scale;
+                    ctx.stroke();
+                    
+                    // Arrow head
+                    const angle = Math.atan2(y2 - cy, x2 - cx);
+                    const arrowSize = 10 * scale;
+                    ctx.beginPath();
+                    ctx.moveTo(x2, y2);
+                    ctx.lineTo(
+                        x2 - arrowSize * Math.cos(angle - Math.PI / 6),
+                        y2 - arrowSize * Math.sin(angle - Math.PI / 6)
+                    );
+                    ctx.moveTo(x2, y2);
+                    ctx.lineTo(
+                        x2 - arrowSize * Math.cos(angle + Math.PI / 6),
+                        y2 - arrowSize * Math.sin(angle + Math.PI / 6)
+                    );
+                    ctx.strokeStyle = 'rgba(6, 182, 212, 0.8)';
+                    ctx.stroke();
+                    
+                    // Edge label
+                    if (scale > 0.6) {
+                        ctx.font = `${10 * scale}px JetBrains Mono, monospace`;
+                        ctx.fillStyle = 'rgba(156, 163, 175, 0.7)';
+                        ctx.textAlign = 'center';
+                        ctx.fillText(edge.trigger, cx, cy - 8 * scale);
+                    }
+                }
+            });
+            
+            // Draw nodes
+            nodes.forEach(node => {
+                const x = toCanvasX(node.x);
+                const y = toCanvasY(node.y);
+                const radius = (node.isRoot ? 35 : 25 + Math.min(node.elements / 5, 15)) * scale;
+                
+                // Glow effect
+                const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius * 2);
+                if (node.isRoot) {
+                    gradient.addColorStop(0, 'rgba(139, 92, 246, 0.3)');
+                    gradient.addColorStop(1, 'rgba(139, 92, 246, 0)');
+                } else {
+                    gradient.addColorStop(0, 'rgba(6, 182, 212, 0.2)');
+                    gradient.addColorStop(1, 'rgba(6, 182, 212, 0)');
+                }
+                ctx.beginPath();
+                ctx.arc(x, y, radius * 2, 0, Math.PI * 2);
+                ctx.fillStyle = gradient;
+                ctx.fill();
+                
+                // Node circle
+                ctx.beginPath();
+                ctx.arc(x, y, radius, 0, Math.PI * 2);
+                
+                const nodeGradient = ctx.createLinearGradient(x - radius, y - radius, x + radius, y + radius);
+                if (node.isRoot) {
+                    nodeGradient.addColorStop(0, '#8b5cf6');
+                    nodeGradient.addColorStop(1, '#6366f1');
+                } else {
+                    nodeGradient.addColorStop(0, '#06b6d4');
+                    nodeGradient.addColorStop(1, '#3b82f6');
+                }
+                ctx.fillStyle = nodeGradient;
+                ctx.fill();
+                
+                // Border
+                ctx.strokeStyle = hoveredNode === node.id ? '#ffffff' : 'rgba(255, 255, 255, 0.2)';
+                ctx.lineWidth = hoveredNode === node.id ? 3 * scale : 1.5 * scale;
+                ctx.stroke();
+                
+                // Label
+                ctx.font = `bold ${12 * scale}px JetBrains Mono, monospace`;
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(node.label, x, y);
+                
+                // Element count badge
+                if (scale > 0.5) {
+                    const badgeX = x + radius * 0.7;
+                    const badgeY = y - radius * 0.7;
+                    ctx.beginPath();
+                    ctx.arc(badgeX, badgeY, 12 * scale, 0, Math.PI * 2);
+                    ctx.fillStyle = '#1e1e2e';
+                    ctx.fill();
+                    ctx.strokeStyle = 'rgba(139, 92, 246, 0.5)';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    
+                    ctx.font = `${9 * scale}px JetBrains Mono`;
+                    ctx.fillStyle = '#818cf8';
+                    ctx.fillText(node.elements.toString(), badgeX, badgeY);
+                }
+            });
+            
+            animationFrame++;
+            requestAnimationFrame(draw);
+        }
+        
+        // Event handlers
+        canvas.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            lastMouseX = e.clientX;
+            lastMouseY = e.clientY;
+            canvas.style.cursor = 'grabbing';
+        });
+        
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                offsetX += e.clientX - lastMouseX;
+                offsetY += e.clientY - lastMouseY;
+                lastMouseX = e.clientX;
+                lastMouseY = e.clientY;
+            } else {
+                // Check for node hover
+                const rect = canvas.getBoundingClientRect();
+                const mouseX = fromCanvasX(e.clientX - rect.left);
+                const mouseY = fromCanvasY(e.clientY - rect.top);
+                
+                hoveredNode = null;
+                nodes.forEach(node => {
+                    const dist = Math.sqrt(Math.pow(mouseX - node.x, 2) + Math.pow(mouseY - node.y, 2));
+                    const radius = node.isRoot ? 35 : 25 + Math.min(node.elements / 5, 15);
+                    
+                    if (dist < radius) {
+                        hoveredNode = node.id;
+                        
+                        // Show tooltip
+                        tooltip.classList.add('visible');
+                        tooltipTitle.textContent = node.id;
+                        tooltipContent.innerHTML = `
+                            <strong>Elements:</strong> ${node.elements}<br>
+                            <strong>Parent:</strong> ${node.parent || 'None'}<br>
+                            <strong>Root:</strong> ${node.isRoot ? 'Yes' : 'No'}
+                        `;
+                        tooltip.style.left = (e.clientX + 15) + 'px';
+                        tooltip.style.top = (e.clientY + 15) + 'px';
+                    }
+                });
+                
+                if (!hoveredNode) {
+                    tooltip.classList.remove('visible');
+                }
+                
+                canvas.style.cursor = hoveredNode ? 'pointer' : 'grab';
+            }
+        });
+        
+        canvas.addEventListener('mouseup', () => {
+            isDragging = false;
+            canvas.style.cursor = hoveredNode ? 'pointer' : 'grab';
+        });
+        
+        canvas.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const rect = canvas.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const mouseY = e.clientY - rect.top;
+            
+            const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+            const newScale = Math.max(0.2, Math.min(3, scale * zoomFactor));
+            
+            // Zoom toward mouse position
+            offsetX = mouseX - (mouseX - offsetX) * (newScale / scale);
+            offsetY = mouseY - (mouseY - offsetY) * (newScale / scale);
+            scale = newScale;
+        });
+        
+        // Control buttons
+        document.getElementById('zoomIn').addEventListener('click', () => {
+            scale = Math.min(3, scale * 1.2);
+        });
+        
+        document.getElementById('zoomOut').addEventListener('click', () => {
+            scale = Math.max(0.2, scale * 0.8);
+        });
+        
+        document.getElementById('resetView').addEventListener('click', centerView);
+        
+        // Populate state list
+        const stateList = document.getElementById('stateList');
+        nodes.forEach(node => {
+            const li = document.createElement('li');
+            li.className = 'state-item' + (node.isRoot ? ' root' : '');
+            li.innerHTML = `
+                <div class="state-name">${node.isRoot ? '🏠 ' : '📄 '}${node.id}</div>
+                <div class="state-meta">${node.elements} elements | ${node.parent ? 'from ' + node.parent : 'root state'}</div>
+            `;
+            li.addEventListener('click', () => {
+                // Center on node
+                offsetX = canvas.width / 2 - node.x * scale;
+                offsetY = canvas.height / 2 - node.y * scale;
+                
+                // Highlight
+                document.querySelectorAll('.state-item').forEach(el => el.classList.remove('active'));
+                li.classList.add('active');
+            });
+            stateList.appendChild(li);
+        });
+    </script>
+</body>
+</html>
