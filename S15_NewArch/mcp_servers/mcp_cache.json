@@ -1,0 +1,49 @@
+{
+  "rag": {
+    "tools": [
+      {
+        "name": "search_stored_documents_rag",
+        "description": "Search old stored documents like PDF, DOCX, TXT, etc. to get relevant extracts. "
+      },
+      {
+        "name": "convert_pdf_to_markdown",
+        "description": "Convert PDF to markdown. S20: Thread-safe with pdf_lock."
+      },
+      {
+        "name": "caption_images",
+        "description": ""
+      }
+    ],
+    "last_connected": "2026-02-02T12:09:21.722449"
+  },
+  "sandbox": {
+    "tools": [
+      {
+        "name": "run_python_script",
+        "description": "\n    Execute Python code in a secure sandbox.\n    Use this for math, data processing, and logic.\n    Returns the stdout and result of the execution.\n    "
+      }
+    ],
+    "last_connected": "2026-02-02T12:09:22.029259"
+  },
+  "browser": {
+    "tools": [
+      {
+        "name": "web_search",
+        "description": "Search the web using multiple engines (DuckDuckGo, Bing, Ecosia, etc.) and return a list of relevant result URLs"
+      },
+      {
+        "name": "web_extract_text",
+        "description": "Extract readable text from a webpage using robust methods (Playwright/Trafilatura)."
+      },
+      {
+        "name": "search_web_with_text_content",
+        "description": "\n    S20 RESTORED TOOL: Search the web AND extract full text from top results in ONE call.\n    \n    This is the \"bulk search\" tool that S15_NX removed but agents NEED.\n    Instead of:\n      1. Search -> get URLs\n      2. Extract URL 1\n      3. Extract URL 2\n      4. Extract URL 3\n      ... (10 turns wasted)\n    \n    This tool does it all in ONE shot:\n      1. Search -> get top N URLs\n      2. Extract text from ALL URLs in parallel\n      3. Return combined results\n    \n    Use this when you need to quickly gather information from multiple sources.\n    "
+      },
+      {
+        "name": "browser_use_action",
+        "description": "\n    Execute a complex browser task using Vision and generic reasoning.\n    Use this for: Logging in, filling forms, navigating complex sites, or when text search fails.\n    WARNING: Slow and expensive.\n    "
+      }
+    ],
+    "last_connected": "2026-02-02T12:09:20.895344"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "servers": {
+    "browser": {
+      "command": "uv",
+      "args": ["run", "mcp_servers/server_browser.py"],
+      "description": "Web browsing and search capabilities",
+      "timeout": 20,
+      "enabled": true
+    },
+    "rag": {
+      "command": "uv",
+      "args": ["run", "mcp_servers/server_rag.py"],
+      "description": "Document RAG and local storage",
+      "timeout": 30,
+      "enabled": true
+    },
+    "sandbox": {
+      "command": "uv",
+      "args": ["run", "mcp_servers/server_sandbox.py"],
+      "description": "Python code execution sandbox",
+      "timeout": 60,
+      "enabled": true
+    }
+  },
+  "global_settings": {
+    "default_timeout": 20,
+    "max_retries": 3,
+    "cache_enabled": true,
+    "cache_file": "mcp_cache.json",
+    "log_level": "INFO"
+  }
+}

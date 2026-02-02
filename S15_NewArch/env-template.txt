@@ -1,0 +1,12 @@
+# S15_NewArch Environment Configuration
+# Copy this to .env and fill in your values
+# ==========================================
+
+# Gemini API Key (Required for default model)
+GEMINI_API_KEY=your-gemini-api-key-here
+
+# Optional: For browser-use agent (browser automation)
+# GOOGLE_API_KEY=your-google-api-key-here
+
+# Optional: For Ollama local models
+# OLLAMA_HOST=http://localhost:11434
